@@ -67,6 +67,7 @@ create table t_user (
   password varchar(255) not null,
   email varchar(255) not null,
   mobile varchar(255) not null,
+  avatar varchar(255) not null,
   state int not null,
   create_time timestamp not null default current_timestamp, 
   update_time timestamp not null default current_timestamp on update current_timestamp, 
