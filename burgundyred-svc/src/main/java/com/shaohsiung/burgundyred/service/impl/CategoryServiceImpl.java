@@ -1,7 +1,7 @@
 package com.shaohsiung.burgundyred.service.impl;
 
 import com.alibaba.dubbo.config.annotation.Service;
-import com.shaohsiung.burgundyred.error.FrontEndException;
+import com.shaohsiung.burgundyred.error.BackEndException;
 import com.shaohsiung.burgundyred.mapper.CategoryMapper;
 import com.shaohsiung.burgundyred.model.Category;
 import com.shaohsiung.burgundyred.service.CategoryService;
@@ -57,6 +57,6 @@ public class CategoryServiceImpl implements CategoryService {
             log.info("添加商品类目：{}", category);
             return category;
         }
-        throw new FrontEndException("商品类目创建失败");
+        throw new BackEndException("商品类目创建失败");
     }
 }

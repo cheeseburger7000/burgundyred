@@ -18,7 +18,6 @@
 create table t_product (
   id varchar(255) not null,
   name varchar(255) not null,
-  introduction text not null,
   detail text not null,
   price decimal(8,2) not null,
   stock int not null default 0,

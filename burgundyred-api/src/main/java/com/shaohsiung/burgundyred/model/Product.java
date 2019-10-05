@@ -19,8 +19,6 @@ public class Product implements Serializable {
 
     private String name;
 
-    private String introduction;
-
     private String detail;
 
     private BigDecimal price;

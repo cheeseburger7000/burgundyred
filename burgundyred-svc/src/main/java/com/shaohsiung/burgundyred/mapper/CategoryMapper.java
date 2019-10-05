@@ -16,7 +16,4 @@ public interface CategoryMapper {
     @Insert("insert into t_category(id, name, detail, hot, create_time, update_time) " +
             "values(#{id}, #{name}, #{detail}, #{hot}, #{createTime}, #{updateTime})")
     int save(Category category);
-
-    @Delete("delete from t_category where id = #{categoryId}")
-    int delete(@Param("categoryId") String id);
 }
