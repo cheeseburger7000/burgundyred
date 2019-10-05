@@ -9,6 +9,11 @@ spring:
     username: root
     password: root
     url: jdbc:mysql://localhost:3306/db_burgundyred?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC
+  data:
+    elasticsearch:
+      cluster-name: elasticsearch
+      cluster-nodes: localhost:9300
+
 
 mybatis:
   configuration:
@@ -16,6 +21,7 @@ mybatis:
   mapper-locations: classpath*:/mapper/**/*.xml
   type-aliases-package: com.shaohsiung.burgundyred.model
   type-handlers-package: com.shaohsiung.burgundyred.handler
+
 
 server:
   port: 8081
@@ -32,3 +38,10 @@ dubbo:
     address: zookeeper://119.23.40.171:2181
   provider:
     timeout: 1000
+
+# RabbitMQ
+rabbitmq:
+  host: localhost
+  port: 5672
+  username: guest
+  password: guest
