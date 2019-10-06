@@ -37,6 +37,14 @@ public interface ProductService {
     Product addProduct(Product product);
 
     /**
+     * 获取商品库存
+     *
+     * @param productId
+     * @return
+     */
+    Integer getStockByProductId(String productId);
+
+    /**
      * 减少商品库存
      *
      * 前台订单服务

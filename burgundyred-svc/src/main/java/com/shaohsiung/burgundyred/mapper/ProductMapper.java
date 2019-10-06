@@ -19,4 +19,7 @@ public interface ProductMapper {
     @Insert("insert into t_product(id, name, detail, price, stock, state, main_picture, sub_picture, category_id, create_time, update_time) " +
             "values(#{id}, #{name}, #{detail}, #{price}, #{stock}, #{state}, #{mainPicture}, #{subPicture}, #{categoryId}, #{createTime}, #{updateTime})")
     int save(Product product);
+
+    @Select("select stock from t_product where id = #{productId}")
+    Integer getStockByProductId(@Param("productId") String productId);
 }

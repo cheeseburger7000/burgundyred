@@ -5,6 +5,7 @@ import com.shaohsiung.burgundyred.converter.ObjectBytesConverter;
 import com.shaohsiung.burgundyred.document.ProductDocument;
 import com.shaohsiung.burgundyred.enums.ProductState;
 import com.shaohsiung.burgundyred.error.BackEndException;
+import com.shaohsiung.burgundyred.error.FrontEndException;
 import com.shaohsiung.burgundyred.mapper.ProductMapper;
 import com.shaohsiung.burgundyred.model.Product;
 import com.shaohsiung.burgundyred.service.ProductService;
@@ -101,6 +102,21 @@ public class ProductServiceImpl implements ProductService {
             return product;
         }
         throw new BackEndException("产品创建失败");
+    }
+
+    /**
+     * 获取商品库存
+     *
+     * @param productId
+     * @return
+     */
+    @Override
+    public Integer getStockByProductId(String productId) {
+        Integer stock = productMapper.getStockByProductId(productId);
+        if (stock == null) {
+            throw new FrontEndException("获取商品库存错误");
+        }
+        return stock;
     }
 
     /**

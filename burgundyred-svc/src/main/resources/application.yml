@@ -13,6 +13,12 @@ spring:
     elasticsearch:
       cluster-name: elasticsearch
       cluster-nodes: localhost:9300
+  redis:
+    host: localhost
+    lettuce:
+      pool:
+        max-active: 5
+        max-idle: 5
 
 
 mybatis:
