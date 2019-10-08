@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ * 商城门户
+ */
 @RestController
 @RequestMapping("/")
 public class IndexController {
@@ -18,7 +21,10 @@ public class IndexController {
     private CategoryService categoryService;
 
     @GetMapping
-    public List<Category> index() {
-        throw new FrontEndException("商品类目创建失败");
+    public String index() {
+        // 获取类目列表
+        // 获取轮播图 redis缓存
+        // 根据类目获取商品 F5
+        return null;
     }
 }

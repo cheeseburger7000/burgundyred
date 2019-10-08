@@ -1,0 +1,17 @@
+dubbo:
+  application:
+    name: dubbo-customer-web
+  protocol:
+    name: dubbo
+    port: 20880
+  registry:
+    address: zookeeper://119.23.40.171:2181
+  consumer:
+    timeout: 5000
+
+server:
+  port: 8080
+
+spring:
+  application:
+    name: burgundred-web
