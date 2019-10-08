@@ -23,9 +23,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Autowired
     private IdWorker idWorker;
-
-    @Autowired
-    private JwtUtils jwtUtils;
     /**
      * 用户注册
      * <p>
@@ -67,7 +64,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      * @return json web token 包括id，用户名称，头像
      */
     @Override
-    public String login(String userName, String password) {
+    public User login(String userName, String password) {
         String encryptPassword = AppUtils.sha256Encrypt(password);
         User user = userMapper.findByUserNameAndPassword(userName, encryptPassword);
         if (user == null) {
@@ -82,14 +79,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             throw new FrontEndException("该用户已被冻结");
         }
         log.info("【鉴权模块】用户登录：{}", user);
+        return user;
 
         // 生成JWT
-        try {
-            String result = jwtUtils.createJWT(user.getId(), user.getUserName(), user.getAvatar());
-            return result;
-        } catch (Exception e) {
-            throw new FrontEndException("鉴权失败");
-        }
+//        try {
+//            String result = jwtUtils.createJWT(user.getId(), user.getUserName(), user.getAvatar());
+//            return result;
+//        } catch (Exception e) {
+//            throw new FrontEndException("鉴权失败");
+//        }
     }
 
     /**

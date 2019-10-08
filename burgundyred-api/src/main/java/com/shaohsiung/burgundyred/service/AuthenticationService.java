@@ -22,7 +22,7 @@ public interface AuthenticationService {
      * @param password
      * @return json web token
      */
-    String login(String userName, String password);
+    User login(String userName, String password);
 
     /**
      * 激活用户
