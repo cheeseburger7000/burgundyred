@@ -96,7 +96,7 @@ public class CartServiceImpl implements CartService {
                 CartItem cartItem = entry.getValue();
                 cart.getContent().remove(cartItem);
                 // 若存在 数量+1 计算购物车总价
-                cartItem.setCount(cartItem.getCount()+1);
+                cartItem.setQuantity(cartItem.getQuantity()+1);
                 cartItem.setAmount(cartItem.getAmount().add(product.getPrice()));
 
                 cart.getContent().put(productId, cartItem);
@@ -113,7 +113,7 @@ public class CartServiceImpl implements CartService {
         CartItem newCartItem = CartItem.builder().productId(productId)
                 .price(product.getPrice())
                 .amount(product.getPrice())
-                .count(1)
+                .quantity(1)
                 .name(product.getName())
                 .build();
         cart.getContent().put(productId, newCartItem);
@@ -148,10 +148,10 @@ public class CartServiceImpl implements CartService {
             if (productId != null && productId.equals(currentProductId)) {
                 // 删除目标商品 -1
                 CartItem cartItem = entry.getValue();
-                if (cartItem.getCount() > 0) {
+                if (cartItem.getQuantity() > 0) {
                     cartItem.setAmount(cartItem.getAmount().subtract(product.getPrice()));
-                    cartItem.setCount(cartItem.getCount() - 1);
-                    if (cartItem.getCount() == 0) {
+                    cartItem.setQuantity(cartItem.getQuantity() - 1);
+                    if (cartItem.getQuantity() == 0) {
                         content.remove(productId);
                     }
                     cart.setTotal(cart.getTotal().subtract(product.getPrice()));

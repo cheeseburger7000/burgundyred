@@ -19,7 +19,7 @@ public class CartItem implements Serializable {
     /** 产品单价*/
     private BigDecimal price;
 
-    private Integer count;
+    private Integer quantity;
 
     /** 购物项总价 */
     private BigDecimal amount;
