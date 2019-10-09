@@ -226,6 +226,20 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public Order receipt(String orderId, String userId) {
-        return null;
+        Order order = orderMapper.getByIdAndUserId(orderId, userId);
+        if (order == null) {
+            throw new FrontEndException("订单不存在");
+        }
+
+        OrderState state = order.getState();
+        if (state.equals(OrderState.SHIPPED)) {
+            order.setState(OrderState.COMPLETED);
+            int update = orderMapper.update(order);
+            if (update == 1) {
+                log.info("【订单服务】用户收货，订单状态机：已发货->已完成，订单号：{}", orderId);
+                return order;
+            }
+        }
+        throw new FrontEndException("订单状态机转化错误");
     }
 }
