@@ -24,8 +24,8 @@ public class CartServiceImplTest {
 
     @Test
     public void add() {
-        Cart add1 = cartService.add("1", "1180496378418302976");
-        Cart add2 = cartService.add("1", "1180496378418302976");
+        cartService.add("1", "1180496378418302976");
+        cartService.add("1", "1180496378418302976");
 
         Cart add3 = cartService.add("2", "1180496378418302976");
     }

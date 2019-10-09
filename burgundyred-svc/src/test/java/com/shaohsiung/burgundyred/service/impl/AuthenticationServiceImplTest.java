@@ -29,7 +29,6 @@ public class AuthenticationServiceImplTest {
 
     @Test
     public void login() {
-        String token = authenticationService.login("shaohsiung", "123");
     }
 
     @Test

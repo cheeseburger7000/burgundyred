@@ -7,6 +7,7 @@ import com.shaohsiung.burgundyred.dto.Cart;
 import com.shaohsiung.burgundyred.dto.CartItem;
 import com.shaohsiung.burgundyred.enums.OrderState;
 import com.shaohsiung.burgundyred.error.FrontEndException;
+import com.shaohsiung.burgundyred.mapper.OrderItemMapper;
 import com.shaohsiung.burgundyred.mapper.OrderMapper;
 import com.shaohsiung.burgundyred.model.Order;
 import com.shaohsiung.burgundyred.model.OrderItem;
@@ -35,10 +36,13 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private OrderMapper orderMapper;
 
-    @Reference(version = "1.0.0")
+    @Autowired
+    private OrderItemMapper orderItemMapper;
+
+    @Autowired
     private ProductService productService;
 
-    @Reference(version = "1.0.0")
+    @Autowired
     private CartService cartService;
 
     /**
@@ -79,13 +83,13 @@ public class OrderServiceImpl implements OrderService {
             orderItem.setId(idWorker.nextId()+"");
             orderItem.setOrderId(order.getId());
 
-            //orderItemMapper.save(orderItem);
+            orderItemMapper.save(orderItem);
         }
 
-
         // 清空购物车
+        cartService.clear(userId);
 
-        return null;
+        return order;
     }
 
     /**
@@ -151,6 +155,7 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 根据订单id查询订单详情
+     *      包括 订单信息 订单项信息 物流信息
      *
      * @param orderId
      * @param userId

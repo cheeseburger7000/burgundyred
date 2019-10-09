@@ -1,7 +1,6 @@
 package com.shaohsiung.burgundyred.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
-import com.shaohsiung.burgundyred.dto.Cart;
 import com.shaohsiung.burgundyred.error.FrontEndException;
 import com.shaohsiung.burgundyred.form.UserForm;
 import com.shaohsiung.burgundyred.model.User;

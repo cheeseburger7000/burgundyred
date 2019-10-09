@@ -6,7 +6,6 @@ import com.shaohsiung.burgundyred.dto.CartItem;
 import com.shaohsiung.burgundyred.enums.ProductState;
 import com.shaohsiung.burgundyred.error.BackEndException;
 import com.shaohsiung.burgundyred.error.FrontEndException;
-import com.shaohsiung.burgundyred.mapper.CartMapper;
 import com.shaohsiung.burgundyred.model.Product;
 import com.shaohsiung.burgundyred.service.CartService;
 import com.shaohsiung.burgundyred.service.ProductService;
@@ -26,9 +25,6 @@ import java.util.Optional;
 public class CartServiceImpl implements CartService {
 
     private final static String CART_KEY = "BURGUNDYRED_CART";
-
-    @Autowired
-    private CartMapper cartMapper;
 
     @Autowired
     private ProductService productService;
