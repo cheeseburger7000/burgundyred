@@ -6,6 +6,9 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.session.RowBounds;
+
+import java.util.List;
 
 public interface OrderMapper {
 
@@ -22,4 +25,7 @@ public interface OrderMapper {
 
     @Update("update t_order set state = #{state} where id = #{id}")
     int update(Order order);
+
+    @Select("select * from t_order where user_id = #{userId}")
+    List<Order> orderList(@Param("userId") String userId, RowBounds rowBounds);
 }

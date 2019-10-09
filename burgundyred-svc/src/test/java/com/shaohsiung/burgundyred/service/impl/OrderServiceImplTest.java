@@ -10,6 +10,8 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.List;
+
 import static org.junit.Assert.*;
 
 @SpringBootTest
@@ -55,6 +57,7 @@ public class OrderServiceImplTest {
 
     @Test
     public void orderList() {
+        List<Order> orderList = orderService.orderList("1", 0, 4);
     }
 
     @Test

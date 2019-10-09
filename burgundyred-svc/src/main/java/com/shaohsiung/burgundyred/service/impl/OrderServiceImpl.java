@@ -16,6 +16,7 @@ import com.shaohsiung.burgundyred.service.OrderService;
 import com.shaohsiung.burgundyred.service.ProductService;
 import com.shaohsiung.burgundyred.util.IdWorker;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -187,7 +188,9 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public List<Order> orderList(String userId, int pageNum, int pageSize) {
-        return null;
+        int offset = pageNum * pageSize;
+        List<Order> orderList= orderMapper.orderList(userId, new RowBounds(offset, pageSize));
+        return orderList;
     }
 
     /**
