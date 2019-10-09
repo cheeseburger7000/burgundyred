@@ -5,15 +5,18 @@ import com.alibaba.dubbo.config.annotation.Service;
 import com.shaohsiung.burgundyred.controller.request.Response;
 import com.shaohsiung.burgundyred.dto.Cart;
 import com.shaohsiung.burgundyred.dto.CartItem;
+import com.shaohsiung.burgundyred.dto.OrderDetailDto;
 import com.shaohsiung.burgundyred.enums.OrderState;
 import com.shaohsiung.burgundyred.error.FrontEndException;
 import com.shaohsiung.burgundyred.mapper.OrderItemMapper;
 import com.shaohsiung.burgundyred.mapper.OrderMapper;
 import com.shaohsiung.burgundyred.model.Order;
 import com.shaohsiung.burgundyred.model.OrderItem;
+import com.shaohsiung.burgundyred.model.Shipping;
 import com.shaohsiung.burgundyred.service.CartService;
 import com.shaohsiung.burgundyred.service.OrderService;
 import com.shaohsiung.burgundyred.service.ProductService;
+import com.shaohsiung.burgundyred.service.ShippingService;
 import com.shaohsiung.burgundyred.util.IdWorker;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.RowBounds;
@@ -21,10 +24,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @Transactional
@@ -42,6 +42,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private ShippingService shippingService;
 
     @Autowired
     private CartService cartService;
@@ -202,8 +205,16 @@ public class OrderServiceImpl implements OrderService {
      * @return
      */
     @Override
-    public Order getById(String orderId, String userId) {
-        return null;
+    public OrderDetailDto getById(String orderId, String userId) {
+        Order order = orderMapper.getByIdAndUserId(orderId, userId);
+        List<OrderItem> orderItemList = orderItemMapper.getOrderItemListByOrderId(orderId);
+        Shipping shipping = shippingService.getById(order.getShippingId());
+
+        OrderDetailDto orderDetailDto = new OrderDetailDto();
+        BeanUtils.copyProperties(order, orderDetailDto);
+        orderDetailDto.setOrderItemList(orderItemList);
+        orderDetailDto.setShipping(shipping);
+        return orderDetailDto;
     }
 
     /**

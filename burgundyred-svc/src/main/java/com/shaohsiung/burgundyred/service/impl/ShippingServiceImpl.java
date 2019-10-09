@@ -111,4 +111,15 @@ public class ShippingServiceImpl implements ShippingService {
         }
         throw new FrontEndException("删除物流信息失败");
     }
+
+    /**
+     * 获取物流详情
+     *
+     * @param shippingId
+     * @return
+     */
+    @Override
+    public Shipping getById(String shippingId) {
+        return shippingMapper.getById(shippingId);
+    }
 }

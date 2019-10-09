@@ -36,4 +36,11 @@ public interface ShippingService {
      * @return
      */
     int deleteShipping(String ShippingId, String userId);
+
+    /**
+     * 获取物流详情
+     * @param shippingId
+     * @return
+     */
+    Shipping getById(String shippingId);
 }

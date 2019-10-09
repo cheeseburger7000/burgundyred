@@ -1,6 +1,7 @@
 package com.shaohsiung.burgundyred.service;
 
 import com.shaohsiung.burgundyred.controller.request.Response;
+import com.shaohsiung.burgundyred.dto.OrderDetailDto;
 import com.shaohsiung.burgundyred.model.Order;
 
 import java.util.List;
@@ -66,7 +67,7 @@ public interface OrderService {
      * @param userId
      * @return
      */
-    Order getById(String orderId, String userId);
+    OrderDetailDto getById(String orderId, String userId);
 
     /**
      * 收货

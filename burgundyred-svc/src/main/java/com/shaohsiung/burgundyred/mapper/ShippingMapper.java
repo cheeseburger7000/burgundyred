@@ -27,4 +27,7 @@ public interface ShippingMapper {
             "receiver_city = #{receiverCity}, receiver_district = #{receiverDistrict}, receiver_address = #{receiverAddress}, receiver_zip = #{receiverZip}, " +
             "update_time = #{updateTime} where id = #{id} and user_id = #{userId}")
     int update(Shipping origin);
+
+    @Select("select * from t_shipping where id = #{shippingId}")
+    Shipping getById(String shippingId);
 }
