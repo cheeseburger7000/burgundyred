@@ -129,7 +129,10 @@ public class OrderServiceImpl implements OrderService {
     }
 
     /**
-     * 取消订单 判断订单状态机 防止越权访问
+     * 取消订单
+     *
+     * 判断订单状态机
+     * 防止越权访问
      *
      * @param orderId
      * @param userId
@@ -137,7 +140,41 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public Order cancel(String orderId, String userId) {
-        return null;
+        Order order = orderMapper.getByIdAndUserId(orderId, userId);
+        if (order == null) {
+            throw new FrontEndException("订单不存在");
+        }
+
+        OrderState state = order.getState();
+        if (state.equals(OrderState.UNPAID)) {
+            order.setState(OrderState.CLOSED);
+            int update = orderMapper.update(order);
+            if (update == 1) {
+                log.info("【订单服务】用户取消订单，订单状态：未支付->已关闭，订单号：{}", orderId);
+                return order;
+            }
+        } else if (state.equals(OrderState.NOT_SHIPPED)) {
+            // TODO 退款
+            // TODO 库存
+            order.setState(OrderState.CLOSED);
+            int update = orderMapper.update(order);
+            if (update == 1) {
+                log.info("【订单服务】用户取消订单，订单状态：未发货->已关闭，订单号：{}", orderId);
+                return order;
+            }
+        } else if (state.equals(OrderState.SHIPPED)) {
+            order.setState(OrderState.CANCEL);
+            int update = orderMapper.update(order);
+            if (update == 1) {
+                log.info("【订单服务】用户取消订单，订单状态：已发货->已取消，订单号：{}", orderId);
+                return order;
+            }
+        } else {
+            log.warn("【订单服务】用户取消订单，订单状态异常，订单号：{}", orderId);
+            throw new FrontEndException("该订单无法关闭");
+        }
+
+        throw new FrontEndException("订单取消失败");
     }
 
     /**
