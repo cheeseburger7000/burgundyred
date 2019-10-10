@@ -22,6 +22,7 @@ import java.util.List;
 
 @Slf4j
 @Service(version = "1.0.0")
+@Transactional
 public class ProductServiceImpl implements ProductService {
 
     @Autowired

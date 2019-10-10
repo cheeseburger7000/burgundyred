@@ -12,6 +12,11 @@
     <artifactId>burgundyred-svc</artifactId>
 
     <dependencies>
+        <!-- Spring Email -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
         <dependency>
             <groupId>com.shaohsiung</groupId>
             <artifactId>burgundyred-api</artifactId>

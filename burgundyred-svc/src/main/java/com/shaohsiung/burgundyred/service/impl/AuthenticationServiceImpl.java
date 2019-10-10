@@ -1,6 +1,10 @@
 package com.shaohsiung.burgundyred.service.impl;
 
 import com.alibaba.dubbo.config.annotation.Service;
+import com.shaohsiung.burgundyred.api.BaseResponse;
+import com.shaohsiung.burgundyred.api.ResultCode;
+import com.shaohsiung.burgundyred.converter.ObjectBytesConverter;
+import com.shaohsiung.burgundyred.document.ProductDocument;
 import com.shaohsiung.burgundyred.enums.UserState;
 import com.shaohsiung.burgundyred.error.FrontEndException;
 import com.shaohsiung.burgundyred.mapper.UserMapper;
@@ -10,12 +14,20 @@ import com.shaohsiung.burgundyred.util.AppUtils;
 import com.shaohsiung.burgundyred.util.IdWorker;
 import com.shaohsiung.burgundyred.util.JwtUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.xml.transform.Result;
 import java.util.Date;
 
 @Slf4j
 @Service(version = "1.0.0")
+@Transactional
 public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Autowired
@@ -23,6 +35,16 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Autowired
     private IdWorker idWorker;
+
+    private String DEFAULT_AVATAR_PATH = "/images/avatar/default_profile.png";
+
+    private String USER_ACTIVATE_PREFIX = "user_activate_key_";
+
+    @Autowired
+    private AmqpTemplate rabbitTemplate;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
     /**
      * 用户注册
      * <p>
@@ -39,7 +61,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         user.setState(UserState.INACTIVATED);
 
         // 设置默认头像
-        user.setAvatar("http://todo.jpg");
+        user.setAvatar(DEFAULT_AVATAR_PATH);
 
         // 用户密码加盐加密
         String encryptPassword = AppUtils.sha256Encrypt(user.getPassword());
@@ -48,9 +70,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         int save = userMapper.save(user);
         if (save == 1) {
 
-            // TODO Spring Mail发送邮件
-
-            log.info("【鉴权模块】用户注册：{}", user);
+            // 向消息队列发送消息Spring Mail发送邮件
+            byte[] bytes = new byte[0];
+            try {
+                bytes = ObjectBytesConverter.getBytesFromObject(user);
+                rabbitTemplate.convertAndSend("email.exchange", "topic.email", bytes);
+                log.info("【鉴权模块】用户注册：{}", user);
+            } catch (Exception e) {
+                throw new FrontEndException("注册邮件消息发送失败");
+            }
             return user;
         }
         throw new FrontEndException("注册失败");
@@ -83,13 +111,28 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     /**
-     * TODO 激活用户
+     * 激活用户
      *
      * @param userId
      * @return
      */
     @Override
-    public User activate(String userId) {
-        return null;
+    public BaseResponse activate(String userId, String token) {
+        String redisToken = (String) redisTemplate.opsForValue().get(USER_ACTIVATE_PREFIX + userId);
+        if (redisToken != null && redisToken.equals(token)) {
+            int update = userMapper.activate(userId);
+            if (update == 1) {
+                log.info("【鉴权模块】用户id：{} 激活成功", userId);
+                redisTemplate.delete(USER_ACTIVATE_PREFIX + userId);
+                return BaseResponse.builder().state(ResultCode.SUCCESS.getCode())
+                        .message(ResultCode.SUCCESS.getMessage())
+                        .build();
+            }
+        }
+
+        log.warn("【鉴权模块】用户id：{}  令牌错误，账户激活失败", userId);
+        return BaseResponse.builder().state(ResultCode.FAILURE.getCode())
+                .message(ResultCode.FAILURE.getMessage())
+                .build();
     }
 }

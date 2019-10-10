@@ -19,6 +19,14 @@ spring:
       pool:
         max-active: 5
         max-idle: 5
+  # Mail
+  mail:
+    default-encoding: UTF-8
+    host: smtp.126.com
+    password: shaohsiung123321
+    port: 25
+    protocol: smtp
+    username: shaohsiung@126.com
 
 
 mybatis:
@@ -51,3 +59,6 @@ rabbitmq:
   port: 5672
   username: guest
   password: guest
+
+
+# Mail

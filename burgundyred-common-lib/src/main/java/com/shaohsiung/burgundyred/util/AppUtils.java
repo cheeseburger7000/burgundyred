@@ -47,7 +47,7 @@ public final class AppUtils {
      * orderNo生成策略 UUID
      * @return orderNo
      */
-    public static String nextOrderNo() {
+    public static String UUID() {
         return UUID.randomUUID().toString();
     }
 }

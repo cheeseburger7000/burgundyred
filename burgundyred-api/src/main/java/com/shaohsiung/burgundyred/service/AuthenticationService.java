@@ -1,5 +1,6 @@
 package com.shaohsiung.burgundyred.service;
 
+import com.shaohsiung.burgundyred.api.BaseResponse;
 import com.shaohsiung.burgundyred.model.User;
 
 /**
@@ -27,7 +28,8 @@ public interface AuthenticationService {
     /**
      * 激活用户
      * @param userId
+     * @param token
      * @return
      */
-    User activate(String userId);
+    BaseResponse activate(String userId, String token);
 }
