@@ -1,6 +1,7 @@
 package com.shaohsiung.burgundyred.service.impl;
 
 import com.alibaba.dubbo.config.annotation.Service;
+import com.shaohsiung.burgundyred.api.BaseResponse;
 import com.shaohsiung.burgundyred.dto.Cart;
 import com.shaohsiung.burgundyred.dto.CartItem;
 import com.shaohsiung.burgundyred.dto.OrderDetailDto;
@@ -103,7 +104,7 @@ public class OrderServiceImpl implements OrderService {
      * @return
      */
     @Override
-    public Response pay(String orderNo, String userId, String path) {
+    public BaseResponse pay(String orderNo, String userId, String path) {
         return null;
     }
 
@@ -114,7 +115,7 @@ public class OrderServiceImpl implements OrderService {
      * @return
      */
     @Override
-    public Response aliCallback(Map<String, String> params) {
+    public BaseResponse aliCallback(Map<String, String> params) {
         return null;
     }
 
@@ -126,7 +127,7 @@ public class OrderServiceImpl implements OrderService {
      * @return
      */
     @Override
-    public Response queryOrderPayStatus(String userId, String orderNo) {
+    public BaseResponse queryOrderPayStatus(String userId, String orderNo) {
         return null;
     }
 

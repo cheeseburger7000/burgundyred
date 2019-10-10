@@ -1,5 +1,6 @@
 package com.shaohsiung.burgundyred.service;
 
+import com.shaohsiung.burgundyred.api.BaseResponse;
 import com.shaohsiung.burgundyred.dto.OrderDetailDto;
 import com.shaohsiung.burgundyred.model.Order;
 
@@ -26,14 +27,14 @@ public interface OrderService {
      * @param path
      * @return
      */
-    Response pay(String orderNo, String userId, String path);
+    BaseResponse pay(String orderNo, String userId, String path);
 
     /**
      * 支付回调
      * @param params
      * @return
      */
-    Response aliCallback(Map<String, String> params);
+    BaseResponse aliCallback(Map<String, String> params);
 
     /**
      * 查询订单状态
@@ -41,7 +42,7 @@ public interface OrderService {
      * @param orderNo
      * @return
      */
-    Response queryOrderPayStatus(String userId, String orderNo);
+    BaseResponse queryOrderPayStatus(String userId, String orderNo);
 
     /**
      * 取消订单 判断订单状态机 防止越权访问
