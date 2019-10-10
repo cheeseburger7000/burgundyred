@@ -4,7 +4,7 @@ import com.alibaba.dubbo.config.annotation.Reference;
 import com.shaohsiung.burgundyred.api.BaseResponse;
 import com.shaohsiung.burgundyred.api.ResultCode;
 import com.shaohsiung.burgundyred.error.FrontEndException;
-import com.shaohsiung.burgundyred.form.UserForm;
+import com.shaohsiung.burgundyred.form.UserRegisterForm;
 import com.shaohsiung.burgundyred.model.User;
 import com.shaohsiung.burgundyred.service.AuthenticationService;
 import com.shaohsiung.burgundyred.util.CookieUtils;
@@ -20,6 +20,9 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 
 /**
  * 用户服务
@@ -43,21 +46,26 @@ public class UserController {
 
     /** 处理用户注册 */
     @PostMapping("/register")
-    @ResponseBody
-    public String register(@Valid @RequestBody UserForm userForm, Model model) {
-        if (!userForm.getPassword().equals(userForm.getConfirmPassword())) {
+    public String register(@RequestParam @NotBlank String userName,
+                           @RequestParam @NotBlank String password,
+                           @RequestParam @NotBlank String confirmPassword,
+                           @RequestParam @Email String email,
+                           @RequestParam @Pattern(regexp = "^(?:\\+?86)?1(?:3\\d{3}|5[^4\\D]\\d{2}|8\\d{3}|7(?:[35678]\\d{2}|4(?:0\\d|1[0-2]|9\\d))|9[189]\\d{2}|66\\d{2})\\d{6}$") String mobile,
+                           Model model) {
+        if (!password.equals(confirmPassword)) {
             // TODO
             throw new FrontEndException("两次密码不一致");
         }
 
-        User user = new User();
-        BeanUtils.copyProperties(userForm, user);
+        User user = User.builder().userName(userName)
+                .password(password)
+                .email(email)
+                .mobile(mobile)
+                .build();
         User register = authenticationService.register(user);
 
-        String message = "注册成功！账户激活邮件已经发送到邮箱 "+ register.getEmail() + " , 请您在三天直接激活，否则需要重新注册！";
+        String message = "注册成功！账户激活邮件已经发送到邮箱 "+ register.getEmail() + " , 请您在三天之内激活，否则需要重新注册！";
         model.addAttribute("message", message);
-
-        log.info("{}", message);
         return "message";
     }
 
@@ -69,11 +77,14 @@ public class UserController {
 
     /** 处理用户登录 */
     @PostMapping("/login")
-    public String login(@RequestParam("userName") String userName, @RequestParam("password") String password,
-                        Model model, HttpServletResponse response) {
+    public String login(@RequestParam @NotBlank String userName,
+                        @RequestParam @NotBlank String password,
+                        HttpServletResponse response,
+                        Model model) {
         User user = authenticationService.login(userName, password);
         if (user == null) {
-            throw new FrontEndException("账号密码错误");
+            model.addAttribute("message", "账号密码错误"); //TODO 重新登录
+            return "message";
         }
 
         try {
@@ -82,11 +93,12 @@ public class UserController {
             // 将token放在cookie中
             CookieUtils.set(response, CookieUtils.TOKEN, token, CookieUtils.expire);
         } catch (Exception e) {
-            throw new FrontEndException("鉴权失败");
+            log.error("鉴权失败");
+            model.addAttribute("message", "鉴权失败");
+            return "message";
         }
-
-        model.addAttribute("user", user);
-        return "index";
+        // 重定向到index
+        return "redirect:/";
     }
 
     /** 用户注销 */
@@ -98,6 +110,13 @@ public class UserController {
         return "index";
     }
 
+    /**
+     * 账户激活
+     * @param userId
+     * @param token
+     * @param model
+     * @return
+     */
     @GetMapping("/activate/{userId}/{token}")
     public String activate(@PathVariable("userId") String userId, @PathVariable("token") String token,
                            Model model) {

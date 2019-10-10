@@ -96,7 +96,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         String encryptPassword = AppUtils.sha256Encrypt(password);
         User user = userMapper.findByUserNameAndPassword(userName, encryptPassword);
         if (user == null) {
-            throw new FrontEndException("账号或密码错误");
+            return null;
         }
 
         // 判断用户状态

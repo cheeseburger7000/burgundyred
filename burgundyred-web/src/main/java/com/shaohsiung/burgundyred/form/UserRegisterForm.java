@@ -8,7 +8,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 @Data
-public class UserForm {
+public class UserRegisterForm {
 
     @NotBlank
     private String userName;
