@@ -80,14 +80,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         }
         log.info("【鉴权模块】用户登录：{}", user);
         return user;
-
-        // 生成JWT
-//        try {
-//            String result = jwtUtils.createJWT(user.getId(), user.getUserName(), user.getAvatar());
-//            return result;
-//        } catch (Exception e) {
-//            throw new FrontEndException("鉴权失败");
-//        }
     }
 
     /**

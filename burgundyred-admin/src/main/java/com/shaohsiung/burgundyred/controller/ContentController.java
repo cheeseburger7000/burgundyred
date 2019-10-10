@@ -15,5 +15,5 @@ public class ContentController {
     @Reference(version = "1.0.0")
     private BannerService bannerService;
 
-    
+
 }

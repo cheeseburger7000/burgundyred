@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="./style/index.css">
     <link rel="stylesheet" href="./style/ad.css">
     <link rel="stylesheet" href="./style/footer.css">
-    <title>用户登录-勃艮第红</title>
+    <title>用户注册-勃艮第红</title>
     <style>
         .header {
             background-color: #FFFFFF;
@@ -16,7 +16,7 @@
         }
         .login {
             background-color: #1F1122;
-            height: 400px;
+            height: 600px;
         }
         .header-logo {
             line-height: 2em;
@@ -26,7 +26,7 @@
             color: #911E3B;
         }
         .user-content {
-            height: 280px;
+            height: 500px;
             width: 400px;
             background-color: #fff;
             margin: 60px auto;
@@ -73,7 +73,7 @@
         <div class="w">
             <div class="user-content">
                 <div class="user-title">
-                    <h2 style="border-bottom: 1px solid #DDDDDD; color: #9C9E9C;">用户登录</h2>
+                    <h2 style="border-bottom: 1px solid #DDDDDD; color: #9C9E9C;">用户注册</h2>
                 </div>
                 <div class="user-login-form">
                     <form action="#">
@@ -86,13 +86,21 @@
                             <input class="user-input" type="text" name="password" placeholder="请输入密码">
                         </div>
                         <div class="form-box">
-                            <input class="login-btn" type="submit" value="登录">
+                            <i class="fas fa-lock"></i>
+                            <input class="user-input" type="text" name="password" placeholder="请再次输入密码">
+                        </div>
+                        <div class="form-box">
+                            <i class="fas fa-envelope"></i>
+                            <input class="user-input" type="email" name="password" placeholder="请输入邮箱">
+                        </div>
+                        <div class="form-box">
+                            <i class="fas fa-mobile"></i>
+                            <input class="user-input" type="text" name="password" placeholder="请输入手机号码">
+                        </div>
+                        <div class="form-box">
+                            <input class="login-btn" type="submit" value="注册">
                         </div>
                     </form>
-                    <div style="text-align: right; padding-right: 60px;">
-                        <a href="#">忘记密码</a>
-                        <a href="#">注册</a>
-                    </div>
                 </div>
             </div>
         </div>
