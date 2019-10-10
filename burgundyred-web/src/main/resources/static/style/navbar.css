@@ -1,0 +1,38 @@
+.navbar {
+    background-color: #1F1122;
+    height: 30px;
+}
+
+.user-info {
+    float: left;
+    list-style-type: none;
+}
+.user-info-item {
+    display: inline-block;
+    margin: 0 5px;
+}
+.user-info-item a {
+    text-decoration: none;
+    line-height: 2em;
+    color: #FFFFFF;
+}
+.user-info-item a:hover {
+    color: #D3D0D4;
+}
+
+.nav-list {
+    float: right;
+    list-style-type: none;
+}
+.nav-list-item {
+    display: inline-block;
+    margin: 0 5px;
+}
+.nav-list-item a {
+    text-decoration: none;
+    line-height: 2em;
+    color: #FFFFFF;
+}
+.nav-list-item a:hover {
+    color: #D3D0D4;
+}

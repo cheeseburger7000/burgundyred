@@ -68,13 +68,8 @@ public class UserController {
         try {
             // 生成JWT
             String token = jwtUtils.createJWT(user.getId(), user.getUserName(), user.getAvatar());
-
-            // TODO 将JWT存储到redis
-
-
             // 将token放在cookie中
             CookieUtils.set(response, CookieUtils.TOKEN, token, CookieUtils.expire);
-
         } catch (Exception e) {
             throw new FrontEndException("鉴权失败");
         }
@@ -84,15 +79,11 @@ public class UserController {
     }
 
     /** 用户注销 */
-    /** 处理用户登录 */
     @PostMapping("/logout")
-    public String logout(HttpServletRequest request, Model model) {
+    public String logout(HttpServletRequest request, HttpServletResponse response) {
         Cookie token = CookieUtils.get(request, "token");
         token.setMaxAge(0);
-
-        // TODO redis移除token
-
-        model.addAttribute("user", null);
+        response.addCookie(token);
         return "index";
     }
 }

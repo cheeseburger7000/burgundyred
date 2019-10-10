@@ -1,7 +1,7 @@
 package com.shaohsiung.burgundyred.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
-import com.shaohsiung.burgundyred.service.BannerService;
+import com.shaohsiung.burgundyred.service.SellerBannerService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ContentController {
 
     @Reference(version = "1.0.0")
-    private BannerService bannerService;
+    private SellerBannerService sellerBannerService;
 
 
 }

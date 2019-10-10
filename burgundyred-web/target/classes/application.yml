@@ -15,3 +15,8 @@ server:
 spring:
   application:
     name: burgundred-web
+  thymeleaf:
+    cache: false
+
+redis:
+  host: localhost

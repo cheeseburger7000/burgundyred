@@ -1,10 +1,7 @@
 package com.shaohsiung.burgundyred.mapper;
 
 import com.shaohsiung.burgundyred.model.Banner;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.session.RowBounds;
 
 import java.util.List;
@@ -28,4 +25,7 @@ public interface BannerMapper {
 
     @Update("update t_banner set active = 0 where id = #{bannerId}")
     int inactive(String bannerId);
+
+    @Select("select * from t_banner where active = 1 limit #{count}")
+    List<Banner> getIndexBanner(@Param("count") Integer max_banner_count);
 }
