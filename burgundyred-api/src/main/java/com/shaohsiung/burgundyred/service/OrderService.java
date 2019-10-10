@@ -1,6 +1,5 @@
 package com.shaohsiung.burgundyred.service;
 
-import com.shaohsiung.burgundyred.controller.request.Response;
 import com.shaohsiung.burgundyred.dto.OrderDetailDto;
 import com.shaohsiung.burgundyred.model.Order;
 

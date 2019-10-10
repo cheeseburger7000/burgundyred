@@ -1,8 +1,6 @@
 package com.shaohsiung.burgundyred.service.impl;
 
-import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.dubbo.config.annotation.Service;
-import com.shaohsiung.burgundyred.controller.request.Response;
 import com.shaohsiung.burgundyred.dto.Cart;
 import com.shaohsiung.burgundyred.dto.CartItem;
 import com.shaohsiung.burgundyred.dto.OrderDetailDto;

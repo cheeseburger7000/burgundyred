@@ -119,3 +119,15 @@ create table t_pay_info (
   primary key(id)
 );
 ```
+
+- 9.轮播图
+```sql
+create table t_banner (
+  id varchar(255) not null,
+  name varchar(255) not null,
+  path varchar(255) not null,
+  active tinyint not null,
+  create_time timestamp not null default current_timestamp,
+  primary key(id)
+);
+```

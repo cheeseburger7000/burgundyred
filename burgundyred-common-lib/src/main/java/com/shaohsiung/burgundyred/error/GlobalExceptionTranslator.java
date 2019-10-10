@@ -1,6 +1,6 @@
 package com.shaohsiung.burgundyred.error;
 
-import com.shaohsiung.burgundyred.controller.request.BaseResponse;
+import com.shaohsiung.burgundyred.api.BaseResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
