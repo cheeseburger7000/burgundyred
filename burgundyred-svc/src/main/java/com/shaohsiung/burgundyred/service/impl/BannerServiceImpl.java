@@ -22,7 +22,7 @@ import java.util.List;
 public class BannerServiceImpl implements BannerService {
 
     // TODO 最多主页轮播图数量
-    private Integer MAX_BANNER_COUNT = 5;
+    private Integer MAX_BANNER_COUNT = 3;
 
     @Autowired
     private BannerMapper bannerMapper;
