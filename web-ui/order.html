@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>index</title>
+    <link href="./lib/fontawesome/css/all.css" rel="stylesheet">
+    <link rel="stylesheet" href="./style/index.css">
+    <link rel="stylesheet" href="./style/navbar.css">
+    <link rel="stylesheet" href="./style/search-form.css">
+    <link rel="stylesheet" href="./style/category-list.css">
+    <link rel="stylesheet" href="./style/banner.css">
+    <link rel="stylesheet" href="./style/product-item.css">
+    <link rel="stylesheet" href="./style/ad.css">
+    <link rel="stylesheet" href="./style/footer.css">
+    <link rel="stylesheet" href="./lib/swiper/swiper.min.css">
+    <style>
+        .bread_nav {
+            height: 50px;
+            border-top: 4px solid #6C0A26;
+            background-color: #1F1122;
+            color: #ffffff;
+            line-height: 2.8em;
+        }
+        .bread_nav a {
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        .bread_nav a:hover {
+            color: #D3D0D4;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航 -->
+    <div class="navbar">
+        <div class="w">
+            <ul class="user-info">
+                <li class="user-info-item"><a href="#">注册</a></li>
+                <li class="user-info-item"><a href="#">登录</a></li>
+            </ul>
+            
+            <ul class="nav-list">
+                <li class="nav-list-item"><a href="#"><i class="fas fa-shopping-cart"></i> 购物车(0)</a></li>
+                <li class="nav-list-item"><a href="#">我的订单</a></li>
+                <li class="nav-list-item"><a href="#">个人中心</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- logo，搜索框 -->
+    <div class="w">
+        <a class="site-logo" href="#">Burgundyred</a>
+        <div class="search-form"> 
+            <input class="search-input" id="search-input" placeholder="请输入商品名称"> 
+            <button class="search-btn" id="search-btn">搜索</button> 
+        </div>
+    </div>
+
+    <!-- 面包削导航 -->
+    <div class="bread_nav">
+        <div class="w">
+            <a href="#">Burgundyred</a> > <a href="#">我的订单</a>
+        </div>
+    </div>
+
+    <div class="w">
+        text
+    </div>
+
+    <div class="ad">
+        <div class="w">
+            广告
+        </div>
+    </div>
+    
+    <div class="footer">
+        <div class="w">
+            版权
+        </div>
+    </div>
+
+<script src="./lib/jquery.js"></script>
+<script src="./lib/swiper/swiper.min.js"></script>
+<script src="./script/banner.js"></script>
+<script src="./lib/pagination/pagination.js"></script>
+<script>
+const pageSize = 10 // 默认页码大小
+const dataCount = 95 // 测试数据数量
+const pager = new Pagination('.page-container', {
+  pageSize: pageSize,
+  autoLoad: true,
+  unit: '条',
+  toPage: function(index, _pageSize) {
+    // 设置记录总数，用于生成分页HTML内容
+    if (index === 0 || _pageSize) this.updateCount(dataCount, _pageSize)
+
+    // 根据页码以及分页大小生成html内容
+    let pageListHtml = ''
+    for (var i = 0; i < (_pageSize || pageSize); i++) {
+      pageListHtml += `
+          <div class="col-md-3">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">Card - ${index *
+                  (_pageSize || pageSize) +
+                  i +
+                  1}</h5>
+                <p class="card-text">card-text,card-text,card-text,card-text</p>
+              </div>
+            </div>
+          </div>
+        `
+    }
+    $('.page-list').html(pageListHtml)
+  }
+})
+</script>
+</body>
+</html>
