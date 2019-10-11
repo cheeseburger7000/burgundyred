@@ -130,4 +130,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .message(ResultCode.FAILURE.getMessage())
                 .build();
     }
+
+    @Override
+    public String confirmUserNameUnique(String userName) {
+        return userMapper.confirmUserNameUnique(userName);
+    }
 }

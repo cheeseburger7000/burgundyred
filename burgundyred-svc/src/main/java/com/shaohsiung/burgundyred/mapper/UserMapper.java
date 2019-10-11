@@ -17,4 +17,7 @@ public interface UserMapper {
 
     @Update("update t_user set state = 1 where id = #{userId}")
     int activate(@Param("userId") String userId);
+
+    @Select("select user_name from t_user where user_name = #{userName}")
+    String confirmUserNameUnique(@Param("userName") String userName);
 }

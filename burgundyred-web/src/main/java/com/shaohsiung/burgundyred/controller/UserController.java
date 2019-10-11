@@ -57,6 +57,13 @@ public class UserController {
             return "message";
         }
 
+        // 校验密码
+        String repeatName = authenticationService.confirmUserNameUnique(userName);
+        if (repeatName != null) {
+            model.addAttribute("message", "用户名已存在");
+            return "message";
+        }
+
         User user = User.builder().userName(userName)
                 .password(password)
                 .email(email)

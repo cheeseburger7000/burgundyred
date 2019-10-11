@@ -34,4 +34,9 @@ public class AuthenticationServiceImplTest {
     @Test
     public void activate() {
     }
+    
+    @Test
+    public void confirmUserNameUnique() {
+        String s = authenticationService.confirmUserNameUnique("123");
+    }
 }

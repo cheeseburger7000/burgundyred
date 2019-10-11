@@ -32,4 +32,6 @@ public interface AuthenticationService {
      * @return
      */
     BaseResponse activate(String userId, String token);
+
+    String confirmUserNameUnique(String userName);
 }
