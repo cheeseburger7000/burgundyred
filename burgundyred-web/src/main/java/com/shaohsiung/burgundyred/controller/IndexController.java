@@ -1,9 +1,7 @@
 package com.shaohsiung.burgundyred.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
-import com.shaohsiung.burgundyred.error.FrontEndException;
 import com.shaohsiung.burgundyred.model.Banner;
-import com.shaohsiung.burgundyred.model.Category;
 import com.shaohsiung.burgundyred.service.CategoryService;
 import com.shaohsiung.burgundyred.service.SellerBannerService;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +11,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 

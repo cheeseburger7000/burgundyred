@@ -5,7 +5,6 @@ import com.shaohsiung.burgundyred.api.BaseResponse;
 import com.shaohsiung.burgundyred.api.ResultCode;
 import com.shaohsiung.burgundyred.error.BackEndException;
 import com.shaohsiung.burgundyred.error.ErrorState;
-import com.shaohsiung.burgundyred.error.FrontEndException;
 import com.shaohsiung.burgundyred.mapper.BannerMapper;
 import com.shaohsiung.burgundyred.model.Banner;
 import com.shaohsiung.burgundyred.service.SellerBannerService;

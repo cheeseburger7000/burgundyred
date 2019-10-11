@@ -2,6 +2,8 @@ package com.shaohsiung.burgundyred.error;
 
 import lombok.Getter;
 
+import java.io.Serializable;
+
 /**
  * 4xxx 前台ex
  * 5xxx 后台ex

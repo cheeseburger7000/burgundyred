@@ -4,7 +4,6 @@ import com.alibaba.dubbo.config.annotation.Service;
 import com.shaohsiung.burgundyred.dto.Cart;
 import com.shaohsiung.burgundyred.dto.CartItem;
 import com.shaohsiung.burgundyred.enums.ProductState;
-import com.shaohsiung.burgundyred.error.BackEndException;
 import com.shaohsiung.burgundyred.error.ErrorState;
 import com.shaohsiung.burgundyred.error.FrontEndException;
 import com.shaohsiung.burgundyred.model.Product;

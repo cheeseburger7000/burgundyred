@@ -1,7 +1,6 @@
 package com.shaohsiung.burgundyred.service.impl;
 
 import com.alibaba.dubbo.config.annotation.Reference;
-import com.shaohsiung.burgundyred.error.FrontEndException;
 import com.shaohsiung.burgundyred.model.Order;
 import com.shaohsiung.burgundyred.service.OrderService;
 import org.junit.Assert;
@@ -11,8 +10,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
-
-import static org.junit.Assert.*;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)

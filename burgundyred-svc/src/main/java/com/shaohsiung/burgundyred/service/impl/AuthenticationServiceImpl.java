@@ -4,7 +4,6 @@ import com.alibaba.dubbo.config.annotation.Service;
 import com.shaohsiung.burgundyred.api.BaseResponse;
 import com.shaohsiung.burgundyred.api.ResultCode;
 import com.shaohsiung.burgundyred.converter.ObjectBytesConverter;
-import com.shaohsiung.burgundyred.document.ProductDocument;
 import com.shaohsiung.burgundyred.enums.UserState;
 import com.shaohsiung.burgundyred.error.ErrorState;
 import com.shaohsiung.burgundyred.error.FrontEndException;
@@ -13,17 +12,12 @@ import com.shaohsiung.burgundyred.model.User;
 import com.shaohsiung.burgundyred.service.AuthenticationService;
 import com.shaohsiung.burgundyred.util.AppUtils;
 import com.shaohsiung.burgundyred.util.IdWorker;
-import com.shaohsiung.burgundyred.util.JwtUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.AmqpTemplate;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.xml.transform.Result;
 import java.util.Date;
 
 @Slf4j

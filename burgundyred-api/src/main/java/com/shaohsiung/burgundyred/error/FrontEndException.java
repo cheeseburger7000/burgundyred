@@ -1,7 +1,5 @@
 package com.shaohsiung.burgundyred.error;
 
-import lombok.Data;
-
 import java.io.Serializable;
 
 /**
@@ -10,11 +8,26 @@ import java.io.Serializable;
  * 面向用户
  */
 public class FrontEndException extends RuntimeException implements Serializable {
+    private String message;
     private Integer code;
 
+    public FrontEndException(String message) {
+        this.message = message;
+        this.code = -1;
+    }
+
     public FrontEndException(ErrorState errorState) {
-        super(errorState.getMessage());
+        this.message = errorState.getMessage();
         this.code = errorState.getCode();
+    }
+
+    @Override
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public Integer getCode() {

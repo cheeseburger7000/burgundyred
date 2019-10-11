@@ -3,15 +3,11 @@ package com.shaohsiung.burgundyred.controller;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.shaohsiung.burgundyred.api.BaseResponse;
 import com.shaohsiung.burgundyred.api.ResultCode;
-import com.shaohsiung.burgundyred.error.ErrorState;
-import com.shaohsiung.burgundyred.error.FrontEndException;
-import com.shaohsiung.burgundyred.form.UserRegisterForm;
 import com.shaohsiung.burgundyred.model.User;
 import com.shaohsiung.burgundyred.service.AuthenticationService;
 import com.shaohsiung.burgundyred.util.CookieUtils;
 import com.shaohsiung.burgundyred.util.JwtUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -83,6 +78,7 @@ public class UserController {
                         @RequestParam @NotBlank String password,
                         HttpServletResponse response,
                         Model model) {
+
         User user = authenticationService.login(userName, password);
         if (user == null) {
             model.addAttribute("message", "账号密码错误"); //TODO 重新登录
