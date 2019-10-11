@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -51,16 +50,17 @@ public class UserController {
                            @RequestParam @Email String email,
                            @RequestParam @Pattern(regexp = "^(?:\\+?86)?1(?:3\\d{3}|5[^4\\D]\\d{2}|8\\d{3}|7(?:[35678]\\d{2}|4(?:0\\d|1[0-2]|9\\d))|9[189]\\d{2}|66\\d{2})\\d{6}$") String mobile,
                            Model model) {
-        if (!password.equals(confirmPassword)) {
-            // TODO
-            model.addAttribute("message", "两次密码不一致");
+
+        // 校验用户名
+        String repeatName = authenticationService.confirmUserNameUnique(userName);
+        if (repeatName != null) {
+            model.addAttribute("message", "用户名已存在");
             return "message";
         }
 
         // 校验密码
-        String repeatName = authenticationService.confirmUserNameUnique(userName);
-        if (repeatName != null) {
-            model.addAttribute("message", "用户名已存在");
+        if (!password.equals(confirmPassword)) {
+            model.addAttribute("message", "两次密码不一致");
             return "message";
         }
 
@@ -91,7 +91,7 @@ public class UserController {
 
         User user = authenticationService.login(userName, password);
         if (user == null) {
-            model.addAttribute("message", "账号密码错误"); //TODO 重新登录
+            model.addAttribute("message", "账号密码错误");
             return "message";
         }
 
@@ -110,12 +110,14 @@ public class UserController {
     }
 
     /** 用户注销 */
-    @PostMapping("/logout")
+    @GetMapping("/logout")
     public String logout(HttpServletRequest request, HttpServletResponse response) {
         Cookie token = CookieUtils.get(request, "token");
         token.setMaxAge(0);
+        token.setPath("/");
         response.addCookie(token);
-        return "index";
+        log.info("用户注销登录");
+        return "redirect:/";
     }
 
     /**

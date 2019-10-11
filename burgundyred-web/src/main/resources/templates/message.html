@@ -45,7 +45,8 @@
     <div class="login">
         <div class="w">
             <div class="message-content">
-                <a href="#" th:href="@{/}">返回主页</a><br><br>
+                <a href="#" th:href="@{/}">主页</a> 或 <a href=”#” onclick="javascript :history.go(-1); return false;">返回</a> <br><br>
+
                 <p th:text="${message}">message</p>
             </div>
         </div>
