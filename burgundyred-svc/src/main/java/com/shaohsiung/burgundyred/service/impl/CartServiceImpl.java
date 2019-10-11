@@ -1,6 +1,7 @@
 package com.shaohsiung.burgundyred.service.impl;
 
 import com.alibaba.dubbo.config.annotation.Service;
+import com.shaohsiung.burgundyred.constant.AppConstant;
 import com.shaohsiung.burgundyred.dto.Cart;
 import com.shaohsiung.burgundyred.dto.CartItem;
 import com.shaohsiung.burgundyred.enums.ProductState;
@@ -23,12 +24,8 @@ import java.util.Optional;
 @Slf4j
 @Service(version = "1.0.0")
 public class CartServiceImpl implements CartService {
-
-    private final static String CART_KEY = "BURGUNDYRED_CART";
-
     @Autowired
     private ProductService productService;
-
     @Autowired
     private RedisTemplate<String, Cart> redisTemplate;
 
@@ -44,15 +41,15 @@ public class CartServiceImpl implements CartService {
         HashOperations<String, String, Cart> hashOperations = redisTemplate.opsForHash();
 
         // reids中存在购物车
-        if (redisTemplate.hasKey(CART_KEY) && hashOperations.hasKey(CART_KEY , userId)) {
-            result = Optional.of(hashOperations.get(CART_KEY, userId)).get();
+        if (redisTemplate.hasKey(AppConstant.CART_KEY) && hashOperations.hasKey(AppConstant.CART_KEY , userId)) {
+            result = Optional.of(hashOperations.get(AppConstant.CART_KEY, userId)).get();
             log.info("【购物车模块】从redis获取购物车 {}", result);
             return result;
         }
 
         // 用户还没有购物车
         result = Cart.builder().userId(userId).content(new HashMap<>()).total(new BigDecimal(BigInteger.ZERO)).build();
-        hashOperations.put(CART_KEY, userId, result);
+        hashOperations.put(AppConstant.CART_KEY, userId, result);
         log.info("【购物车模块】保存购物车 {} 到redis", result);
         return result;
     }
@@ -82,7 +79,7 @@ public class CartServiceImpl implements CartService {
 
         // 根据userId获取购物车，判断购物车中是否已经存在该商品
         Cart cart = get(userId);
-        hashOperations.delete(CART_KEY, userId); // 处理反序列化异常
+        hashOperations.delete(AppConstant.CART_KEY, userId); // 处理反序列化异常
 
         Map<String, CartItem> content = cart.getContent();
         for (Map.Entry<String, CartItem> entry: content.entrySet()) {
@@ -99,7 +96,7 @@ public class CartServiceImpl implements CartService {
                 cart.setTotal(cart.getTotal().add(product.getPrice()));
 
                 // 将购物车更改到redis
-                hashOperations.put(CART_KEY, userId, cart);
+                hashOperations.put(AppConstant.CART_KEY, userId, cart);
                 log.info("【购物车模块】添加商品 {} 到购物车 {} 到redis", product, cart);
                 return  cart;
             }
@@ -116,7 +113,7 @@ public class CartServiceImpl implements CartService {
         cart.setTotal(cart.getTotal().add(product.getPrice()));
 
         // 将购物车更改到redis
-        hashOperations.put(CART_KEY, userId, cart);
+        hashOperations.put(AppConstant.CART_KEY, userId, cart);
         log.info("【购物车模块】添加商品 {} 到购物车 {} 到redis", productId, cart);
         return cart;
     }
@@ -135,7 +132,7 @@ public class CartServiceImpl implements CartService {
 
         // 获取购物车
         Cart cart = get(userId);
-        hashOperations.delete(CART_KEY, userId);
+        hashOperations.delete(AppConstant.CART_KEY, userId);
 
         // 判断购物车是否存在该商品，不存在就抛异常
         Map<String, CartItem> content = cart.getContent();
@@ -152,13 +149,13 @@ public class CartServiceImpl implements CartService {
                     }
                     cart.setTotal(cart.getTotal().subtract(product.getPrice()));
                     // 存储到redis
-                    hashOperations.put(CART_KEY, userId, cart);
+                    hashOperations.put(AppConstant.CART_KEY, userId, cart);
                     log.info("【购物车模块】购物车商品-1 productId:{}， cart:{}", productId, cart);
                     return cart;
                 }
             }
         }
-        hashOperations.put(CART_KEY, userId, cart);
+        hashOperations.put(AppConstant.CART_KEY, userId, cart);
         log.error("【购物车模块】购物车商品-1失败 productId:{}，userId:{}", productId, userId);
         throw new FrontEndException(ErrorState.ITEM_DOES_NOT_EXIST_IN_THE_CART);
     }
@@ -188,7 +185,7 @@ public class CartServiceImpl implements CartService {
 
         // 根据userId获取购物车，判断购物车中是否已经存在该商品
         Cart cart = get(userId);
-        hashOperations.delete(CART_KEY, userId);
+        hashOperations.delete(AppConstant.CART_KEY, userId);
 
         Map<String, CartItem> content = cart.getContent();
         for (Map.Entry<String, CartItem> entry: content.entrySet()) {
@@ -199,14 +196,14 @@ public class CartServiceImpl implements CartService {
                 cart.getContent().remove(productId);
                 cart.setTotal(cart.getTotal().subtract(cartItem.getAmount()));
 
-                hashOperations.put(CART_KEY, userId, cart);
+                hashOperations.put(AppConstant.CART_KEY, userId, cart);
                 log.info("【购物车模块】删除购物车商品 {} 购物车 {}", productId, cart);
                 return cart;
             }
         }
 
         // 将购物车放回redis
-        hashOperations.put(CART_KEY, userId, cart);
+        hashOperations.put(AppConstant.CART_KEY, userId, cart);
         log.error("【购物车模块】删除购物车商品失败 productId:{}，userId:{}", productId, userId);
         throw new FrontEndException(ErrorState.ITEM_DOES_NOT_EXIST_IN_THE_CART);
     }
@@ -238,15 +235,15 @@ public class CartServiceImpl implements CartService {
         HashOperations<String, String, Cart> hashOperations = redisTemplate.opsForHash();
 
         // 清空redis中的购物车
-        if (redisTemplate.hasKey(CART_KEY ) && hashOperations.hasKey(CART_KEY , userId)) {
-            hashOperations.delete(CART_KEY, userId);
+        if (redisTemplate.hasKey(AppConstant.CART_KEY ) && hashOperations.hasKey(AppConstant.CART_KEY , userId)) {
+            hashOperations.delete(AppConstant.CART_KEY, userId);
         }
 
         result = Cart.builder().userId(userId)
                 .total(new BigDecimal(0))
                 .content(new HashMap<>())
                 .build();
-        hashOperations.put(CART_KEY, userId, result);
+        hashOperations.put(AppConstant.CART_KEY, userId, result);
         return result;
     }
 }

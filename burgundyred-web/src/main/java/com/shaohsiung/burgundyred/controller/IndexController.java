@@ -1,6 +1,7 @@
 package com.shaohsiung.burgundyred.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.shaohsiung.burgundyred.constant.AppConstant;
 import com.shaohsiung.burgundyred.model.Banner;
 import com.shaohsiung.burgundyred.service.CategoryService;
 import com.shaohsiung.burgundyred.service.SellerBannerService;
@@ -31,18 +32,16 @@ public class IndexController {
     @Autowired
     private RedisTemplate redisTemplate;
 
-    private String BANNER_CACHE_KEY = "banner_cache_key";
-
     @GetMapping
     public String index(Model model) {
         // 获取类目列表
 
         // 从redis缓存获取轮播图
         // TODO 卖家设置轮播图之后，同步缓存
-        List<Banner> banners = (List<Banner>) redisTemplate.opsForValue().get(BANNER_CACHE_KEY);
+        List<Banner> banners = (List<Banner>) redisTemplate.opsForValue().get(AppConstant.BANNER_CACHE_KEY);
         if (banners == null) {
             banners = sellerBannerService.indexBanner();
-            redisTemplate.opsForValue().set(BANNER_CACHE_KEY, banners);
+            redisTemplate.opsForValue().set(AppConstant.BANNER_CACHE_KEY, banners);
             log.info("缓存未命中，调用基础SVC并缓存轮播图数据");
         } else {
             log.info("缓存命中，从redis拉取轮播图数据");

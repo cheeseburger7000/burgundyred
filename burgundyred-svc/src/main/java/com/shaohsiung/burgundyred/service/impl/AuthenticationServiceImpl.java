@@ -3,6 +3,7 @@ package com.shaohsiung.burgundyred.service.impl;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.shaohsiung.burgundyred.api.BaseResponse;
 import com.shaohsiung.burgundyred.api.ResultCode;
+import com.shaohsiung.burgundyred.constant.AppConstant;
 import com.shaohsiung.burgundyred.converter.ObjectBytesConverter;
 import com.shaohsiung.burgundyred.enums.UserState;
 import com.shaohsiung.burgundyred.error.ErrorState;
@@ -31,10 +32,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Autowired
     private IdWorker idWorker;
 
-    private String DEFAULT_AVATAR_PATH = "/images/avatar/default_profile.png";
-
-    private String USER_ACTIVATE_PREFIX = "user_activate_key_";
-
     @Autowired
     private AmqpTemplate rabbitTemplate;
 
@@ -56,7 +53,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         user.setState(UserState.INACTIVATED);
 
         // 设置默认头像
-        user.setAvatar(DEFAULT_AVATAR_PATH);
+        user.setAvatar(AppConstant.DEFAULT_AVATAR_PATH);
 
         // 用户密码加盐加密
         String encryptPassword = AppUtils.sha256Encrypt(user.getPassword());
@@ -113,12 +110,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      */
     @Override
     public BaseResponse activate(String userId, String token) {
-        String redisToken = (String) redisTemplate.opsForValue().get(USER_ACTIVATE_PREFIX + userId);
+        String redisToken = (String) redisTemplate.opsForValue().get(AppConstant.USER_ACTIVATE_PREFIX + userId);
         if (redisToken != null && redisToken.equals(token)) {
             int update = userMapper.activate(userId);
             if (update == 1) {
                 log.info("【鉴权模块】用户id：{} 激活成功", userId);
-                redisTemplate.delete(USER_ACTIVATE_PREFIX + userId);
+                redisTemplate.delete(AppConstant.USER_ACTIVATE_PREFIX + userId);
                 return BaseResponse.builder().state(ResultCode.SUCCESS.getCode())
                         .message(ResultCode.SUCCESS.getMessage())
                         .build();

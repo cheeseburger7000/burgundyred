@@ -1,6 +1,7 @@
 package com.shaohsiung.burgundyred.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.shaohsiung.burgundyred.constant.AppConstant;
 import com.shaohsiung.burgundyred.document.ProductDocument;
 import com.shaohsiung.burgundyred.model.Product;
 import com.shaohsiung.burgundyred.service.ProductService;
@@ -19,9 +20,6 @@ import java.util.List;
 @Controller
 @RequestMapping("/product")
 public class ProductController {
-
-    private final static Integer pageSize = 4;
-
     @Reference(version = "1.0.0")
     private ProductService productService;
 
@@ -40,7 +38,7 @@ public class ProductController {
     /** 搜索商品*/
     @GetMapping("/search/{keyword}/{page}")
     public String search(@PathVariable("keyword") String keyword, @PathVariable("page") Integer page, Model model) {
-        List<ProductDocument> productDocuments = searchService.search(keyword, page, pageSize);
+        List<ProductDocument> productDocuments = searchService.search(keyword, page, AppConstant.PRODUCT_PAGE_SIZE);
         model.addAttribute("products", productDocuments);
         return "list";
     }
@@ -48,7 +46,7 @@ public class ProductController {
     /** 按类目获取商品列表*/
     @GetMapping("/list/{id}/{page}")
     public String listByCategoryId(@PathVariable("id") String categoryId, @PathVariable("page") Integer page, Model model) {
-        List<Product> productList = productService.getProductListByCategoryId(categoryId, page, pageSize);
+        List<Product> productList = productService.getProductListByCategoryId(categoryId, page, AppConstant.PRODUCT_PAGE_SIZE);
         model.addAttribute("products", productList);
         return "list";
     }

@@ -3,6 +3,7 @@ package com.shaohsiung.burgundyred.service.impl;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.shaohsiung.burgundyred.api.BaseResponse;
 import com.shaohsiung.burgundyred.api.ResultCode;
+import com.shaohsiung.burgundyred.constant.AppConstant;
 import com.shaohsiung.burgundyred.error.BackEndException;
 import com.shaohsiung.burgundyred.error.ErrorState;
 import com.shaohsiung.burgundyred.mapper.BannerMapper;
@@ -22,9 +23,6 @@ import java.util.List;
 @Transactional
 @Service(version = "1.0.0")
 public class SellerBannerServiceImpl implements SellerBannerService {
-
-    // TODO 最多主页轮播图数量
-    private Integer MAX_BANNER_COUNT = 3;
 
     @Autowired
     private BannerMapper bannerMapper;
@@ -76,7 +74,7 @@ public class SellerBannerServiceImpl implements SellerBannerService {
     public BaseResponse activeBanner(String bannerId) {
         // 判断已激活的图片是否超过5张
         Integer activeCount = bannerMapper.calcActiveCount();
-        if (activeCount >= MAX_BANNER_COUNT) {
+        if (activeCount >= AppConstant.MAX_BANNER_COUNT) {
             throw new BackEndException(ErrorState.BANNER_COUNT_REACHES_THE_UPPER_LIMIT);
         }
 
@@ -110,12 +108,12 @@ public class SellerBannerServiceImpl implements SellerBannerService {
     @Override
     public List<Banner> indexBanner() {
         Integer count = bannerMapper.calcActiveCount();
-        if (count <= 0 || count > MAX_BANNER_COUNT) {
+        if (count <= 0 || count > AppConstant.MAX_BANNER_COUNT) {
             log.error("轮播图获取出错");
             return Collections.emptyList();
         }
 
-        List<Banner> result = bannerMapper.getIndexBanner(MAX_BANNER_COUNT);
+        List<Banner> result = bannerMapper.getIndexBanner(AppConstant.MAX_BANNER_COUNT);
         log.info("【轮播图SVC】获取主页轮播图：{}", result);
         return result;
     }
