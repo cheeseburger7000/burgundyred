@@ -2,6 +2,7 @@ package com.shaohsiung.burgundyred.service.impl;
 
 import com.alibaba.dubbo.config.annotation.Service;
 import com.shaohsiung.burgundyred.error.BackEndException;
+import com.shaohsiung.burgundyred.error.ErrorState;
 import com.shaohsiung.burgundyred.mapper.CategoryMapper;
 import com.shaohsiung.burgundyred.model.Category;
 import com.shaohsiung.burgundyred.service.CategoryService;
@@ -9,6 +10,7 @@ import com.shaohsiung.burgundyred.util.IdWorker;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.Errors;
 
 import java.util.Date;
 import java.util.List;
@@ -57,6 +59,6 @@ public class CategoryServiceImpl implements CategoryService {
             log.info("添加商品类目：{}", category);
             return category;
         }
-        throw new BackEndException("商品类目创建失败");
+        throw new BackEndException(ErrorState.CATEGORY_CREATE_FAILED);
     }
 }

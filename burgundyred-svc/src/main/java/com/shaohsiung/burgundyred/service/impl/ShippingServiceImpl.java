@@ -1,6 +1,7 @@
 package com.shaohsiung.burgundyred.service.impl;
 
 import com.alibaba.dubbo.config.annotation.Service;
+import com.shaohsiung.burgundyred.error.ErrorState;
 import com.shaohsiung.burgundyred.error.FrontEndException;
 import com.shaohsiung.burgundyred.mapper.ShippingMapper;
 import com.shaohsiung.burgundyred.model.Shipping;
@@ -39,7 +40,7 @@ public class ShippingServiceImpl implements ShippingService {
             log.info("【物流模块】用户添加物流信息：{}", shipping);
             return shipping;
         }
-        throw new FrontEndException("添加物流信息失败");
+        throw new FrontEndException(ErrorState.SHIPPING_CREATE_FAILED);
     }
 
     /**
@@ -93,7 +94,7 @@ public class ShippingServiceImpl implements ShippingService {
             log.info("【物流模块】用户修改物流信息：{}", origin);
             return origin;
         }
-        throw new FrontEndException("修改物流信息失败");
+        throw new FrontEndException(ErrorState.SHIPPING_UPDATE_FAILED);
     }
 
     /**
@@ -109,7 +110,7 @@ public class ShippingServiceImpl implements ShippingService {
             log.info("【物流模块】删除用户：{} 物流信息：{}", userId, ShippingId);
             return delete;
         }
-        throw new FrontEndException("删除物流信息失败");
+        throw new FrontEndException(ErrorState.SHIPPING_DELETE_FAILED);
     }
 
     /**

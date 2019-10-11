@@ -5,6 +5,7 @@ import com.shaohsiung.burgundyred.converter.ObjectBytesConverter;
 import com.shaohsiung.burgundyred.document.ProductDocument;
 import com.shaohsiung.burgundyred.enums.ProductState;
 import com.shaohsiung.burgundyred.error.BackEndException;
+import com.shaohsiung.burgundyred.error.ErrorState;
 import com.shaohsiung.burgundyred.error.FrontEndException;
 import com.shaohsiung.burgundyred.mapper.ProductMapper;
 import com.shaohsiung.burgundyred.model.Product;
@@ -97,12 +98,12 @@ public class ProductServiceImpl implements ProductService {
                 rabbitTemplate.convertAndSend("exchange", "topic.messages", bytes);
             } catch (Exception e) {
                 log.warn("【产品模块】添加产品，发送消息失败");
-                throw new BackEndException("产品创建失败");
+                throw new BackEndException(ErrorState.PRODUCT_CREATE_FAILED);
             }
 
             return product;
         }
-        throw new BackEndException("产品创建失败");
+        throw new BackEndException(ErrorState.PRODUCT_CREATE_FAILED);
     }
 
     /**
@@ -115,7 +116,7 @@ public class ProductServiceImpl implements ProductService {
     public Integer getStockByProductId(String productId) {
         Integer stock = productMapper.getStockByProductId(productId);
         if (stock == null) {
-            throw new FrontEndException("获取商品库存错误");
+            throw new FrontEndException(ErrorState.ACQUIRE_PRODUCT_STOCK_FAILED);
         }
         return stock;
     }

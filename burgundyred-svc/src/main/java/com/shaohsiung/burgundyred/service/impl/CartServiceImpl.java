@@ -5,6 +5,7 @@ import com.shaohsiung.burgundyred.dto.Cart;
 import com.shaohsiung.burgundyred.dto.CartItem;
 import com.shaohsiung.burgundyred.enums.ProductState;
 import com.shaohsiung.burgundyred.error.BackEndException;
+import com.shaohsiung.burgundyred.error.ErrorState;
 import com.shaohsiung.burgundyred.error.FrontEndException;
 import com.shaohsiung.burgundyred.model.Product;
 import com.shaohsiung.burgundyred.service.CartService;
@@ -71,13 +72,13 @@ public class CartServiceImpl implements CartService {
         // 根据id获取商品， 判断商品是否上架
         Product product = productService.getProductById(productId);
         if (product.getState().equals(ProductState.HAS_BEEN_REMOVED)) {
-            throw new FrontEndException("该商品已下架");
+            throw new FrontEndException(ErrorState.PRODUCT_HAS_BEEN_REMOVED);
         }
 
         // 判断库存
         Integer stock = productService.getStockByProductId(productId);
         if (stock <= 0) {
-            throw new FrontEndException("商品库存不足");
+            throw new FrontEndException(ErrorState.PRODUCT_STOCK_LACKING);
         }
 
         // 根据userId获取购物车，判断购物车中是否已经存在该商品
@@ -160,7 +161,7 @@ public class CartServiceImpl implements CartService {
         }
         hashOperations.put(CART_KEY, userId, cart);
         log.error("【购物车模块】购物车商品-1失败 productId:{}，userId:{}", productId, userId);
-        throw new BackEndException("购物车中不存在该商品");
+        throw new FrontEndException(ErrorState.ITEM_DOES_NOT_EXIST_IN_THE_CART);
     }
 
     /**
@@ -208,7 +209,7 @@ public class CartServiceImpl implements CartService {
         // 将购物车放回redis
         hashOperations.put(CART_KEY, userId, cart);
         log.error("【购物车模块】删除购物车商品失败 productId:{}，userId:{}", productId, userId);
-        throw new FrontEndException("购物车中不存在该商品");
+        throw new FrontEndException(ErrorState.ITEM_DOES_NOT_EXIST_IN_THE_CART);
     }
 
     /**

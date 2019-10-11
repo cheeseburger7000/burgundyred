@@ -4,6 +4,7 @@ import com.alibaba.dubbo.config.annotation.Service;
 import com.shaohsiung.burgundyred.api.BaseResponse;
 import com.shaohsiung.burgundyred.api.ResultCode;
 import com.shaohsiung.burgundyred.error.BackEndException;
+import com.shaohsiung.burgundyred.error.ErrorState;
 import com.shaohsiung.burgundyred.error.FrontEndException;
 import com.shaohsiung.burgundyred.mapper.BannerMapper;
 import com.shaohsiung.burgundyred.model.Banner;
@@ -57,7 +58,7 @@ public class SellerBannerServiceImpl implements SellerBannerService {
                     .message(ResultCode.SUCCESS.getMessage())
                     .build();
         }
-        throw new BackEndException("轮播图添加失败");
+        throw new BackEndException(ErrorState.BANNER_CREATE_FAILED);
     }
 
     @Override
@@ -69,7 +70,7 @@ public class SellerBannerServiceImpl implements SellerBannerService {
                     .message(ResultCode.SUCCESS.getMessage())
                     .build();
         }
-        throw new BackEndException("轮播图删除失败");
+        throw new BackEndException(ErrorState.BANNER_DELETE_FAILED);
     }
 
     @Override
@@ -77,7 +78,7 @@ public class SellerBannerServiceImpl implements SellerBannerService {
         // 判断已激活的图片是否超过5张
         Integer activeCount = bannerMapper.calcActiveCount();
         if (activeCount >= MAX_BANNER_COUNT) {
-            throw new BackEndException("轮播图数量达到上限");
+            throw new BackEndException(ErrorState.BANNER_COUNT_REACHES_THE_UPPER_LIMIT);
         }
 
         int update = bannerMapper.active(bannerId);
@@ -87,7 +88,7 @@ public class SellerBannerServiceImpl implements SellerBannerService {
                     .message(ResultCode.SUCCESS.getMessage())
                     .build();
         }
-        throw new BackEndException("轮播图激活失败");
+        throw new BackEndException(ErrorState.BANNER_INACTIVATE_FAILED);
     }
 
     @Override
@@ -99,7 +100,7 @@ public class SellerBannerServiceImpl implements SellerBannerService {
                     .message(ResultCode.SUCCESS.getMessage())
                     .build();
         }
-        throw new BackEndException("轮播图取消失败");
+        throw new BackEndException(ErrorState.BANNER_CANCEL_FAILED);
     }
 
     /**

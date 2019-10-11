@@ -6,6 +6,7 @@ import com.shaohsiung.burgundyred.dto.Cart;
 import com.shaohsiung.burgundyred.dto.CartItem;
 import com.shaohsiung.burgundyred.dto.OrderDetailDto;
 import com.shaohsiung.burgundyred.enums.OrderState;
+import com.shaohsiung.burgundyred.error.ErrorState;
 import com.shaohsiung.burgundyred.error.FrontEndException;
 import com.shaohsiung.burgundyred.mapper.OrderItemMapper;
 import com.shaohsiung.burgundyred.mapper.OrderMapper;
@@ -61,7 +62,7 @@ public class OrderServiceImpl implements OrderService {
         // 获取购物车，判断购物车存在商品
         Cart cart = cartService.get(userId);
         if (cart.getContent().size() <= 0) {
-            throw new FrontEndException("购物车空空如也");
+            throw new FrontEndException(ErrorState.CART_IS_EMPTY);
         }
 
         // 创建订单对象
@@ -145,7 +146,7 @@ public class OrderServiceImpl implements OrderService {
     public Order cancel(String orderId, String userId) {
         Order order = orderMapper.getByIdAndUserId(orderId, userId);
         if (order == null) {
-            throw new FrontEndException("订单不存在");
+            throw new FrontEndException(ErrorState.ORDER_NOT_EXIST);
         }
 
         OrderState state = order.getState();
@@ -174,10 +175,10 @@ public class OrderServiceImpl implements OrderService {
             }
         } else {
             log.warn("【订单服务】用户取消订单，订单状态异常，订单号：{}", orderId);
-            throw new FrontEndException("该订单无法关闭");
+            throw new FrontEndException(ErrorState.ORDER_CAN_NOT_CLOSE);
         }
 
-        throw new FrontEndException("订单取消失败");
+        throw new FrontEndException(ErrorState.ORDER_CANCEL_FAILED);
     }
 
     /**
@@ -227,7 +228,7 @@ public class OrderServiceImpl implements OrderService {
     public Order receipt(String orderId, String userId) {
         Order order = orderMapper.getByIdAndUserId(orderId, userId);
         if (order == null) {
-            throw new FrontEndException("订单不存在");
+            throw new FrontEndException(ErrorState.ORDER_NOT_EXIST);
         }
 
         OrderState state = order.getState();
@@ -239,6 +240,6 @@ public class OrderServiceImpl implements OrderService {
                 return order;
             }
         }
-        throw new FrontEndException("订单状态机转化错误");
+        throw new FrontEndException(ErrorState.ORDER_STATE_TRANSFORM_ERROR);
     }
 }

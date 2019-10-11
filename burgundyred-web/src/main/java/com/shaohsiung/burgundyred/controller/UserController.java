@@ -3,6 +3,7 @@ package com.shaohsiung.burgundyred.controller;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.shaohsiung.burgundyred.api.BaseResponse;
 import com.shaohsiung.burgundyred.api.ResultCode;
+import com.shaohsiung.burgundyred.error.ErrorState;
 import com.shaohsiung.burgundyred.error.FrontEndException;
 import com.shaohsiung.burgundyred.form.UserRegisterForm;
 import com.shaohsiung.burgundyred.model.User;
@@ -54,7 +55,8 @@ public class UserController {
                            Model model) {
         if (!password.equals(confirmPassword)) {
             // TODO
-            throw new FrontEndException("两次密码不一致");
+            model.addAttribute("message", "两次密码不一致");
+            return "message";
         }
 
         User user = User.builder().userName(userName)

@@ -6,6 +6,7 @@ import com.shaohsiung.burgundyred.api.ResultCode;
 import com.shaohsiung.burgundyred.converter.ObjectBytesConverter;
 import com.shaohsiung.burgundyred.document.ProductDocument;
 import com.shaohsiung.burgundyred.enums.UserState;
+import com.shaohsiung.burgundyred.error.ErrorState;
 import com.shaohsiung.burgundyred.error.FrontEndException;
 import com.shaohsiung.burgundyred.mapper.UserMapper;
 import com.shaohsiung.burgundyred.model.User;
@@ -77,11 +78,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 rabbitTemplate.convertAndSend("email.exchange", "topic.email", bytes);
                 log.info("【鉴权模块】用户注册：{}", user);
             } catch (Exception e) {
-                throw new FrontEndException("注册邮件消息发送失败");
+                throw new FrontEndException(ErrorState.REGISTER_EMAIL_SEND_FAILED);
             }
             return user;
         }
-        throw new FrontEndException("注册失败");
+        throw new FrontEndException(ErrorState.REGISTER_FAILED);
     }
 
     /**
@@ -101,10 +102,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         // 判断用户状态
         if (user.getState().equals(UserState.INACTIVATED)) {
-            throw new FrontEndException("该用户未激活");
+            throw new FrontEndException(ErrorState.USER_INACTIVATE);
         }
         if (user.getState().equals(UserState.FREEZE)) {
-            throw new FrontEndException("该用户已被冻结");
+            throw new FrontEndException(ErrorState.USER_FREEZE);
         }
         log.info("【鉴权模块】用户登录：{}", user);
         return user;
