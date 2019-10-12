@@ -22,4 +22,26 @@ public interface ProductMapper {
 
     @Select("select stock from t_product where id = #{productId}")
     Integer getStockByProductId(@Param("productId") String productId);
+
+    @Select("select * from t_product order by create_time desc limit #{limit}")
+    List<Product> latestStyle(@Param("limit") int limit);
+
+    @Select("select * from t_product limit #{limit}")
+    List<Product> recommendedStyle(int limit);
+
+    @Select("select * from t_product order by price asc limit #{limit}")
+    List<Product> intimateStyle(int limit);
+
+    @Select("select * from t_product order by stock desc limit #{limit}")
+    List<Product> scarceStyle(int limit);
+
+    @Select("select * from t_product order by stock asc limit #{limit}")
+    List<Product> clearanceStyle(int limit);
+
+    @Select("select * from t_product order by state desc, create_time desc")
+    List<Product> sellerProductList(RowBounds rowBounds);
+
+    @Select("select count(1) from t_product")
+    Integer sellerProductListTotalRecord();
+
 }

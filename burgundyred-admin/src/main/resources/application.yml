@@ -1,0 +1,20 @@
+dubbo:
+  application:
+    name: dubbo-customer-admin
+  protocol:
+    name: dubbo
+    port: 20880
+  registry:
+    address: zookeeper://119.23.40.171:2181
+  consumer:
+    timeout: 5000
+
+server:
+  port: 8083
+
+redis:
+  host: localhost
+
+spring:
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss

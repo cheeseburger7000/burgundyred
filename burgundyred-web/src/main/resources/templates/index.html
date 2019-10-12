@@ -15,6 +15,12 @@
     <link rel="stylesheet" href="./style/ad.css">
     <link rel="stylesheet" href="./style/footer.css">
     <link rel="stylesheet" href="./lib/swiper/swiper.min.css">
+    <style>
+        .product-item-margin {
+            /*margin-right: 30px;*/
+            margin-right: 0;
+        }
+    </style>
 </head>
 <body>
     <!-- 导航 -->
@@ -123,8 +129,16 @@
     <!-- 商品展示列表 -->
     <div class="w">
         <!-- F1 -->
-        <h2 class="floor">F1 热销款式</h2>
-        <div class="product-list">
+        <h2 class="floor">F1 最新款式</h2>
+        <div class="product-list"  th:each="product : ${latestStyle}">
+            <div class="product-item">
+                <div class="product-img">
+                    <img height="289.48" width="192.99" src="./images/1.jpg" alt="" th:src="@{${product.mainPicture}}">
+                </div>
+                <h4 th:text="${product.name}">天山 遊花 純米吟釀生貯 300ml（熱銷完售）</h4>
+                <span style="font-weight: bold; color: #ff1a55;" th:text="'￥' + ${product.price}">￥600.00</span>
+            </div>
+            <!--/*-->
             <div class="product-item">
                 <div class="product-img">
                     <img height="289.48" width="192.99" src="./images/1.jpg" alt="">
@@ -146,19 +160,21 @@
                 <h4>天山 遊花 純米吟釀生貯 300ml（熱銷完售）</h4>
                 <span style="font-weight: bold; color: #ff1a55;">￥600.00</span>
             </div>
-            <div class="product-item" style="margin-right: 0;">
-                <div class="product-img">
-                    <img height="289.48" width="192.99" src="./images/1.jpg" alt="">
-                </div>
-                <h4>天山 遊花 純米吟釀生貯 300ml（熱銷完售）</h4>
-                <span style="font-weight: bold; color: #ff1a55;">￥600.00</span>
-            </div>
+            <!--*/-->
         </div>
         <div style="clear: both;"></div>
 
         <!-- F2 -->
-        <h2 class="floor">F2 最新款式</h2>
-        <div class="product-list">
+        <h2 class="floor">F2 推荐款式</h2>
+        <div class="product-list"  th:each="product : ${recommendedStyle}">
+            <div class="product-item">
+                <div class="product-img">
+                    <img height="289.48" width="192.99" src="./images/2.jpg" alt=""  th:src="@{${product.mainPicture}}">
+                </div>
+                <h4 th:text="${product.name}">天山 遊花 純米吟釀生貯 300ml（熱銷完售）</h4>
+                <span style="font-weight: bold; color: #ff1a55;" th:text="'￥' + ${product.price}">￥360.00</span>
+            </div>
+            <!--/*-->
             <div class="product-item">
                 <div class="product-img">
                     <img height="289.48" width="192.99" src="./images/2.jpg" alt="">
@@ -180,19 +196,21 @@
                 <h4>天山 遊花 純米吟釀生貯 300ml（熱銷完售）</h4>
                 <span style="font-weight: bold; color: #ff1a55;">￥360.00</span>
             </div>
-            <div class="product-item" style="margin-right: 0;">
-                <div class="product-img">
-                    <img height="289.48" width="192.99" src="./images/2.jpg" alt="">
-                </div>
-                <h4>天山 遊花 純米吟釀生貯 300ml（熱銷完售）</h4>
-                <span style="font-weight: bold; color: #ff1a55;">￥360.00</span>
-            </div>
+            <!--*/-->
         </div>
         <div style="clear: both;"></div>
 
         <!-- F3 -->
-        <h2 class="floor">F3 最新款式</h2>
-        <div class="product-list">
+        <h2 class="floor">F3 亲民款式</h2>
+        <div class="product-list"  th:each="product : ${intimateStyle}">
+            <div class="product-item">
+                <div class="product-img">
+                    <img height="289.48" width="192.99" src="./images/2.jpg" alt=""  th:src="@{${product.mainPicture}}">
+                </div>
+                <h4 th:text="${product.name}">天山 遊花 純米吟釀生貯 300ml（熱銷完售）</h4>
+                <span style="font-weight: bold; color: #ff1a55;" th:text="'￥' + ${product.price}">￥360.00</span>
+            </div>
+            <!--/*-->
             <div class="product-item">
                 <div class="product-img">
                     <img height="289.48" width="192.99" src="./images/2.jpg" alt="">
@@ -214,19 +232,21 @@
                 <h4>天山 遊花 純米吟釀生貯 300ml（熱銷完售）</h4>
                 <span style="font-weight: bold; color: #ff1a55;">￥360.00</span>
             </div>
-            <div class="product-item" style="margin-right: 0;">
-                <div class="product-img">
-                    <img height="289.48" width="192.99" src="./images/2.jpg" alt="">
-                </div>
-                <h4>天山 遊花 純米吟釀生貯 300ml（熱銷完售）</h4>
-                <span style="font-weight: bold; color: #ff1a55;">￥360.00</span>
-            </div>
+            <!--*/-->
         </div>
         <div style="clear: both;"></div>
 
         <!-- F4 -->
-        <h2 class="floor">F4 最新款式</h2>
-        <div class="product-list">
+        <h2 class="floor">F4 稀缺款式</h2>
+        <div class="product-list"  th:each="product : ${scarceStyle}">
+            <div class="product-item">
+                <div class="product-img">
+                    <img height="289.48" width="192.99" src="./images/2.jpg" alt=""  th:src="@{${product.mainPicture}}">
+                </div>
+                <h4 th:text="${product.name}">天山 遊花 純米吟釀生貯 300ml（熱銷完售）</h4>
+                <span style="font-weight: bold; color: #ff1a55;" th:text="'￥' + ${product.price}">￥360.00</span>
+            </div>
+            <!--/*-->
             <div class="product-item">
                 <div class="product-img">
                     <img height="289.48" width="192.99" src="./images/2.jpg" alt="">
@@ -248,19 +268,21 @@
                 <h4>天山 遊花 純米吟釀生貯 300ml（熱銷完售）</h4>
                 <span style="font-weight: bold; color: #ff1a55;">￥360.00</span>
             </div>
-            <div class="product-item" style="margin-right: 0;">
-                <div class="product-img">
-                    <img height="289.48" width="192.99" src="./images/2.jpg" alt="">
-                </div>
-                <h4>天山 遊花 純米吟釀生貯 300ml（熱銷完售）</h4>
-                <span style="font-weight: bold; color: #ff1a55;">￥360.00</span>
-            </div>
+            <!--*/-->
         </div>
         <div style="clear: both;"></div>
 
         <!-- F5 -->
-        <h2 class="floor">F5 最新款式</h2>
-        <div class="product-list">
+        <h2 class="floor">F5 清仓甩卖</h2>
+        <div class="product-list"  th:each="product : ${clearanceStyle}">
+            <div class="product-item">
+                <div class="product-img">
+                    <img height="289.48" width="192.99" src="./images/2.jpg" alt=""  th:src="@{${product.mainPicture}}">
+                </div>
+                <h4 th:text="${product.name}">天山 遊花 純米吟釀生貯 300ml（熱銷完售）</h4>
+                <span style="font-weight: bold; color: #ff1a55;" th:text="'￥' + ${product.price}">￥360.00</span>
+            </div>
+            <!--/*-->
             <div class="product-item">
                 <div class="product-img">
                     <img height="289.48" width="192.99" src="./images/2.jpg" alt="">
@@ -282,13 +304,7 @@
                 <h4>天山 遊花 純米吟釀生貯 300ml（熱銷完售）</h4>
                 <span style="font-weight: bold; color: #ff1a55;">￥360.00</span>
             </div>
-            <div class="product-item" style="margin-right: 0;">
-                <div class="product-img">
-                    <img height="289.48" width="192.99" src="./images/2.jpg" alt="">
-                </div>
-                <h4>天山 遊花 純米吟釀生貯 300ml（熱銷完售）</h4>
-                <span style="font-weight: bold; color: #ff1a55;">￥360.00</span>
-            </div>
+            <!--*/-->
         </div>
         <div style="clear: both;"></div>
 
@@ -309,5 +325,11 @@
 <script src="./lib/jquery.js"></script>
 <script src="./lib/swiper/swiper.min.js"></script>
 <script src="./script/banner.js"></script>
+<script>
+$(document).ready(function (){
+    $(".product-list .product-item:last-child").addClass('product-item-margin');
+});
+
+</script>
 </body>
 </html>

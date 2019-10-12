@@ -15,6 +15,11 @@
     <link rel="stylesheet" href="./style/ad.css">
     <link rel="stylesheet" href="./style/footer.css">
     <link rel="stylesheet" href="./lib/swiper/swiper.min.css">
+    <style>
+        .product-item-margin {
+            margin-right: 0;
+        }
+    </style>
 </head>
 <body>
     <!-- 导航 -->
@@ -140,7 +145,7 @@
                 <h4>天山 遊花 純米吟釀生貯 300ml（熱銷完售）</h4>
                 <span style="font-weight: bold; color: #ff1a55;">￥600.00</span>
             </div>
-            <div class="product-item" style="margin-right: 0;">
+            <div class="product-item">
                 <div class="product-img">
                     <img height="289.48" width="192.99" src="./images/1.jpg" alt="">
                 </div>
@@ -276,7 +281,7 @@
                 <h4>天山 遊花 純米吟釀生貯 300ml（熱銷完售）</h4>
                 <span style="font-weight: bold; color: #ff1a55;">￥360.00</span>
             </div>
-            <div class="product-item" style="margin-right: 0;">
+            <div class="product-item">
                 <div class="product-img">
                     <img height="289.48" width="192.99" src="./images/2.jpg" alt="">
                 </div>
@@ -299,9 +304,11 @@
             版权
         </div>
     </div>
-
 <script src="./lib/jquery.js"></script>
 <script src="./lib/swiper/swiper.min.js"></script>
 <script src="./script/banner.js"></script>
+<script>
+    $(".product-list .product-item:last-child").addClass('product-item-margin');
+</script>
 </body>
 </html>

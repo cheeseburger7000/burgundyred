@@ -34,20 +34,49 @@ public class ProductServiceImplTest {
     }
 
     @Test
-    @Transactional
+//    @Transactional
     public void addProduct() {
         // 请求参数参考
-        Product product = Product.builder().name("招牌勃艮第红酒")
-                .detail("招牌勃艮第红酒描述")
+        Product product1 = Product.builder().name("智利 白酒  波塔酒莊 波塔白蘇維濃白葡萄酒")
+                .detail("智利 紅酒  波塔酒莊 波塔卡本內蘇維濃紅酒产品描述")
                 .categoryId("0")
-                .stock(90)
-                .price(new BigDecimal(312.90))
-                .mainPicture("http://xxx.jpg")
-                .subPicture("http://xxx.jpg")
+                .stock(20)
+                .price(new BigDecimal(351.00))
+                .mainPicture("/images/智利 白酒  波塔酒莊 波塔白蘇維濃白葡萄酒-351.jpg")
+                .subPicture("/images/智利 白酒  波塔酒莊 波塔白蘇維濃白葡萄酒-351-sub.jpg")
                 .build();
 
-        Product result = productService.addProduct(product);
-        Assert.assertNotNull(result);
+        Product product2 = Product.builder().name("智利 紅酒  波塔酒莊 波塔卡本內蘇維濃紅酒")
+                .detail("智利 紅酒  波塔酒莊 波塔卡本內蘇維濃紅酒产品描述")
+                .categoryId("0")
+                .stock(80)
+                .price(new BigDecimal(390.00))
+                .mainPicture("/images/智利 紅酒  波塔酒莊 波塔卡本內蘇維濃紅酒-390.jpg")
+                .subPicture("/images/智利 紅酒  波塔酒莊 波塔卡本內蘇維濃紅酒-390-sub.jpg")
+                .build();
+
+        Product product3 = Product.builder().name("天山 遊花 純米吟釀生貯 300ml（熱銷完售)")
+                .detail("天山 遊花 純米吟釀生貯 300ml（熱銷完售)产品描述")
+                .categoryId("0")
+                .stock(100)
+                .price(new BigDecimal(600.00))
+                .mainPicture("/images/天山 遊花 純米吟釀生貯 300ml（熱銷完售)-600.jpg")
+                .subPicture("/images/天山 遊花 純米吟釀生貯 300ml（熱銷完售)-600-sub.jpg")
+                .build();
+
+        Product product4 = Product.builder().name("智利 紅酒  舒伯堡喜若紅酒 (完售補貨中)")
+                .detail("智利 紅酒  舒伯堡喜若紅酒 (完售補貨中)产品描述")
+                .categoryId("0")
+                .stock(990)
+                .price(new BigDecimal(360.00))
+                .mainPicture("/images/智利 紅酒  舒伯堡喜若紅酒 (完售補貨中)-360.jpg")
+                .subPicture("/images/智利 紅酒  舒伯堡喜若紅酒 (完售補貨中)-360-sub.jpg")
+                .build();
+
+        productService.addProduct(product1);
+        productService.addProduct(product2);
+        productService.addProduct(product3);
+        productService.addProduct(product4);
     }
 
     @Test

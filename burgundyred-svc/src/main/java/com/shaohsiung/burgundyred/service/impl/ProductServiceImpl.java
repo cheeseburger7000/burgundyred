@@ -3,6 +3,7 @@ package com.shaohsiung.burgundyred.service.impl;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.shaohsiung.burgundyred.converter.ObjectBytesConverter;
 import com.shaohsiung.burgundyred.document.ProductDocument;
+import com.shaohsiung.burgundyred.dto.ProductItemDto;
 import com.shaohsiung.burgundyred.enums.ProductState;
 import com.shaohsiung.burgundyred.error.BackEndException;
 import com.shaohsiung.burgundyred.error.ErrorState;
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service(version = "1.0.0")
@@ -134,4 +136,85 @@ public class ProductServiceImpl implements ProductService {
     public Product incStock(String productId, int quanity) {
         return null;
     }
+
+
+
+
+    @Override
+    public List<ProductItemDto> latestStyle(int limit) {
+        List<Product> products = productMapper.latestStyle(limit);
+        List<ProductItemDto> result = products.stream().map(product -> {
+            ProductItemDto productItemDto = new ProductItemDto();
+            BeanUtils.copyProperties(product, productItemDto);
+            return productItemDto;
+        }).collect(Collectors.toList());
+        return result;
+    }
+
+    @Override
+    public List<ProductItemDto> recommendedStyle(int limit) {
+        List<Product> products = productMapper.recommendedStyle(limit);
+        List<ProductItemDto> result = products.stream().map(product -> {
+            ProductItemDto productItemDto = new ProductItemDto();
+            BeanUtils.copyProperties(product, productItemDto);
+            return productItemDto;
+        }).collect(Collectors.toList());
+        return result;
+    }
+
+    /**
+     * 亲民款式
+     * @param limit
+     * @return
+     */
+    @Override
+    public List<ProductItemDto> intimateStyle(int limit) {
+        List<Product> products = productMapper.intimateStyle(limit);
+        List<ProductItemDto> result = products.stream().map(product -> {
+            ProductItemDto productItemDto = new ProductItemDto();
+            BeanUtils.copyProperties(product, productItemDto);
+            return productItemDto;
+        }).collect(Collectors.toList());
+        return result;
+    }
+
+    @Override
+    public List<ProductItemDto> scarceStyle(int limit) {
+        List<Product> products = productMapper.scarceStyle(limit);
+        List<ProductItemDto> result = products.stream().map(product -> {
+            ProductItemDto productItemDto = new ProductItemDto();
+            BeanUtils.copyProperties(product, productItemDto);
+            return productItemDto;
+        }).collect(Collectors.toList());
+        return result;
+    }
+
+    @Override
+    public List<ProductItemDto> clearanceStyle(int limit) {
+        List<Product> products = productMapper.clearanceStyle(limit);
+        List<ProductItemDto> result = products.stream().map(product -> {
+            ProductItemDto productItemDto = new ProductItemDto();
+            BeanUtils.copyProperties(product, productItemDto);
+            return productItemDto;
+        }).collect(Collectors.toList());
+        return result;
+    }
+
+    /**
+     * 卖家商品列表
+     *
+     * @return
+     */
+    @Override
+    public List<Product> sellerProductList(int pageNum, int pageSize) {
+        int offset = pageNum * pageSize;
+        return productMapper.sellerProductList(new RowBounds(offset, pageSize));
+    }
+
+    @Override
+    public Integer sellerProductListTotalRecord() {
+        return productMapper.sellerProductListTotalRecord();
+    }
+
+
 }
