@@ -1,14 +1,17 @@
 package com.shaohsiung.burgundyred.service.impl;
 
 import com.alibaba.dubbo.config.annotation.Service;
+import com.shaohsiung.burgundyred.api.BaseResponse;
 import com.shaohsiung.burgundyred.dto.CategoryListItemDto;
 import com.shaohsiung.burgundyred.error.BackEndException;
 import com.shaohsiung.burgundyred.error.ErrorState;
 import com.shaohsiung.burgundyred.mapper.CategoryMapper;
 import com.shaohsiung.burgundyred.model.Category;
 import com.shaohsiung.burgundyred.service.CategoryService;
+import com.shaohsiung.burgundyred.util.BaseResponseUtils;
 import com.shaohsiung.burgundyred.util.IdWorker;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,14 +32,15 @@ public class CategoryServiceImpl implements CategoryService {
 
     /**
      * 获取商品类目列表
-     * 前台 无序分页，创建时间等字段
+     * 后台 无序分页，创建时间等字段
      *
      * @return
      */
     @Override
-    public List<Category> categoryList() {
-        List<Category> result = categoryMapper.getAll();
-        log.info("获取商品类目列表：{}", result);
+    public List<Category> categoryList(Integer pageNum, Integer pageSize) {
+        int offset = pageNum * pageSize;
+        List<Category> result = categoryMapper.getAll(new RowBounds(offset, pageSize));
+        log.info("【商品类目基础SVC】获取商品类目列表：{}", result);
         return result;
     }
 
@@ -58,7 +62,7 @@ public class CategoryServiceImpl implements CategoryService {
 
         int save = categoryMapper.save(category);
         if (save == 1) {
-            log.info("添加商品类目：{}", category);
+            log.info("【商品类目基础SVC】添加商品类目：{}", category);
             return category;
         }
         throw new BackEndException(ErrorState.CATEGORY_CREATE_FAILED);
@@ -66,6 +70,8 @@ public class CategoryServiceImpl implements CategoryService {
 
     /**
      * 获取主页热门分类列表
+     *
+     * 前台
      *
      * @return
      */
@@ -79,5 +85,49 @@ public class CategoryServiceImpl implements CategoryService {
         }).collect(Collectors.toList());
         log.info("【商品类目基础SVC】获取主页分类推荐列表：{}", result);
         return result;
+    }
+
+    /**
+     * 设置商品类目为热门
+     *
+     * 后台
+     * @param categoryId
+     * @return
+     */
+    @Override
+    public BaseResponse setHot(String categoryId) {
+        int update = categoryMapper.setHot(categoryId);
+        if (update == 1) {
+            log.info("【商品类目基础SVC】商品类目设置热门成功，商品类目id：{}", categoryId);
+            return BaseResponseUtils.success();
+        }
+        throw new BackEndException(ErrorState.CATEGORY_SET_HOT_FAILED);
+    }
+
+    /**
+     * 商品类目取消热门
+     *
+     * 后台
+     * @param categoryId
+     * @return
+     */
+    @Override
+    public BaseResponse setUnhot(String categoryId) {
+        int update = categoryMapper.setUnhot(categoryId);
+        if (update == 1) {
+            log.info("【商品类目基础SVC】商品类目取消热门成功，商品类目id：{}", categoryId);
+            return BaseResponseUtils.success();
+        }
+        throw new BackEndException(ErrorState.CATEGORY_SET_UNHOT_FAILED);
+    }
+
+    /**
+     * 商品类目列表总记录数
+     *
+     * @return
+     */
+    @Override
+    public Integer categoryListTotalRecord() {
+        return categoryMapper.categoryListTotalRecord();
     }
 }

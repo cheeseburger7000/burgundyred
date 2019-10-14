@@ -1,12 +1,16 @@
 package com.shaohsiung.burgundyred.service.impl;
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.shaohsiung.burgundyred.api.BaseResponse;
 import com.shaohsiung.burgundyred.model.Category;
 import com.shaohsiung.burgundyred.service.CategoryService;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -18,12 +22,24 @@ public class CategoryServiceImplTest {
 
     @Test
     public void categoryList() {
+        List<Category> categories = categoryService.categoryList(0, 4);
+        Assert.assertNotEquals(0, categories.size());
+    }
+
+    @Test
+    public void setUnhot() {
+        BaseResponse baseResponse = categoryService.setUnhot("1183555079408586752");
+    }
+
+    @Test
+    public void setHot() {
+        BaseResponse baseResponse = categoryService.setHot("1183555077844111360");
     }
 
     @Test
     public void addCategory() {
 //        categoryListOne();
-        categoryListSecond();
+//        categoryListSecond();
     }
 
     private void categoryListSecond() {

@@ -13,7 +13,10 @@ import com.shaohsiung.burgundyred.api.BaseResponse;
 import com.shaohsiung.burgundyred.constant.AppConstant;
 import com.shaohsiung.burgundyred.constant.QiniuConstant;
 import com.shaohsiung.burgundyred.model.Banner;
+import com.shaohsiung.burgundyred.model.Category;
 import com.shaohsiung.burgundyred.param.BannerParam;
+import com.shaohsiung.burgundyred.param.CategoryParam;
+import com.shaohsiung.burgundyred.service.CategoryService;
 import com.shaohsiung.burgundyred.service.SellerBannerService;
 import com.shaohsiung.burgundyred.util.AppUtils;
 import com.shaohsiung.burgundyred.util.BaseResponseUtils;
@@ -27,6 +30,7 @@ import javax.validation.Valid;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -40,6 +44,9 @@ public class ContentController {
 
     @Reference(version = "1.0.0")
     private SellerBannerService sellerBannerService;
+
+    @Reference(version = "1.0.0")
+    private CategoryService categoryService;
 
     @Autowired
     private QiniuConstant qiniuConstant;
@@ -119,5 +126,40 @@ public class ContentController {
         result.put("page", pageNum);
         result.put("totalPage", totalPage);
         return BaseResponseUtils.success(result);
+    }
+
+    @GetMapping("/category/{pageNum}")
+    public BaseResponse categoryList(@PathVariable("pageNum") Integer pageNum) {
+        List<Category> categories = categoryService.categoryList(pageNum, AppConstant.CATEGORY_PAGE_SIZE);
+
+        // 计算总页数
+        Integer totalRecord = categoryService.categoryListTotalRecord();
+        Integer totalPage = (totalRecord + AppConstant.CATEGORY_PAGE_SIZE - 1) / AppConstant.CATEGORY_PAGE_SIZE;
+
+        Map result = new HashMap();
+        result.put("categories", categories);
+        result.put("page", pageNum);
+        result.put("totalPage", totalPage);
+        return BaseResponseUtils.success(result);
+    }
+
+    @PostMapping("/category")
+    public BaseResponse addCategory(@Valid @RequestBody CategoryParam categoryParam) {
+        Category category = new Category();
+        BeanUtils.copyProperties(categoryParam, category);
+        Category result = categoryService.addCategory(category);
+        return BaseResponseUtils.success(result);
+    }
+
+    @PostMapping("/category/hot/{categoryId}")
+    public BaseResponse setHot(@PathVariable("categoryId") String categoryId) {
+        log.info("【后台应用】商品类目设置为热门请求，商品类目id：{}", categoryId);
+        return categoryService.setHot(categoryId);
+    }
+
+    @PostMapping("/category/unhot/{categoryId}")
+    public BaseResponse setUnhot(@PathVariable("categoryId") String categoryId) {
+        log.info("【后台应用】商品类目设置为热门请求，商品类目id：{}", categoryId);
+        return categoryService.setUnhot(categoryId);
     }
 }

@@ -19,4 +19,6 @@ public interface AppConstant {
     Integer PRODUCT_PAGE_SIZE = 4;
 
     Integer BANNER_PAGE_SIZE = 4;
+
+    Integer CATEGORY_PAGE_SIZE = 4;
 }
