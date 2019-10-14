@@ -2,6 +2,7 @@ package com.shaohsiung.burgundyred.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.shaohsiung.burgundyred.constant.AppConstant;
+import com.shaohsiung.burgundyred.dto.CategoryListItemDto;
 import com.shaohsiung.burgundyred.dto.ProductItemDto;
 import com.shaohsiung.burgundyred.model.Banner;
 import com.shaohsiung.burgundyred.model.User;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 商城门户
@@ -47,27 +49,27 @@ public class IndexController {
             model.addAttribute("user", user);
         }
 
-        // 获取类目列表
+        // 获取商品类目列表
+        List<CategoryListItemDto> categoryList = categoryService.indexCategoryList();
 
-
-        // 从redis缓存获取轮播图
-        // TODO 卖家设置轮播图之后，同步缓存
+        // 获取轮播图数据
         List<Banner> banners = (List<Banner>) redisTemplate.opsForValue().get(AppConstant.BANNER_CACHE_KEY);
         if (banners == null) {
             banners = sellerBannerService.indexBanner();
-            redisTemplate.opsForValue().set(AppConstant.BANNER_CACHE_KEY, banners);
+            redisTemplate.opsForValue().set(AppConstant.BANNER_CACHE_KEY, banners, 1, TimeUnit.DAYS);
             log.info("【前台应用】缓存未命中，调用基础SVC并缓存轮播图数据");
         } else {
             log.info("【前台应用】缓存命中，从redis拉取轮播图数据");
         }
 
-        // TODO 缓存，mq同步
+        // 获取商品展示数据
         List<ProductItemDto> latestStyle = productService.latestStyle(4);
         List<ProductItemDto> recommendedStyle = productService.recommendedStyle(4);
         List<ProductItemDto> intimateStyle = productService.intimateStyle(4);
         List<ProductItemDto> scarceStyle = productService.scarceStyle(4);
         List<ProductItemDto> clearanceStyle = productService.clearanceStyle(4);
 
+        model.addAttribute("categoryList", categoryList);
         model.addAttribute("banners", banners);
         model.addAttribute("latestStyle", latestStyle);
         model.addAttribute("recommendedStyle", recommendedStyle);

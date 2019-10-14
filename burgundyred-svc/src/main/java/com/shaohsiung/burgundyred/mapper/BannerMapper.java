@@ -28,4 +28,7 @@ public interface BannerMapper {
 
     @Select("select * from t_banner where active = 1 limit #{count}")
     List<Banner> getIndexBanner(@Param("count") Integer max_banner_count);
+
+    @Select("select count(1) from t_banner")
+    Integer bannerListTotalRecord();
 }

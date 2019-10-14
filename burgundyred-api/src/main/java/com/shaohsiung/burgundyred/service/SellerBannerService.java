@@ -23,4 +23,10 @@ public interface SellerBannerService {
      * @return
      */
     List<Banner> indexBanner();
+
+    /**
+     * 获取轮播图数量
+     * @return
+     */
+    Integer bannerListTotalRecord();
 }

@@ -13,6 +13,7 @@ import com.shaohsiung.burgundyred.util.IdWorker;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
@@ -29,6 +30,9 @@ public class SellerBannerServiceImpl implements SellerBannerService {
 
     @Autowired
     private IdWorker idWorker;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     @Override
     public BaseResponse bannerList(int pageNum, int pageSize) {
@@ -81,6 +85,13 @@ public class SellerBannerServiceImpl implements SellerBannerService {
         int update = bannerMapper.active(bannerId);
         if (update == 1) {
             log.info("【轮播图SVC】激活轮播图：{}", bannerId);
+
+            // 删除redis缓存 banner
+            Boolean delete = redisTemplate.delete(AppConstant.BANNER_CACHE_KEY);
+            if (delete) {
+                log.info("【轮播图SVC】删除banner缓存成功！");
+            }
+
             return BaseResponse.builder().state(ResultCode.SUCCESS.getCode())
                     .message(ResultCode.SUCCESS.getMessage())
                     .build();
@@ -93,6 +104,13 @@ public class SellerBannerServiceImpl implements SellerBannerService {
         int update = bannerMapper.inactive(bannerId);
         if (update == 1) {
             log.info("【轮播图SVC】取消轮播图：{}", bannerId);
+
+            // 删除redis缓存 banner TODO 使用消息队列优化实现同步缓存
+            Boolean delete = redisTemplate.delete(AppConstant.BANNER_CACHE_KEY);
+            if (delete) {
+                log.info("【轮播图SVC】删除banner缓存成功！");
+            }
+
             return BaseResponse.builder().state(ResultCode.SUCCESS.getCode())
                     .message(ResultCode.SUCCESS.getMessage())
                     .build();
@@ -116,5 +134,15 @@ public class SellerBannerServiceImpl implements SellerBannerService {
         List<Banner> result = bannerMapper.getIndexBanner(AppConstant.MAX_BANNER_COUNT);
         log.info("【轮播图SVC】获取主页轮播图：{}", result);
         return result;
+    }
+
+    /**
+     * 获取轮播图数量
+     *
+     * @return
+     */
+    @Override
+    public Integer bannerListTotalRecord() {
+        return bannerMapper.bannerListTotalRecord();
     }
 }

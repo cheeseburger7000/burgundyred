@@ -30,7 +30,7 @@ public class BackEndGlobalExceptionTranslator {
     public BaseResponse handleError(BackEndException e) {
         Integer code = e.getCode();
         String message = e.getMessage();
-        log.error("【前台异常】code: {}, message: {}", code, message);
+        log.error("【后台异常】code: {}, message: {}", code, message);
 
         return BaseResponse.builder().state(code)
                 .message(message)

@@ -18,3 +18,10 @@ redis:
 spring:
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
+
+qiniu:
+  accessKey: AiYMNMLUCx5T2KJByydrwa3Yje2pVOFZmMn-XlRW
+  secretKey: MEeHVxsI_sJ_2P-x5Css-9IPBLQ65k_3BWfffNNp
+  bucket: producttable
+  path: producttable.s3-cn-south-1.qiniucs.com
+  host: pzceg9ngw.bkt.clouddn.com

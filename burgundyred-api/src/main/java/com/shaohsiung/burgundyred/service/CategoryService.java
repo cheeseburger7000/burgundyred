@@ -1,5 +1,6 @@
 package com.shaohsiung.burgundyred.service;
 
+import com.shaohsiung.burgundyred.dto.CategoryListItemDto;
 import com.shaohsiung.burgundyred.model.Category;
 
 import java.util.List;
@@ -23,4 +24,10 @@ public interface CategoryService {
      * @return
      */
     Category addCategory(Category category);
+
+    /**
+     * 获取主页热门分类列表
+     * @return
+     */
+    List<CategoryListItemDto> indexCategoryList();
 }

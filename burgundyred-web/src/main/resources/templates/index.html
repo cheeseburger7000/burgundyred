@@ -17,7 +17,6 @@
     <link rel="stylesheet" href="./lib/swiper/swiper.min.css">
     <style>
         .product-item-margin {
-            /*margin-right: 30px;*/
             margin-right: 0;
         }
     </style>
@@ -52,51 +51,38 @@
     <div class="w">
         <div class="category-list-wrap">
             <ul class="category_list">
-                <li class="category_item">
-                    <a href="#">勃艮第</a>
-                    <a href="#">红酒</a>
+                <li class="category_item" th:each="category : ${categoryList}">
+                    <a href="#" th:text="${category.name}">勃艮第</a>
                 </li>
+                <!--/*-->
                 <li class="category_item">
                     <a href="#">牛排</a>
-                    <a href="#">烛光晚餐</a>
-                    <a href="#">清酒</a>
                 </li>
                 <li class="category_item">
                     <a href="#">勃艮第</a>
-                    <a href="#">红酒</a>
                 </li>
                 <li class="category_item">
                     <a href="#">牛排</a>
-                    <a href="#">烛光晚餐</a>
-                    <a href="#">清酒</a>
                 </li>
                 <li class="category_item">
                     <a href="#">勃艮第</a>
-                    <a href="#">红酒</a>
                 </li>
                 <li class="category_item">
                     <a href="#">牛排</a>
-                    <a href="#">烛光晚餐</a>
-                    <a href="#">清酒</a>
                 </li>
                 <li class="category_item">
                     <a href="#">勃艮第</a>
-                    <a href="#">红酒</a>
                 </li>
                 <li class="category_item">
                     <a href="#">牛排</a>
-                    <a href="#">烛光晚餐</a>
-                    <a href="#">清酒</a>
                 </li>
                 <li class="category_item">
                     <a href="#">勃艮第</a>
-                    <a href="#">红酒</a>
                 </li>
                 <li class="category_item">
                     <a href="#">牛排</a>
-                    <a href="#">烛光晚餐</a>
-                    <a href="#">清酒</a>
                 </li>
+                <!--*/-->
             </ul>
         </div>
         <div class="banner-wrap">
@@ -130,8 +116,8 @@
     <div class="w">
         <!-- F1 -->
         <h2 class="floor">F1 最新款式</h2>
-        <div class="product-list"  th:each="product : ${latestStyle}">
-            <div class="product-item">
+        <div class="product-list">
+            <div class="product-item"  th:each="product : ${latestStyle}">
                 <div class="product-img">
                     <img height="289.48" width="192.99" src="./images/1.jpg" alt="" th:src="@{${product.mainPicture}}">
                 </div>
@@ -166,8 +152,8 @@
 
         <!-- F2 -->
         <h2 class="floor">F2 推荐款式</h2>
-        <div class="product-list"  th:each="product : ${recommendedStyle}">
-            <div class="product-item">
+        <div class="product-list">
+            <div class="product-item"  th:each="product : ${recommendedStyle}">
                 <div class="product-img">
                     <img height="289.48" width="192.99" src="./images/2.jpg" alt=""  th:src="@{${product.mainPicture}}">
                 </div>
@@ -202,8 +188,8 @@
 
         <!-- F3 -->
         <h2 class="floor">F3 亲民款式</h2>
-        <div class="product-list"  th:each="product : ${intimateStyle}">
-            <div class="product-item">
+        <div class="product-list">
+            <div class="product-item" th:each="product : ${intimateStyle}">
                 <div class="product-img">
                     <img height="289.48" width="192.99" src="./images/2.jpg" alt=""  th:src="@{${product.mainPicture}}">
                 </div>
@@ -238,8 +224,8 @@
 
         <!-- F4 -->
         <h2 class="floor">F4 稀缺款式</h2>
-        <div class="product-list"  th:each="product : ${scarceStyle}">
-            <div class="product-item">
+        <div class="product-list">
+            <div class="product-item"  th:each="product : ${scarceStyle}">
                 <div class="product-img">
                     <img height="289.48" width="192.99" src="./images/2.jpg" alt=""  th:src="@{${product.mainPicture}}">
                 </div>
@@ -274,8 +260,8 @@
 
         <!-- F5 -->
         <h2 class="floor">F5 清仓甩卖</h2>
-        <div class="product-list"  th:each="product : ${clearanceStyle}">
-            <div class="product-item">
+        <div class="product-list">
+            <div class="product-item"  th:each="product : ${clearanceStyle}">
                 <div class="product-img">
                     <img height="289.48" width="192.99" src="./images/2.jpg" alt=""  th:src="@{${product.mainPicture}}">
                 </div>
@@ -326,9 +312,9 @@
 <script src="./lib/swiper/swiper.min.js"></script>
 <script src="./script/banner.js"></script>
 <script>
-$(document).ready(function (){
-    $(".product-list .product-item:last-child").addClass('product-item-margin');
-});
+    $(document).ready(function (){
+        $(".product-list .product-item:last-child").addClass('product-item-margin');
+    });
 
 </script>
 </body>

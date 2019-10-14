@@ -17,4 +17,6 @@ public interface AppConstant {
     String BANNER_CACHE_KEY = "banner_cache_key";
 
     Integer PRODUCT_PAGE_SIZE = 4;
+
+    Integer BANNER_PAGE_SIZE = 4;
 }

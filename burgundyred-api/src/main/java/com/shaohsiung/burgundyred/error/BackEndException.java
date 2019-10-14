@@ -10,11 +10,26 @@ import java.io.Serializable;
  * 面向管理员
  */
 public class BackEndException extends RuntimeException implements Serializable {
+    private String message;
     private Integer code;
 
+    public BackEndException(String message) {
+        this.message = message;
+        this.code = -1;
+    }
+
     public BackEndException(ErrorState errorState) {
-        super(errorState.getMessage());
+        this.message = errorState.getMessage();
         this.code = errorState.getCode();
+    }
+
+    @Override
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public Integer getCode() {
