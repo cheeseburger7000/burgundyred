@@ -1,5 +1,6 @@
 package com.shaohsiung.burgundyred.service;
 
+import com.shaohsiung.burgundyred.api.BaseResponse;
 import com.shaohsiung.burgundyred.dto.ProductItemDto;
 import com.shaohsiung.burgundyred.model.Product;
 
@@ -76,6 +77,23 @@ public interface ProductService {
      * @return
      */
     List<Product> sellerProductList(int pageNum, int pageSize);
-
+    /**
+     * 卖家商品列表总数量
+     * @return
+     */
     Integer sellerProductListTotalRecord();
+
+    /**
+     * 上架商品
+     * @param productId
+     * @return
+     */
+    BaseResponse onShelves(String productId);
+
+    /**
+     * 下架商品
+     * @param productId
+     * @return
+     */
+    BaseResponse remove(String productId);
 }

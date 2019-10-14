@@ -48,23 +48,6 @@ public class ContentController {
     @Reference(version = "1.0.0")
     private CategoryService categoryService;
 
-    @Autowired
-    private QiniuConstant qiniuConstant;
-
-    @PostMapping("/banner/upload")
-    public BaseResponse uploadBannerPicture(@RequestParam("picture") MultipartFile multipartFile) {
-        FileInputStream inputStream = null;
-        String path = "";
-        try {
-            inputStream = (FileInputStream) multipartFile.getInputStream();
-            path = uploadQiniuImg(inputStream, UUID.randomUUID().toString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        log.info("【后台应用】上传轮播图请求，七牛云图片路径：{}", path);
-        return BaseResponseUtils.success(path);
-    }
-
     /**
      * 添加轮播图
      * @param bannerParam
@@ -141,26 +124,5 @@ public class ContentController {
     public BaseResponse setUnhot(@PathVariable("categoryId") String categoryId) {
         log.info("【后台应用】商品类目设置为热门请求，商品类目id：{}", categoryId);
         return categoryService.setUnhot(categoryId);
-    }
-
-    /**
-     *  七牛云上传图片
-     * @param inputStream 输入流
-     * @param fileName 图片服务器上文件名称
-     * @return URL 文件资源路径
-     */
-    private String uploadQiniuImg(FileInputStream inputStream, String fileName) throws QiniuException {
-        Configuration cfg = new Configuration(Zone.zone2());
-        UploadManager uploadManager = new UploadManager(cfg);
-
-        Auth auth = Auth.create(qiniuConstant.getAccessKey(), qiniuConstant.getSecretKey());
-        String upToken = auth.uploadToken(qiniuConstant.getBucket());
-
-        Response response = uploadManager.put(inputStream, fileName, upToken, null, null);
-        // 解析上传成功的结果
-        DefaultPutRet putRet = new Gson().fromJson(response.bodyString(), DefaultPutRet.class);
-        String result = "http://" + qiniuConstant.getHost() + "/" + putRet.key;
-
-        return result;
     }
 }

@@ -1,6 +1,7 @@
 package com.shaohsiung.burgundyred.service.impl;
 
 import com.alibaba.dubbo.config.annotation.Service;
+import com.shaohsiung.burgundyred.api.BaseResponse;
 import com.shaohsiung.burgundyred.converter.ObjectBytesConverter;
 import com.shaohsiung.burgundyred.document.ProductDocument;
 import com.shaohsiung.burgundyred.dto.ProductItemDto;
@@ -11,6 +12,7 @@ import com.shaohsiung.burgundyred.error.FrontEndException;
 import com.shaohsiung.burgundyred.mapper.ProductMapper;
 import com.shaohsiung.burgundyred.model.Product;
 import com.shaohsiung.burgundyred.service.ProductService;
+import com.shaohsiung.burgundyred.util.BaseResponseUtils;
 import com.shaohsiung.burgundyred.util.IdWorker;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.RowBounds;
@@ -216,5 +218,35 @@ public class ProductServiceImpl implements ProductService {
         return productMapper.sellerProductListTotalRecord();
     }
 
+    /**
+     * 上架商品
+     *
+     * @param productId
+     * @return
+     */
+    @Override
+    public BaseResponse onShelves(String productId) {
+        int update = productMapper.onShelves(productId);
+        if (update == 1) {
+            log.info("【商品基础SVC】商品设置为上架状态，商品id：{}", productId);
+            return BaseResponseUtils.success();
+        }
+        throw new BackEndException(ErrorState.SET_PRODUCT_ON_THE_SHELF_FAILED);
+    }
 
+    /**
+     * 下架商品
+     *
+     * @param productId
+     * @return
+     */
+    @Override
+    public BaseResponse remove(String productId) {
+        int update = productMapper.remove(productId);
+        if (update == 1) {
+            log.info("【商品基础SVC】商品设置为下架状态，商品id：{}", productId);
+            return BaseResponseUtils.success();
+        }
+        throw new BackEndException(ErrorState.PRODUCT_REMOVE_FAILED);
+    }
 }

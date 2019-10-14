@@ -51,7 +51,11 @@ public enum ErrorState {
 
     // 用户模块
     FREEZE_USER_FAILED(5301, "用户冻结失败"),
-    NORMAL_USER_FAILED(5302, "恢复用户正常状态失败")
+    NORMAL_USER_FAILED(5302, "恢复用户正常状态失败"),
+
+    // 商品模块
+    SET_PRODUCT_ON_THE_SHELF_FAILED(5401, "商品上架失败"),
+    PRODUCT_REMOVE_FAILED(5401, "商品下架失败"),
     ;
 
     private Integer code;

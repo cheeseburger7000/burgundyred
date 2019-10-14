@@ -4,6 +4,7 @@ import com.shaohsiung.burgundyred.model.Product;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.apache.ibatis.session.RowBounds;
 
 import java.util.List;
@@ -44,4 +45,9 @@ public interface ProductMapper {
     @Select("select count(1) from t_product")
     Integer sellerProductListTotalRecord();
 
+    @Update("update t_product set state = 0 where id = #{productId}")
+    int onShelves(@Param("productId") String productId);
+
+    @Update("update t_product set state = 1 where id = #{productId}")
+    int remove(String productId);
 }

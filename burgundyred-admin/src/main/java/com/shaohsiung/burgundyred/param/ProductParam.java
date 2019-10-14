@@ -12,7 +12,7 @@ public class ProductParam {
     private String name;
     @NotBlank
     private String detail;
-    @NotBlank
+    @NotNull
     private BigDecimal price;
     @NotNull
     private Integer stock;

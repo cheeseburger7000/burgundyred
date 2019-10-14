@@ -61,4 +61,26 @@ public class ProductController {
         result.put("totalPage", totalPage);
         return BaseResponseUtils.success(result);
     }
+
+    /**
+     * 上架商品
+     * @param productId
+     * @return
+     */
+    @PostMapping("/shelf/{productId}")
+    public BaseResponse onShelves(@PathVariable("productId") String productId) {
+        log.info("【后台应用】上架商品请求，商品id：{}", productId);
+        return productService.onShelves(productId);
+    }
+
+    /**
+     * 下架商品
+     * @param productId
+     * @return
+     */
+    @PostMapping("/remove/{productId}")
+    public BaseResponse remove(@PathVariable("productId") String productId) {
+        log.info("【后台应用】下架商品请求，商品id：{}", productId);
+        return productService.remove(productId);
+    }
 }
