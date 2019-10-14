@@ -23,4 +23,6 @@ public interface AppConstant {
     Integer CATEGORY_PAGE_SIZE = 4;
 
     Integer USER_PAGE_SIZE = 4;
+
+    Integer ORDER_PAGE_SIZE = 4;
 }

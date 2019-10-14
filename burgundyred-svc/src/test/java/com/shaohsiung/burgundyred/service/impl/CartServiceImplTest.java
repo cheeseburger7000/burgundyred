@@ -3,6 +3,7 @@ package com.shaohsiung.burgundyred.service.impl;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.shaohsiung.burgundyred.dto.Cart;
 import com.shaohsiung.burgundyred.service.CartService;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +25,9 @@ public class CartServiceImplTest {
 
     @Test
     public void add() {
-        cartService.add("1", "1180496378418302976");
-        cartService.add("1", "1180496378418302976");
-
-        Cart add3 = cartService.add("2", "1180496378418302976");
+        cartService.add("1182854431662804992", "1182493800958922752");
+        Cart add3 = cartService.add("1182854431662804992", "1182493800958922752");
+        Assert.assertNotEquals(0, add3.getContent().size());
     }
 
     @Test

@@ -6,6 +6,7 @@ import com.shaohsiung.burgundyred.dto.Cart;
 import com.shaohsiung.burgundyred.dto.CartItem;
 import com.shaohsiung.burgundyred.dto.OrderDetailDto;
 import com.shaohsiung.burgundyred.enums.OrderState;
+import com.shaohsiung.burgundyred.error.BackEndException;
 import com.shaohsiung.burgundyred.error.ErrorState;
 import com.shaohsiung.burgundyred.error.FrontEndException;
 import com.shaohsiung.burgundyred.mapper.OrderItemMapper;
@@ -190,10 +191,21 @@ public class OrderServiceImpl implements OrderService {
      * @return
      */
     @Override
-    public List<Order> orderList(String userId, int pageNum, int pageSize) {
+    public List<Order> userOrderList(String userId, int pageNum, int pageSize) {
         int offset = pageNum * pageSize;
-        List<Order> orderList= orderMapper.orderList(userId, new RowBounds(offset, pageSize));
+        List<Order> orderList= orderMapper.userOrderList(userId, new RowBounds(offset, pageSize));
         return orderList;
+    }
+
+    /**
+     * 获取用户订单列表总数量
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public Integer userOrderListTotalRecord(String userId) {
+        return orderMapper.userOrderListTotalRecord(userId);
     }
 
     /**
@@ -241,5 +253,79 @@ public class OrderServiceImpl implements OrderService {
             }
         }
         throw new FrontEndException(ErrorState.ORDER_STATE_TRANSFORM_ERROR);
+    }
+
+    /**
+     * 卖家发货
+     *
+     * @param orderId
+     * @return
+     */
+    @Override
+    public Order ship(String orderId) {
+        Order order = orderMapper.findById(orderId);
+        if (order == null) {
+            throw new FrontEndException(ErrorState.ORDER_NOT_EXIST);
+        }
+
+        OrderState state = order.getState();
+        if (state.equals(OrderState.NOT_SHIPPED)) {
+            order.setState(OrderState.SHIPPED);
+            int update = orderMapper.update(order);
+            if (update == 1) {
+                log.info("【订单服务】用户收货，订单状态机：未发货->已发货，订单号：{}", orderId);
+                return order;
+            }
+        }
+        throw new BackEndException(ErrorState.ORDER_STATE_TRANSFORM_ERROR);
+    }
+
+    /**
+     * 卖家确认取消订单
+     *
+     * @param orderId
+     * @return
+     */
+    @Override
+    public Order confirmCancel(String orderId) {
+        Order order = orderMapper.findById(orderId);
+        if (order == null) {
+            throw new FrontEndException(ErrorState.ORDER_NOT_EXIST);
+        }
+
+        OrderState state = order.getState();
+        if (state.equals(OrderState.CANCEL)) {
+            order.setState(OrderState.CLOSED);
+            int update = orderMapper.update(order);
+            if (update == 1) {
+                log.info("【订单服务】用户收货，订单状态机：取消中->已关闭，订单号：{}", orderId);
+                return order;
+            }
+        }
+        throw new BackEndException(ErrorState.ORDER_STATE_TRANSFORM_ERROR);
+    }
+
+    /**
+     * 卖家获取所有订单列表
+     *
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @Override
+    public List<Order> orderList(int pageNum, int pageSize) {
+        int offset = pageNum * pageSize;
+        List<Order> orderList= orderMapper.orderList(new RowBounds(offset, pageSize));
+        return orderList;
+    }
+
+    /**
+     * 获取订单列表总数量
+     *
+     * @return
+     */
+    @Override
+    public Integer orderListTotalRecord() {
+        return orderMapper.orderListTotalRecord();
     }
 }

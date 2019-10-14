@@ -45,7 +45,7 @@ public interface OrderService {
     BaseResponse queryOrderPayStatus(String userId, String orderNo);
 
     /**
-     * 取消订单 判断订单状态机 防止越权访问
+     * 用户取消订单 判断订单状态机 防止越权访问
      * @param orderId
      * @param userId
      * @return
@@ -59,7 +59,14 @@ public interface OrderService {
      * @param pageSize
      * @return
      */
-    List<Order> orderList(String userId, int pageNum, int pageSize);
+    List<Order> userOrderList(String userId, int pageNum, int pageSize);
+
+    /**
+     * 获取用户订单列表总数量
+     * @param userId
+     * @return
+     */
+    Integer userOrderListTotalRecord(String userId);
 
     /**
      * 根据订单id查询订单详情
@@ -70,10 +77,40 @@ public interface OrderService {
     OrderDetailDto getById(String orderId, String userId);
 
     /**
-     * 收货
+     * 买家收货
      * @param orderId
      * @param userId
      * @return
      */
     Order receipt(String orderId, String userId);
+
+    /**
+     * 卖家发货
+     *
+     * @param orderId
+     * @return
+     */
+    Order ship(String orderId);
+
+    /**
+     * 卖家确认取消订单
+     *
+     * @param orderId
+     * @return
+     */
+    Order confirmCancel(String orderId);
+
+    /**
+     * 卖家获取所有订单列表
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    List<Order> orderList(int pageNum, int pageSize);
+
+    /**
+     * 获取订单列表总数量
+     * @return
+     */
+    Integer orderListTotalRecord();
 }

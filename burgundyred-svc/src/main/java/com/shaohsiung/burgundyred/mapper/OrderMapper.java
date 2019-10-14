@@ -1,6 +1,5 @@
 package com.shaohsiung.burgundyred.mapper;
 
-import com.shaohsiung.burgundyred.enums.OrderState;
 import com.shaohsiung.burgundyred.model.Order;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
@@ -16,7 +15,6 @@ public interface OrderMapper {
             "values(#{id}, #{orderNo}, #{total}, #{state}, #{userId}, #{shippingId}, #{createTime}, #{updateTime})")
     int save(Order order);
 
-    // FIXME 存在越权访问风险
     @Select("select * from t_order where id = #{orderId}")
     Order findById(@Param("orderId") String id);
 
@@ -26,6 +24,15 @@ public interface OrderMapper {
     @Update("update t_order set state = #{state} where id = #{id}")
     int update(Order order);
 
-    @Select("select * from t_order where user_id = #{userId}")
-    List<Order> orderList(@Param("userId") String userId, RowBounds rowBounds);
+    @Select("select * from t_order where user_id = #{userId} order by state desc, create_time desc")
+    List<Order> userOrderList(@Param("userId") String userId, RowBounds rowBounds);
+
+    @Select("select count(1) from t_order where user_id = #{userId}")
+    Integer userOrderListTotalRecord(String userId);
+
+    @Select("select * from t_order order by state desc, create_time desc")
+    List<Order> orderList(RowBounds rowBounds);
+
+    @Select("select count(1) from t_order")
+    Integer orderListTotalRecord();
 }

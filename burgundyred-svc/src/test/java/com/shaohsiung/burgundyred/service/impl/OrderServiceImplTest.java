@@ -1,6 +1,7 @@
 package com.shaohsiung.burgundyred.service.impl;
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.shaohsiung.burgundyred.error.FrontEndException;
 import com.shaohsiung.burgundyred.model.Order;
 import com.shaohsiung.burgundyred.service.OrderService;
 import org.junit.Assert;
@@ -26,7 +27,13 @@ public class OrderServiceImplTest {
 
     @Test
     public void create() {
-        Order order = orderService.create("1180496378418302976", "1180692054221656064");
+        Order order = orderService.create("1182493800958922752", "1180692054221656064");
+        Assert.assertNotNull(order);
+    }
+
+    @Test(expected = FrontEndException.class)
+    public void createEx() {
+        Order order = orderService.create("1182493800958922752", "1180692054221656064");
         Assert.assertNotNull(order);
     }
 
@@ -54,7 +61,7 @@ public class OrderServiceImplTest {
 
     @Test
     public void orderList() {
-        List<Order> orderList = orderService.orderList("1", 0, 4);
+        List<Order> orderList = orderService.userOrderList("1", 0, 4);
     }
 
     @Test
