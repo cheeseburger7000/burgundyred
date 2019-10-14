@@ -6,20 +6,24 @@ import com.shaohsiung.burgundyred.api.ResultCode;
 import com.shaohsiung.burgundyred.constant.AppConstant;
 import com.shaohsiung.burgundyred.converter.ObjectBytesConverter;
 import com.shaohsiung.burgundyred.enums.UserState;
+import com.shaohsiung.burgundyred.error.BackEndException;
 import com.shaohsiung.burgundyred.error.ErrorState;
 import com.shaohsiung.burgundyred.error.FrontEndException;
 import com.shaohsiung.burgundyred.mapper.UserMapper;
 import com.shaohsiung.burgundyred.model.User;
 import com.shaohsiung.burgundyred.service.AuthenticationService;
 import com.shaohsiung.burgundyred.util.AppUtils;
+import com.shaohsiung.burgundyred.util.BaseResponseUtils;
 import com.shaohsiung.burgundyred.util.IdWorker;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
 
 @Slf4j
 @Service(version = "1.0.0")
@@ -128,8 +132,75 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .build();
     }
 
+    /**
+     * 判断用户名是否已经存在，若存在，则返回已存在的用户名
+     *
+     * 前台
+     * @param userName
+     * @return
+     */
     @Override
     public String confirmUserNameUnique(String userName) {
         return userMapper.confirmUserNameUnique(userName);
     }
+
+    /**
+     * 获取用户列表
+     *
+     * @return
+     */
+    @Override
+    public BaseResponse userList(Integer pageNum, Integer pageSize) {
+        int offset = pageNum * pageSize;
+        List<User> userList = userMapper.userList(new RowBounds(offset, pageSize));
+        userList.forEach(user -> {
+            user.setPassword("");
+        });
+        log.info("【基础SVC-用户模块】获取用户列表：{}", userList);
+        return BaseResponseUtils.success(userList);
+    }
+
+    /**
+     * 获取用户列表总数量
+     *
+     * @return
+     */
+    @Override
+    public Integer userListTotalRecord() {
+        return userMapper.userListTotalRecord();
+    }
+
+    /**
+     * 冻结用户
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public BaseResponse freeze(String userId) {
+        int update = userMapper.freeze(userId);
+        if (update == 1) {
+            log.info("【基础SVC-用户模块】冻结用户成功，userId：{}", userId);
+            return BaseResponseUtils.success();
+        }
+        throw new BackEndException(ErrorState.FREEZE_USER_FAILED);
+    }
+
+    /**
+     * 恢复用户正常状态
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public BaseResponse normal(String userId) {
+        int update = userMapper.normal(userId);
+        if (update == 1) {
+            log.info("【基础SVC-用户模块】恢复用户正常状态成功，userId：{}", userId);
+            return BaseResponseUtils.success();
+        }
+        throw new BackEndException(ErrorState.NORMAL_USER_FAILED);
+    }
+
+
 }

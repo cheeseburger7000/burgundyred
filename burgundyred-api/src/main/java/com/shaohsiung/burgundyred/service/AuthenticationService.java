@@ -33,5 +33,38 @@ public interface AuthenticationService {
      */
     BaseResponse activate(String userId, String token);
 
+    /**
+     * 判断用户名是否已经存在，若存在，则返回已存在的用户名
+     *
+     * 前台
+     * @param userName
+     * @return
+     */
     String confirmUserNameUnique(String userName);
+
+    /**
+     * 获取用户列表
+     * @return
+     */
+    BaseResponse userList(Integer pageNum, Integer pageSize);
+
+    /**
+     * 获取用户列表总数量
+     * @return
+     */
+    Integer userListTotalRecord();
+
+    /**
+     * 冻结用户
+     * @param userId
+     * @return
+     */
+    BaseResponse freeze(String userId);
+
+    /**
+     * 恢复用户正常状态
+     * @param userId
+     * @return
+     */
+    BaseResponse normal(String userId);
 }
