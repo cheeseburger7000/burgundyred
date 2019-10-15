@@ -5,7 +5,6 @@ import com.shaohsiung.burgundyred.api.ResultCode;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.validator.internal.engine.path.PathImpl;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -26,7 +25,7 @@ public class BackEndGlobalExceptionTranslator {
      * @return
      */
     @ExceptionHandler(BackEndException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public BaseResponse handleError(BackEndException e) {
         Integer code = e.getCode();
         String message = e.getMessage();

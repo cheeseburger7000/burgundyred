@@ -9,7 +9,9 @@ import com.shaohsiung.burgundyred.enums.UserState;
 import com.shaohsiung.burgundyred.error.BackEndException;
 import com.shaohsiung.burgundyred.error.ErrorState;
 import com.shaohsiung.burgundyred.error.FrontEndException;
+import com.shaohsiung.burgundyred.mapper.AdminMapper;
 import com.shaohsiung.burgundyred.mapper.UserMapper;
+import com.shaohsiung.burgundyred.model.Administrator;
 import com.shaohsiung.burgundyred.model.User;
 import com.shaohsiung.burgundyred.service.AuthenticationService;
 import com.shaohsiung.burgundyred.util.AppUtils;
@@ -32,6 +34,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private AdminMapper adminMapper;
 
     @Autowired
     private IdWorker idWorker;
@@ -200,6 +205,24 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             return BaseResponseUtils.success();
         }
         throw new BackEndException(ErrorState.NORMAL_USER_FAILED);
+    }
+
+    /**
+     * 管理员登陆
+     *
+     * @param adminName
+     * @param password
+     * @return
+     */
+    @Override
+    public Administrator adminLogin(String adminName, String password) {
+        String encryptPassword = AppUtils.sha256Encrypt(password);
+        Administrator administrator = adminMapper.findByAdminNameAndPassword(adminName, encryptPassword);
+        if (administrator == null) {
+            throw new BackEndException(ErrorState.ADMIN_AUTHENTICATION_FAILED);
+        }
+        administrator.setPassword("");
+        return administrator;
     }
 
 

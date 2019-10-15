@@ -82,6 +82,7 @@ create table t_admin (
   id varchar(255) not null,
   admin_name varchar(255) not null,
   password varchar(255) not null,
+  avatar varchar(255) not null,
   root tinyint not null default 0,
   create_time timestamp not null default current_timestamp, 
   primary key(id)

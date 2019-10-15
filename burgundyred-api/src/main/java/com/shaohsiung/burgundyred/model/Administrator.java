@@ -19,6 +19,8 @@ public class Administrator implements Serializable {
 
     private String password;
 
+    private String avatar;
+
     /** 超级管理员 */
     private Boolean root;
 

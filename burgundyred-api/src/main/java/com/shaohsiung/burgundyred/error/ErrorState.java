@@ -59,6 +59,8 @@ public enum ErrorState {
     // 商品模块
     SET_PRODUCT_ON_THE_SHELF_FAILED(5401, "商品上架失败"),
     PRODUCT_REMOVE_FAILED(5401, "商品下架失败"),
+
+    ADMIN_AUTHENTICATION_FAILED(5501, "管理员认证失败"),
     ;
 
     private Integer code;

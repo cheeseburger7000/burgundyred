@@ -1,6 +1,7 @@
 package com.shaohsiung.burgundyred.service;
 
 import com.shaohsiung.burgundyred.api.BaseResponse;
+import com.shaohsiung.burgundyred.model.Administrator;
 import com.shaohsiung.burgundyred.model.User;
 
 /**
@@ -67,4 +68,13 @@ public interface AuthenticationService {
      * @return
      */
     BaseResponse normal(String userId);
+
+
+    /**
+     * 管理员登陆
+     * @param adminName
+     * @param password
+     * @return
+     */
+    Administrator adminLogin(String adminName, String password);
 }
