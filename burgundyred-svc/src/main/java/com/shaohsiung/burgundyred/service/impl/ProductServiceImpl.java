@@ -5,6 +5,7 @@ import com.shaohsiung.burgundyred.api.BaseResponse;
 import com.shaohsiung.burgundyred.converter.ObjectBytesConverter;
 import com.shaohsiung.burgundyred.document.ProductDocument;
 import com.shaohsiung.burgundyred.dto.ProductItemDto;
+import com.shaohsiung.burgundyred.dto.ProductStockDto;
 import com.shaohsiung.burgundyred.enums.ProductState;
 import com.shaohsiung.burgundyred.error.BackEndException;
 import com.shaohsiung.burgundyred.error.ErrorState;
@@ -126,21 +127,66 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     *  TODO 减少产品库存
-     * <p>
-     * 前台订单服务
+     * 增加商品库存
      *
-     * @param productId
-     * @param quanity
+     * @param productStockDtoList
      * @return
      */
     @Override
-    public Product incStock(String productId, int quanity) {
-        return null;
+    @Transactional
+    public BaseResponse increaseStock(List<ProductStockDto> productStockDtoList) {
+        productStockDtoList.forEach(productStockDto -> {
+            Product product = productMapper.getProductById(productStockDto.getProductId());
+            if (product == null) {
+                throw new FrontEndException(ErrorState.PRODUCT_NOT_EXIST);
+            }
+            product.setStock(product.getStock() + productStockDto.getQuanity());
+
+            int update = productMapper.updateStock(product);
+            if (update == 1) {
+                log.info("【商品基础SVC】商品库存更新成功，商品id：{}，增加库存：{}", productStockDto.getProductId(), productStockDto.getQuanity());
+            } else {
+                log.warn("【商品基础SVC】商品库存更新失败，商品id：{}，增加库存：{}", productStockDto.getProductId(), productStockDto.getQuanity());
+                throw new FrontEndException(ErrorState.PRODUCT_STOCK_UPDATE_FAILED);
+            }
+        });
+        return BaseResponseUtils.success();
     }
 
+    /**
+     * 减少商品库存
+     *
+     * @param productStockDtoList
+     * @return
+     */
+    @Override
+    @Transactional
+    public BaseResponse decreaseStock(List<ProductStockDto> productStockDtoList) {
+        productStockDtoList.forEach(productStockDto -> {
+            Product product = productMapper.getProductById(productStockDto.getProductId());
+            if (product == null) {
+                throw new FrontEndException(ErrorState.PRODUCT_NOT_EXIST);
+            }
 
+            Integer result = product.getStock() - productStockDto.getQuanity();
+            if (result < 0) {
+                log.warn("【商品基础SVC】商品库存不足，商品id：{}，减少库存：{}，实际商品库存：{}", productStockDto.getProductId(),
+                        productStockDto.getQuanity(),
+                        product.getStock());
+                throw new FrontEndException(ErrorState.PRODUCT_STOCK_LACK);
+            }
+            product.setStock(result);
 
+            int update = productMapper.updateStock(product);
+            if (update == 1) {
+                log.info("【商品基础SVC】商品库存更新成功，商品id：{}，减少库存：{}", productStockDto.getProductId(), productStockDto.getQuanity());
+            } else {
+                log.warn("【商品基础SVC】商品库存更新失败，商品id：{}，减少库存：{}", productStockDto.getProductId(), productStockDto.getQuanity());
+                throw new FrontEndException(ErrorState.PRODUCT_STOCK_UPDATE_FAILED);
+            }
+        });
+        return BaseResponseUtils.success();
+    }
 
     @Override
     public List<ProductItemDto> latestStyle(int limit) {
@@ -213,6 +259,11 @@ public class ProductServiceImpl implements ProductService {
         return productMapper.sellerProductList(new RowBounds(offset, pageSize));
     }
 
+    /**
+     * 卖家商品列表总数量
+     *
+     * @return
+     */
     @Override
     public Integer sellerProductListTotalRecord() {
         return productMapper.sellerProductListTotalRecord();

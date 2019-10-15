@@ -1,6 +1,9 @@
 package com.shaohsiung.burgundyred.service.impl;
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.shaohsiung.burgundyred.api.BaseResponse;
+import com.shaohsiung.burgundyred.dto.ProductStockDto;
+import com.shaohsiung.burgundyred.error.FrontEndException;
 import com.shaohsiung.burgundyred.model.Product;
 import com.shaohsiung.burgundyred.service.ProductService;
 import org.junit.Assert;
@@ -11,6 +14,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -80,6 +84,32 @@ public class ProductServiceImplTest {
     }
 
     @Test
-    public void incStock() {
+    public void increaseStock() {
+        ProductStockDto p1 = new ProductStockDto("1182854430526148608", 3);
+        ProductStockDto p2 = new ProductStockDto("1182854432250007552", 4);
+        List<ProductStockDto> list = new ArrayList<>();
+        list.add(p1);
+        list.add(p2);
+        BaseResponse baseResponse = productService.increaseStock(list);
+    }
+
+    @Test
+    public void decreaseStock() {
+        ProductStockDto p1 = new ProductStockDto("1182854430526148608", 3);
+        ProductStockDto p2 = new ProductStockDto("1182854432250007552", 4);
+        List<ProductStockDto> list = new ArrayList<>();
+        list.add(p1);
+        list.add(p2);
+        BaseResponse baseResponse = productService.decreaseStock(list);
+    }
+
+    @Test(expected = FrontEndException.class)
+    public void decreaseStockEx() {
+        ProductStockDto p1 = new ProductStockDto("1182854430526148608", 300);
+        ProductStockDto p2 = new ProductStockDto("1182854432250007552", 4);
+        List<ProductStockDto> list = new ArrayList<>();
+        list.add(p1);
+        list.add(p2);
+        BaseResponse baseResponse = productService.decreaseStock(list);
     }
 }

@@ -20,6 +20,9 @@ public enum ErrorState {
 
     PRODUCT_HAS_BEEN_REMOVED(4104, "该商品已下架"),
     PRODUCT_STOCK_LACKING(4105, "商品库存不足"),
+    PRODUCT_NOT_EXIST(4106, "商品不存在"),
+    PRODUCT_STOCK_UPDATE_FAILED(4107, "商品库存更新失败"),
+    PRODUCT_STOCK_LACK(4108, "商品库存不足"),
 
     ITEM_DOES_NOT_EXIST_IN_THE_CART(4206, "购物车中不存在该商品"),
     CART_IS_EMPTY(4207, "购物车空空如也"),

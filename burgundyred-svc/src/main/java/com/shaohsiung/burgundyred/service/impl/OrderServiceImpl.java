@@ -5,6 +5,7 @@ import com.shaohsiung.burgundyred.api.BaseResponse;
 import com.shaohsiung.burgundyred.dto.Cart;
 import com.shaohsiung.burgundyred.dto.CartItem;
 import com.shaohsiung.burgundyred.dto.OrderDetailDto;
+import com.shaohsiung.burgundyred.dto.ProductStockDto;
 import com.shaohsiung.burgundyred.enums.OrderState;
 import com.shaohsiung.burgundyred.error.BackEndException;
 import com.shaohsiung.burgundyred.error.ErrorState;
@@ -26,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Transactional
@@ -78,6 +80,8 @@ public class OrderServiceImpl implements OrderService {
                 .build();
         orderMapper.save(order);
 
+        List<ProductStockDto> productStockDtoList = new ArrayList();
+
         // 创建订单项对象
         Map<String, CartItem> cartItemMap = cart.getContent();
         for (Map.Entry<String, CartItem> cartItemEntry : cartItemMap.entrySet()) {
@@ -89,7 +93,13 @@ public class OrderServiceImpl implements OrderService {
             orderItem.setOrderId(order.getId());
 
             orderItemMapper.save(orderItem);
+
+            ProductStockDto productStockDto = new ProductStockDto(cartItem.getProductId(), cartItem.getQuantity());
+            productStockDtoList.add(productStockDto);
         }
+
+        // 扣除库存
+        productService.decreaseStock(productStockDtoList);
 
         // 清空购物车
         cartService.clear(userId);
@@ -160,7 +170,15 @@ public class OrderServiceImpl implements OrderService {
             }
         } else if (state.equals(OrderState.NOT_SHIPPED)) {
             // TODO 退款
-            // TODO 库存
+
+            // 恢复库存
+            List<OrderItem> orderItemList = orderItemMapper.getOrderItemListByOrderId(orderId);
+            List<ProductStockDto> productStockDtoList = orderItemList.stream().map(orderItem -> {
+                ProductStockDto productStockDto = new ProductStockDto(orderItem.getProductId(), orderItem.getQuantity());
+                return productStockDto;
+            }).collect(Collectors.toList());
+            productService.increaseStock(productStockDtoList);
+
             order.setState(OrderState.CLOSED);
             int update = orderMapper.update(order);
             if (update == 1) {

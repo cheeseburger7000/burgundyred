@@ -50,4 +50,7 @@ public interface ProductMapper {
 
     @Update("update t_product set state = 1 where id = #{productId}")
     int remove(String productId);
+
+    @Update("update t_product set stock = #{stock} where id = #{id}")
+    int updateStock(Product product);
 }

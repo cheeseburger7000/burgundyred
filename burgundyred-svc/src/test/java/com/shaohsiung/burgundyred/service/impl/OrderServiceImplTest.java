@@ -51,7 +51,7 @@ public class OrderServiceImplTest {
 
     @Test
     public void cancel() {
-        orderService.cancel("1181759454547415040", "1180496378418302976");
+        orderService.cancel("1183920777901248512", "1182493800958922752");
     }
 
     @Test(expected = RuntimeException.class)

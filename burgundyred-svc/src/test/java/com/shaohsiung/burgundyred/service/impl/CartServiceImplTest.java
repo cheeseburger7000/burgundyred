@@ -20,13 +20,14 @@ public class CartServiceImplTest {
 
     @Test
     public void get() {
-        Cart cart = cartService.get("0");
+        Cart cart = cartService.get("1182493800958922752");
     }
 
     @Test
     public void add() {
-        cartService.add("1182854431662804992", "1182493800958922752");
-        Cart add3 = cartService.add("1182854431662804992", "1182493800958922752");
+        cartService.add("1182854430526148608", "1182493800958922752");
+        cartService.add("1182854430526148608", "1182493800958922752");
+        Cart add3 = cartService.add("1182854430526148608", "1182493800958922752");
         Assert.assertNotEquals(0, add3.getContent().size());
     }
 

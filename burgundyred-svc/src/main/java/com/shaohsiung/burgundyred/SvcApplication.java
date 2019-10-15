@@ -6,9 +6,12 @@ import com.shaohsiung.burgundyred.util.IdWorker;
 import com.shaohsiung.burgundyred.util.JwtUtils;
 import io.lettuce.core.ReadFrom;
 import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.boot.Banner;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.data.redis.LettuceClientConfigurationBuilderCustomizer;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -17,8 +20,13 @@ import org.springframework.data.redis.core.RedisTemplate;
 @SpringBootApplication
 @MapperScan("com.shaohsiung.burgundyred.mapper")
 public class SvcApplication {
+    // TODO 关闭内置tomcat
     public static void main(String[] args) {
-        SpringApplication.run(SvcApplication.class, args);
+        new SpringApplicationBuilder()
+                .sources(SvcApplication.class)
+                .bannerMode(Banner.Mode.OFF)
+                .web(WebApplicationType.NONE) // 关闭内嵌Tomcat
+                .run(args);
     }
 
     @Bean

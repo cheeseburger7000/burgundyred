@@ -2,6 +2,7 @@ package com.shaohsiung.burgundyred.service;
 
 import com.shaohsiung.burgundyred.api.BaseResponse;
 import com.shaohsiung.burgundyred.dto.ProductItemDto;
+import com.shaohsiung.burgundyred.dto.ProductStockDto;
 import com.shaohsiung.burgundyred.model.Product;
 
 import java.util.List;
@@ -47,14 +48,18 @@ public interface ProductService {
     Integer getStockByProductId(String productId);
 
     /**
-     * 减少商品库存
-     *
-     * 前台订单服务
-     * @param productId
-     * @param quanity
+     * 增加商品库存
+     * @param productStockDtoList
      * @return
      */
-    Product incStock(String productId, int quanity);
+    BaseResponse increaseStock(List<ProductStockDto> productStockDtoList);
+
+    /**
+     * 减少商品库存
+     * @param productStockDtoList
+     * @return
+     */
+    BaseResponse decreaseStock(List<ProductStockDto> productStockDtoList);
 
 
     // 门户 limit 4
