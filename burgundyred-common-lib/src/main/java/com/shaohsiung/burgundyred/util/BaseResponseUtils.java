@@ -18,6 +18,13 @@ public final class BaseResponseUtils {
                 .build();
     }
 
+    public static BaseResponse success(ResultCode resultCode, Object data) {
+        return BaseResponse.builder().state(resultCode.getCode())
+                .message(resultCode.getMessage())
+                .data(data)
+                .build();
+    }
+
     public static BaseResponse failure() {
         return BaseResponse.builder().state(ResultCode.FAILURE.getCode())
                 .message(ResultCode.FAILURE.getMessage())
@@ -27,6 +34,19 @@ public final class BaseResponseUtils {
     public static BaseResponse failure(Object data) {
         return BaseResponse.builder().state(ResultCode.FAILURE.getCode())
                 .message(ResultCode.FAILURE.getMessage())
+                .data(data)
+                .build();
+    }
+
+    public static BaseResponse failure(ResultCode resultCode) {
+        return BaseResponse.builder().state(resultCode.getCode())
+                .message(resultCode.getMessage())
+                .build();
+    }
+
+    public static BaseResponse failure(ResultCode resultCode, Object data) {
+        return BaseResponse.builder().state(resultCode.getCode())
+                .message(resultCode.getMessage())
                 .data(data)
                 .build();
     }

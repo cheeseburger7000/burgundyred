@@ -20,7 +20,7 @@ public class PayInfo implements Serializable {
     private String orderNo;
 
     /** 支付平台类型 */
-    private Integer payPlatform;
+    private String payPlatform;
 
     /** 平台支付流水号 */
     private String platformNumber;

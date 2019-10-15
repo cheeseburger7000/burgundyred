@@ -2,6 +2,7 @@ package com.shaohsiung.burgundyred.mapper;
 
 import com.shaohsiung.burgundyred.model.OrderItem;
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
@@ -13,4 +14,7 @@ public interface OrderItemMapper {
 
     @Select("select * from t_order_item where order_id = #{id}")
     List<OrderItem> getOrderItemListByOrderId(String orderId);
+
+    @Select("select * from t_order_item where order_no = #{orderNo}")
+    List<OrderItem> listByOrderNo(@Param("orderNo") String orderNo);
 }

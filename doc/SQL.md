@@ -113,7 +113,7 @@ create table t_pay_info (
   id varchar(255) not null,
   user_id varchar(255) not null,
   order_no varchar(255) not null,
-  pay_platform int not null,
+  pay_platform varchar(255) not null,
   platform_number varchar(255) not null,
   platform_status varchar(255) not null,
   create_time timestamp not null default current_timestamp, 
