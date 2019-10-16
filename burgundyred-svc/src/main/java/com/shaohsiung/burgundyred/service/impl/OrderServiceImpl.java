@@ -7,7 +7,9 @@ import com.alipay.demo.trade.config.Configs;
 import com.alipay.demo.trade.model.ExtendParams;
 import com.alipay.demo.trade.model.GoodsDetail;
 import com.alipay.demo.trade.model.builder.AlipayTradePrecreateRequestBuilder;
+import com.alipay.demo.trade.model.builder.AlipayTradeRefundRequestBuilder;
 import com.alipay.demo.trade.model.result.AlipayF2FPrecreateResult;
+import com.alipay.demo.trade.model.result.AlipayF2FRefundResult;
 import com.alipay.demo.trade.service.AlipayTradeService;
 import com.alipay.demo.trade.service.impl.AlipayTradeServiceImpl;
 import com.alipay.demo.trade.utils.ZxingUtils;
@@ -256,15 +258,15 @@ public class OrderServiceImpl implements OrderService {
 
             case FAILED:
                 log.error("支付宝预下单失败，orderNo:{}", orderNo);
-                return BaseResponseUtils.success(ResultCode.ALIPAY_PAY_FAILED);
+                return BaseResponseUtils.failure(ResultCode.ALIPAY_PAY_FAILED);
 
             case UNKNOWN:
                 log.error("系统异常，预下单状态未知，orderNo:{}", orderNo);
-                return BaseResponseUtils.success(ResultCode.ALIPAY_PAY_STATE_UNKNOWN);
+                return BaseResponseUtils.failure(ResultCode.ALIPAY_PAY_STATE_UNKNOWN);
 
             default:
                 log.error("不支持的交易状态，交易返回异常，orderNo:{}", orderNo);
-                return BaseResponseUtils.success(ResultCode.ALIPAY_PAY_STATE_ERROR);
+                return BaseResponseUtils.failure(ResultCode.ALIPAY_PAY_STATE_ERROR);
         }
     }
     /**
@@ -344,6 +346,62 @@ public class OrderServiceImpl implements OrderService {
         return BaseResponseUtils.failure();
     }
 
+    @Override
+    public BaseResponse refund(String orderNo, String userId) {
+        // 获取订单
+        Order order = orderMapper.selectByUserIdAndOrderNo(userId, orderNo);
+        if (order == null) {
+            throw new FrontEndException(ErrorState.ORDER_NOT_EXIST);
+        }
+
+        // (必填) 外部订单号，需要退款交易的商户外部订单号
+        String outTradeNo = order.getOrderNo();
+
+        // (必填) 退款金额，该金额必须小于等于订单的支付金额，单位为元
+        String refundAmount = order.getTotal().toString();
+
+        // (可选，需要支持重复退货时必填) 商户退款请求号，相同支付宝交易号下的不同退款请求号对应同一笔交易的不同退款申请，
+        // 对于相同支付宝交易号下多笔相同商户退款请求号的退款交易，支付宝只会进行一次退款
+        String outRequestNo = "";
+
+        // (必填) 退款原因，可以说明用户退款原因，方便为商家后台提供统计
+        String refundReason = "正常退款";
+
+        // (必填) 商户门店编号，退款情况下可以为商家后台提供退款权限判定和统计等作用，详询支付宝技术支持
+        String storeId = "test_store_id";
+
+        // 创建退款请求builder，设置请求参数
+        AlipayTradeRefundRequestBuilder builder = new AlipayTradeRefundRequestBuilder()
+                .setOutTradeNo(outTradeNo).setRefundAmount(refundAmount).setRefundReason(refundReason)
+                .setOutRequestNo(outRequestNo).setStoreId(storeId);
+
+        AlipayF2FRefundResult result = tradeService.tradeRefund(builder);
+        switch (result.getTradeStatus()) {
+            case SUCCESS:
+                log.info("支付宝退款成功: )");
+                // 修改订单状态
+                order.setState(OrderState.CLOSED);
+                int update = orderMapper.update(order);
+                if (update != 1) {
+                    log.error("订单转换失败！");
+                }
+
+                return BaseResponseUtils.success(ResultCode.ALIPAY_REFUND_SUCCESS, order);
+
+            case FAILED:
+                log.error("支付宝退款失败!!!orderNo:{}", orderNo);
+                return BaseResponseUtils.failure(ResultCode.ALIPAY_REFUND_FAILED);
+
+            case UNKNOWN:
+                log.error("系统异常，订单退款状态未知!!!orderNo:{}", orderNo);
+                return BaseResponseUtils.failure(ResultCode.ALIPAY_REFUND_UNKNOWN);
+
+            default:
+                log.error("不支持的交易状态，交易返回异常!!!orderNo:{}", orderNo);
+                return BaseResponseUtils.failure(ResultCode.ALIPAY_REFUND_ERROR);
+        }
+    }
+
     /**
      * 取消订单
      *
@@ -370,7 +428,11 @@ public class OrderServiceImpl implements OrderService {
                 return order;
             }
         } else if (state.equals(OrderState.NOT_SHIPPED)) {
-            // TODO 退款
+            // 退款
+            BaseResponse refund = refund(order.getOrderNo(), userId);
+            if (!refund.getState().equals(ResultCode.ALIPAY_REFUND_SUCCESS.getCode())) {
+                throw new FrontEndException("退款失败");
+            }
 
             // 恢复库存
             List<OrderItem> orderItemList = orderItemMapper.getOrderItemListByOrderId(orderId);

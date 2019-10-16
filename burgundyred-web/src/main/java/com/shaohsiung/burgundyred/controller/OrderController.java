@@ -101,4 +101,11 @@ public class OrderController {
         }
         return BaseResponseUtils.success(false);
     }
+
+    // 用户取消订单
+    @PostMapping("/cancel")
+    public BaseResponse cancel(@NotBlank @RequestHeader("userId") String userId, @NotBlank @RequestParam("orderId") String orderId) {
+        Order cancel = orderService.cancel(orderId, userId);
+        return BaseResponseUtils.success(cancel);
+    }
 }

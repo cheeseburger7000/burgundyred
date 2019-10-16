@@ -45,6 +45,14 @@ public interface OrderService {
     BaseResponse queryOrderPayStatus(String userId, String orderNo);
 
     /**
+     * 用户退款
+     * @param orderNo
+     * @param userId
+     * @return
+     */
+    BaseResponse refund(String orderNo, String userId);
+
+    /**
      * 用户取消订单 判断订单状态机 防止越权访问
      * @param orderId
      * @param userId
