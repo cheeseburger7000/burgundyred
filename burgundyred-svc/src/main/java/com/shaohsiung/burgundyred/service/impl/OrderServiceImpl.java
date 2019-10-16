@@ -576,6 +576,21 @@ public class OrderServiceImpl implements OrderService {
 
         OrderState state = order.getState();
         if (state.equals(OrderState.CANCEL)) {
+
+            // 恢复库存
+            List<OrderItem> orderItemList = orderItemMapper.getOrderItemListByOrderId(orderId);
+            List<ProductStockDto> productStockDtoList = orderItemList.stream().map(orderItem -> {
+                ProductStockDto productStockDto = new ProductStockDto(orderItem.getProductId(), orderItem.getQuantity());
+                return productStockDto;
+            }).collect(Collectors.toList());
+            productService.increaseStock(productStockDtoList);
+
+            // 退款
+            BaseResponse refund = refund(order.getOrderNo(), order.getUserId());
+            if (!refund.getState().equals(ResultCode.ALIPAY_REFUND_SUCCESS.getCode())) {
+                throw new FrontEndException("退款失败");
+            }
+
             order.setState(OrderState.CLOSED);
             int update = orderMapper.update(order);
             if (update == 1) {
