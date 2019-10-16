@@ -36,7 +36,7 @@ public interface OrderMapper {
     @Select("select count(1) from t_order")
     Integer orderListTotalRecord();
 
-    @Select("select * from t_order where user_id = #{userId} and order_no = #{order_no}")
+    @Select("select * from t_order where user_id = #{userId} and order_no = #{orderNo}")
     Order selectByUserIdAndOrderNo(@Param("userId") String userId, @Param("orderNo") String orderNo);
 
     @Select("select * from t_order where order_no = #{orderNo}")

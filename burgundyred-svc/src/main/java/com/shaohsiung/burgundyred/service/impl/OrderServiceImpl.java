@@ -14,12 +14,14 @@ import com.alipay.demo.trade.utils.ZxingUtils;
 import com.google.common.collect.Maps;
 import com.shaohsiung.burgundyred.api.BaseResponse;
 import com.shaohsiung.burgundyred.api.ResultCode;
+import com.shaohsiung.burgundyred.constant.AlipayCallback;
 import com.shaohsiung.burgundyred.constant.AppConstant;
 import com.shaohsiung.burgundyred.dto.Cart;
 import com.shaohsiung.burgundyred.dto.CartItem;
 import com.shaohsiung.burgundyred.dto.OrderDetailDto;
 import com.shaohsiung.burgundyred.dto.ProductStockDto;
 import com.shaohsiung.burgundyred.enums.OrderState;
+import com.shaohsiung.burgundyred.enums.PayPlatformEnum;
 import com.shaohsiung.burgundyred.error.BackEndException;
 import com.shaohsiung.burgundyred.error.ErrorState;
 import com.shaohsiung.burgundyred.error.FrontEndException;
@@ -121,6 +123,7 @@ public class OrderServiceImpl implements OrderService {
             BeanUtils.copyProperties(cartItem, orderItem);
             orderItem.setId(idWorker.nextId()+"");
             orderItem.setOrderId(order.getId());
+            orderItem.setOrderNo(order.getOrderNo());
 
             orderItemMapper.save(orderItem);
 
@@ -217,7 +220,6 @@ public class OrderServiceImpl implements OrderService {
 
         // 发送支付请求
         AlipayF2FPrecreateResult result = tradeService.tradePrecreate(builder);
-
         // 处理支付响应
         switch (result.getTradeStatus()) {
             case SUCCESS:
@@ -294,32 +296,32 @@ public class OrderServiceImpl implements OrderService {
 
         Order order = orderMapper.getByOrderNo(orderNo);
         if (order == null) {
-            throw new FrontEndException(ErrorState.ORDER_NOT_EXIST);
+            return BaseResponseUtils.failure();
         }
         if (!order.getState().equals(OrderState.UNPAID )){
-            return BaseResponseUtils.failure(ResultCode.ALIPAY_REPEATED_CALL);
+            return BaseResponseUtils.failure();
         }
-        if (AppConstant.ALIPAYCALLBACK_TRADE_STATUS_TRADE_SUCCESS.equals(tradeStatus)) {
+        if (AlipayCallback.TRADE_STATUS_TRADE_SUCCESS.equals(tradeStatus)) {
             // 交易成功，设置订单状态
             order.setState(OrderState.NOT_SHIPPED);
             int update = orderMapper.update(order);
-            if (update == 1) {
-                PayInfo payInfo = new PayInfo();
-                payInfo.setId(idWorker.nextId() + "");
-                payInfo.setUserId(order.getUserId());
-                payInfo.setOrderNo(order.getOrderNo());
-                payInfo.setPayPlatform(AppConstant.PAYPLATFORM_ALIPAY);
-                payInfo.setPlatformNumber(tradeNo);
-                payInfo.setPlatformStatus(tradeStatus);
-                payInfo.setCreateTime(new Date());
-                payInfo.setUpdateTime(new Date());
-
-                payInfoMapper.insert(payInfo);
-
-                return BaseResponseUtils.success();
+            if (update != 1) {
+                log.error("订单状态转化错误！");
             }
         }
-        throw new  FrontEndException(ErrorState.ORDER_STATE_TRANSFORM_ERROR);
+        PayInfo payInfo = new PayInfo();
+        payInfo.setId(idWorker.nextId() + "");
+        payInfo.setUserId(order.getUserId());
+        payInfo.setOrderNo(order.getOrderNo());
+        payInfo.setPayPlatform(PayPlatformEnum.ALIPAY);
+        payInfo.setPlatformNumber(tradeNo);
+        payInfo.setPlatformStatus(tradeStatus);
+        payInfo.setCreateTime(new Date());
+        payInfo.setUpdateTime(new Date());
+
+        payInfoMapper.insert(payInfo);
+
+        return BaseResponseUtils.success();
     }
 
     /**
@@ -333,7 +335,8 @@ public class OrderServiceImpl implements OrderService {
     public BaseResponse queryOrderPayStatus(String userId, String orderNo) {
         Order order = orderMapper.selectByUserIdAndOrderNo(userId, orderNo);
         if (order == null) {
-            throw new FrontEndException(ErrorState.ORDER_NOT_EXIST);
+            // TODO 打印日志订单不存在 抛出异常。。。
+            return BaseResponseUtils.failure();
         }
         if (!order.getState().equals(OrderState.UNPAID ) && !order.getState().equals(OrderState.CLOSED )) {
             return BaseResponseUtils.success();

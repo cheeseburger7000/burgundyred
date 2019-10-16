@@ -36,6 +36,7 @@ create table t_product (
 create table t_order_item (
   id varchar(255) not null,
   order_id varchar(255) not null,
+  order_no varchar(255) not null,
   product_id varchar(255) not null,
   quantity int not null comment '商品数量',
   amount decimal(8, 2) not null comment '订单项总额',
@@ -113,7 +114,7 @@ create table t_pay_info (
   id varchar(255) not null,
   user_id varchar(255) not null,
   order_no varchar(255) not null,
-  pay_platform varchar(255) not null,
+  pay_platform int not null,
   platform_number varchar(255) not null,
   platform_status varchar(255) not null,
   create_time timestamp not null default current_timestamp, 

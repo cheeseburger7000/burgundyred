@@ -1,5 +1,6 @@
 package com.shaohsiung.burgundyred.model;
 
+import com.shaohsiung.burgundyred.enums.PayPlatformEnum;
 import lombok.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -20,7 +21,7 @@ public class PayInfo implements Serializable {
     private String orderNo;
 
     /** 支付平台类型 */
-    private String payPlatform;
+    private PayPlatformEnum payPlatform;
 
     /** 平台支付流水号 */
     private String platformNumber;

@@ -17,6 +17,8 @@ public class OrderItem implements Serializable {
 
     private String orderId;
 
+    private String orderNo;
+
     private String productId;
 
     /** 商品数量 */

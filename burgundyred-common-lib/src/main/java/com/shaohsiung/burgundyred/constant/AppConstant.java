@@ -25,8 +25,4 @@ public interface AppConstant {
     Integer USER_PAGE_SIZE = 4;
 
     Integer ORDER_PAGE_SIZE = 4;
-
-    String ALIPAYCALLBACK_TRADE_STATUS_TRADE_SUCCESS = "TRADE_SUCCESS";
-
-    String PAYPLATFORM_ALIPAY = "支付宝";
 }
