@@ -22,7 +22,7 @@ public class JwtUtils {
     private String key = "burgundyred";
 
     /** TODO JWT 过期时间 **/
-    private long ttl = 30000;
+    private long ttl = 180000;
 
     /**
      * 生成JWT

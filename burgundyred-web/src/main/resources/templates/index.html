@@ -25,9 +25,13 @@
     <!-- 导航 -->
     <div class="navbar">
         <div class="w">
-            <ul class="user-info">
+            <ul class="user-info" th:if="${user} == null">
                 <li class="user-info-item"><a href="#" th:href="@{/user/register}">注册</a></li>
                 <li class="user-info-item"><a href="#" th:href="@{/user/login}">登录</a></li>
+            </ul>
+            <ul class="user-info" th:if="${user} != null">
+                <li class="user-info-item"><a href="#" th:text="'欢迎您：'+ ${user.userName}">欢迎您：hello</a></li>
+                <li class="user-info-item"><a href="#" th:href="@{/user/logout}">登出</a></li>
             </ul>
             
             <ul class="nav-list">

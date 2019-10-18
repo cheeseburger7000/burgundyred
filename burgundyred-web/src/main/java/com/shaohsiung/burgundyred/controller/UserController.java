@@ -36,13 +36,25 @@ public class UserController {
     @Autowired
     private JwtUtils jwtUtils;
 
-    /** 获取用户注册页面 */
+    /**
+     * TODO 获取用户注册页面
+     * @return
+     */
     @GetMapping("/register")
     public String registerPage() {
         return "register";
     }
 
-    /** 处理用户注册 */
+    /**
+     * 处理用户注册
+     * @param userName
+     * @param password
+     * @param confirmPassword
+     * @param email
+     * @param mobile
+     * @param model
+     * @return
+     */
     @PostMapping("/register")
     public String register(@RequestParam @NotBlank String userName,
                            @RequestParam @NotBlank String password,
@@ -76,13 +88,23 @@ public class UserController {
         return "message";
     }
 
-    /** 获取用户登录页面 */
+    /**
+     * TODO 获取用户登录页面
+     * @return
+     */
     @GetMapping("/login")
     public String loginPage() {
         return "login";
     }
 
-    /** 处理用户登录 */
+    /**
+     * 处理用户登录
+     * @param userName
+     * @param password
+     * @param response
+     * @param model
+     * @return
+     */
     @PostMapping("/login")
     public String login(@RequestParam @NotBlank String userName,
                         @RequestParam @NotBlank String password,
@@ -109,12 +131,18 @@ public class UserController {
         return "redirect:/";
     }
 
-    /** 用户注销 */
+    /**
+     * 用户注销
+     * @param request
+     * @param response
+     * @return
+     */
     @GetMapping("/logout")
     public String logout(HttpServletRequest request, HttpServletResponse response) {
         Cookie token = CookieUtils.get(request, "token");
         token.setMaxAge(0);
         token.setPath("/");
+        token.setHttpOnly(true);
         response.addCookie(token);
         log.info("用户注销登录");
         return "redirect:/";

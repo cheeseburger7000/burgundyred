@@ -25,4 +25,6 @@ public interface AppConstant {
     Integer USER_PAGE_SIZE = 4;
 
     Integer ORDER_PAGE_SIZE = 4;
+
+    String JWT_COOKIE_NAME = "token";
 }

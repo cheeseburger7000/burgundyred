@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -44,8 +45,9 @@ public class IndexController {
     @GetMapping
     public String index(HttpServletRequest request, Model model) {
         // 判断用户是否登录
-        User user = (User) request.getSession().getAttribute("user");
+        User user = (User) request.getAttribute("user");
         if (user != null) {
+            log.info("【前台应用】门户服务-当前用户：{}", user.getUserName());
             model.addAttribute("user", user);
         }
 
@@ -57,9 +59,9 @@ public class IndexController {
         if (banners == null) {
             banners = sellerBannerService.indexBanner();
             redisTemplate.opsForValue().set(AppConstant.BANNER_CACHE_KEY, banners, 1, TimeUnit.DAYS);
-            log.info("【前台应用】缓存未命中，调用基础SVC并缓存轮播图数据");
+            log.info("【前台应用】门户服务-缓存未命中，调用基础SVC并缓存轮播图数据");
         } else {
-            log.info("【前台应用】缓存命中，从redis拉取轮播图数据");
+            log.info("【前台应用】门户服务-缓存命中，从redis拉取轮播图数据");
         }
 
         // 获取商品展示数据

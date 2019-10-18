@@ -17,6 +17,7 @@ public enum ErrorState {
     REGISTER_FAILED(4001, "注册失败"),
     USER_INACTIVATE(4002, "该用户未激活"),
     USER_FREEZE(4003, "该用户已被冻结"),
+    USER_NOT_LOGGED_IN(4004, "用户未登录"),
 
     PRODUCT_HAS_BEEN_REMOVED(4104, "该商品已下架"),
     PRODUCT_STOCK_LACKING(4105, "商品库存不足"),

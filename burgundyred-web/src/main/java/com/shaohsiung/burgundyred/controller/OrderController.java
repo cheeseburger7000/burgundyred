@@ -8,7 +8,10 @@ import com.google.common.collect.Maps;
 import com.shaohsiung.burgundyred.api.BaseResponse;
 import com.shaohsiung.burgundyred.api.ResultCode;
 import com.shaohsiung.burgundyred.constant.AlipayCallback;
+import com.shaohsiung.burgundyred.error.ErrorState;
+import com.shaohsiung.burgundyred.error.FrontEndException;
 import com.shaohsiung.burgundyred.model.Order;
+import com.shaohsiung.burgundyred.model.User;
 import com.shaohsiung.burgundyred.service.OrderService;
 import com.shaohsiung.burgundyred.util.BaseResponseUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -32,29 +35,55 @@ public class OrderController {
     @Reference(version = "1.0.0")
     private OrderService orderService;
 
+    /**
+     * TODO 提取支付宝初始化信息
+     */
     static {
         Configs.init("zfbinfo.properties");
     }
 
-    // 创建订单
+    /**
+     * 创建订单
+     * @param shippingId
+     * @return
+     */
     @PostMapping("/create")
-    public BaseResponse create(@NotBlank @RequestHeader("userId") String userId, @NotBlank @RequestParam("shippingId") String shippingId) {
-        Order order = orderService.create(userId, shippingId);
+    public BaseResponse create(HttpServletRequest request,
+                               @NotBlank @RequestParam("shippingId") String shippingId) {
+        User user = (User) request.getAttribute("user");
+        if (user == null) {
+            throw new FrontEndException(ErrorState.USER_NOT_LOGGED_IN);
+        }
+
+        Order order = orderService.create(user.getId(), shippingId);
         return BaseResponseUtils.success(order);
     }
 
-    // 支付订单
+    /**
+     * 支付订单
+     * @param orderNo
+     * @param request
+     * @return
+     */
     @PostMapping("/pay")
-    public BaseResponse pay(@NotBlank @RequestHeader("userId") String userId, @NotBlank @RequestParam("orderNo") String orderNo,
+    public BaseResponse pay(@NotBlank @RequestParam("orderNo") String orderNo,
                             HttpServletRequest request) {
+        User user = (User) request.getAttribute("user");
+        if (user == null) {
+            throw new FrontEndException(ErrorState.USER_NOT_LOGGED_IN);
+        }
 
         // 获取存储二维码的目录路径
         String path = request.getSession().getServletContext().getRealPath("upload");
-        BaseResponse result = orderService.pay(orderNo, userId, path);
+        BaseResponse result = orderService.pay(orderNo, user.getId(), path);
         return result;
     }
 
-    // 支付宝回调
+    /**
+     * 支付宝回调
+     * @param request
+     * @return
+     */
     @RequestMapping("/alipay_callback")
     public Object alipayCallback(HttpServletRequest request) {
         Map<String,String> params = Maps.newHashMap();
@@ -92,20 +121,38 @@ public class OrderController {
         return AlipayCallback.RESPONSE_FAILED;
     }
 
-    // 查询订单支付状态
+    /**
+     * 查询订单支付状态
+     * @param orderNo
+     * @return
+     */
     @RequestMapping("/query_order_pay_state")
-    public BaseResponse queryOrderPayState(@NotBlank @RequestHeader("userId") String userId, @NotBlank @RequestParam("orderNo") String orderNo) {
-        BaseResponse baseResponse = orderService.queryOrderPayStatus(userId, orderNo);
+    public BaseResponse queryOrderPayState(HttpServletRequest request, @NotBlank @RequestParam("orderNo") String orderNo) {
+        User user = (User) request.getAttribute("user");
+        if (user == null) {
+            throw new FrontEndException(ErrorState.USER_NOT_LOGGED_IN);
+        }
+
+        BaseResponse baseResponse = orderService.queryOrderPayStatus(user.getId(), orderNo);
         if(baseResponse.getState().equals(ResultCode.SUCCESS.getCode())){
             return BaseResponseUtils.success(true);
         }
         return BaseResponseUtils.success(false);
     }
 
-    // 用户取消订单
+    /**
+     * 用户取消订单
+     * @param orderId
+     * @return
+     */
     @PostMapping("/cancel")
-    public BaseResponse cancel(@NotBlank @RequestHeader("userId") String userId, @NotBlank @RequestParam("orderId") String orderId) {
-        Order cancel = orderService.cancel(orderId, userId);
+    public BaseResponse cancel(HttpServletRequest request, @NotBlank @RequestParam("orderId") String orderId) {
+        User user = (User) request.getAttribute("user");
+        if (user == null) {
+            throw new FrontEndException(ErrorState.USER_NOT_LOGGED_IN);
+        }
+
+        Order cancel = orderService.cancel(orderId, user.getId());
         return BaseResponseUtils.success(cancel);
     }
 }
