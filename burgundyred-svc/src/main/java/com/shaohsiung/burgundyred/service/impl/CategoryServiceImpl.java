@@ -130,4 +130,9 @@ public class CategoryServiceImpl implements CategoryService {
     public Integer categoryListTotalRecord() {
         return categoryMapper.categoryListTotalRecord();
     }
+
+    @Override
+    public Category getById(String categoryId) {
+        return categoryMapper.getById(categoryId);
+    }
 }

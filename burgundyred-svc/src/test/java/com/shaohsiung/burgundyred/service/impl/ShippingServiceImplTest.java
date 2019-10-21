@@ -23,13 +23,13 @@ public class ShippingServiceImplTest {
 
     @Test
     public void addShipping() {
-        Shipping shipping = Shipping.builder().userId("0")
-                .receiverName("shaohsiung")
+        Shipping shipping = Shipping.builder().userId("1182493800958922752")
+                .receiverName("杨少雄")
                 .receiverMobile("13055228247")
                 .receiverProvince("福建省")
                 .receiverCity("厦门市")
                 .receiverDistrict("集美区")
-                .receiverAddress("诚毅学院")
+                .receiverAddress("侨英街道诚毅学院集友楼2号")
                 .receiverZip("3306")
                 .build();
 

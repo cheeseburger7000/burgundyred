@@ -29,4 +29,7 @@ public interface CategoryMapper {
 
     @Select("select count(1) from t_category")
     Integer categoryListTotalRecord();
+
+    @Select("select * from t_category where id = #{categoryId}")
+    Category getById(@Param("categoryId") String categoryId);
 }

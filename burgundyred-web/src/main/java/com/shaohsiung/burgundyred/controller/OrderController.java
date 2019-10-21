@@ -8,19 +8,27 @@ import com.google.common.collect.Maps;
 import com.shaohsiung.burgundyred.api.BaseResponse;
 import com.shaohsiung.burgundyred.api.ResultCode;
 import com.shaohsiung.burgundyred.constant.AlipayCallback;
+import com.shaohsiung.burgundyred.dto.Cart;
 import com.shaohsiung.burgundyred.error.ErrorState;
 import com.shaohsiung.burgundyred.error.FrontEndException;
 import com.shaohsiung.burgundyred.model.Order;
+import com.shaohsiung.burgundyred.model.Shipping;
 import com.shaohsiung.burgundyred.model.User;
+import com.shaohsiung.burgundyred.service.CartService;
 import com.shaohsiung.burgundyred.service.OrderService;
+import com.shaohsiung.burgundyred.service.ShippingService;
 import com.shaohsiung.burgundyred.util.BaseResponseUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotBlank;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,12 +36,18 @@ import java.util.Map;
  */
 @Slf4j
 @Validated
-@RestController
+@Controller
 @RequestMapping("/order")
 public class OrderController {
 
     @Reference(version = "1.0.0")
     private OrderService orderService;
+
+    @Reference(version = "1.0.0")
+    private CartService cartService;
+
+    @Reference(version = "1.0.0")
+    private ShippingService shippingService;
 
     /**
      * TODO 提取支付宝初始化信息
@@ -43,20 +57,48 @@ public class OrderController {
     }
 
     /**
+     * 用户确认订单
+     * @param request
+     * @param model
+     * @return
+     */
+    @GetMapping("/confirm")
+    public String confirmOrder(HttpServletRequest request,
+                               Model model) {
+
+        User user = (User) request.getAttribute("user");
+        if (user == null) {
+            throw new FrontEndException(ErrorState.USER_NOT_LOGGED_IN);
+        }
+
+        Cart cart = cartService.get(user.getId());
+
+        // 根据用户id获取物流信息
+        List<Shipping> shippings = shippingService.shippingList(user.getId());
+
+        model.addAttribute("cart", cart);
+        model.addAttribute("shippings", shippings);
+
+        return "confirm";
+    }
+
+    /**
      * 创建订单
      * @param shippingId
      * @return
      */
-    @PostMapping("/create")
-    public BaseResponse create(HttpServletRequest request,
-                               @NotBlank @RequestParam("shippingId") String shippingId) {
+    @GetMapping("/create/{shippingId}")
+    public String create(HttpServletRequest request,
+                               Model model,
+                               @PathVariable("shippingId") String shippingId) {
         User user = (User) request.getAttribute("user");
         if (user == null) {
             throw new FrontEndException(ErrorState.USER_NOT_LOGGED_IN);
         }
 
         Order order = orderService.create(user.getId(), shippingId);
-        return BaseResponseUtils.success(order);
+
+        return "redirect:/order/pay/" + order.getOrderNo();
     }
 
     /**
@@ -65,9 +107,10 @@ public class OrderController {
      * @param request
      * @return
      */
-    @PostMapping("/pay")
-    public BaseResponse pay(@NotBlank @RequestParam("orderNo") String orderNo,
-                            HttpServletRequest request) {
+    @GetMapping("/pay/{orderNo}")
+    public String pay(@PathVariable("orderNo") String orderNo,
+                            HttpServletRequest request,
+                      Model model) {
         User user = (User) request.getAttribute("user");
         if (user == null) {
             throw new FrontEndException(ErrorState.USER_NOT_LOGGED_IN);
@@ -76,7 +119,21 @@ public class OrderController {
         // 获取存储二维码的目录路径
         String path = request.getSession().getServletContext().getRealPath("upload");
         BaseResponse result = orderService.pay(orderNo, user.getId(), path);
-        return result;
+
+        log.info("result: {}", result);
+
+        Order order = orderService.getByOrderNo(orderNo);
+        if (order == null) {
+            throw new FrontEndException(ErrorState.ORDER_NOT_EXIST);
+        }
+
+        Map<String, String> resultMap = (Map<String, String>) result.getData();
+
+        model.addAttribute("qrcode", resultMap.get("qrUrl"));
+        model.addAttribute("orderNo", orderNo);
+        model.addAttribute("total", order.getTotal());
+
+        return "pay";
     }
 
     /**
@@ -85,6 +142,7 @@ public class OrderController {
      * @return
      */
     @RequestMapping("/alipay_callback")
+    @ResponseBody
     public Object alipayCallback(HttpServletRequest request) {
         Map<String,String> params = Maps.newHashMap();
 
@@ -126,8 +184,9 @@ public class OrderController {
      * @param orderNo
      * @return
      */
-    @RequestMapping("/query_order_pay_state")
-    public BaseResponse queryOrderPayState(HttpServletRequest request, @NotBlank @RequestParam("orderNo") String orderNo) {
+    @RequestMapping("/query_order_pay_state/{orderNo}")
+    @ResponseBody
+    public BaseResponse queryOrderPayState(HttpServletRequest request, @PathVariable("orderNo") String orderNo) {
         User user = (User) request.getAttribute("user");
         if (user == null) {
             throw new FrontEndException(ErrorState.USER_NOT_LOGGED_IN);
@@ -137,11 +196,18 @@ public class OrderController {
         if(baseResponse.getState().equals(ResultCode.SUCCESS.getCode())){
             return BaseResponseUtils.success(true);
         }
-        return BaseResponseUtils.success(false);
+        return BaseResponseUtils.failure(false);
+    }
+
+    @GetMapping("/success/{orderNo}")
+    public String paySuccess(@PathVariable("orderNo") String orderNo,
+                             Model model) {
+        model.addAttribute("message", "订单号：" + orderNo + "，支付成功！");
+        return "message";
     }
 
     /**
-     * 用户取消订单
+     * TODO 用户取消订单
      * @param orderId
      * @return
      */

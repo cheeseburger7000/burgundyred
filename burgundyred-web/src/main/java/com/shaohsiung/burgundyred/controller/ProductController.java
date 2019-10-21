@@ -1,13 +1,17 @@
 package com.shaohsiung.burgundyred.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.shaohsiung.burgundyred.ProductVo;
 import com.shaohsiung.burgundyred.constant.AppConstant;
 import com.shaohsiung.burgundyred.document.ProductDocument;
+import com.shaohsiung.burgundyred.model.Category;
 import com.shaohsiung.burgundyred.model.Product;
 import com.shaohsiung.burgundyred.model.User;
+import com.shaohsiung.burgundyred.service.CategoryService;
 import com.shaohsiung.burgundyred.service.ProductService;
 import com.shaohsiung.burgundyred.service.SearchService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,6 +34,9 @@ public class ProductController {
     @Reference(version = "1.0.0")
     private SearchService searchService;
 
+    @Reference(version = "1.0.0")
+    private CategoryService categoryService;
+
     /**
      * 查看商品详情
      * @param request
@@ -49,7 +56,19 @@ public class ProductController {
         }
 
         Product product = productService.getProductById(productId);
-        model.addAttribute("product", product);
+
+        ProductVo productVo = new ProductVo();
+        BeanUtils.copyProperties(product, productVo);
+
+        Category category = categoryService.getById(product.getCategoryId());
+        if (category == null) {
+            // TODO 处理暂未划分类目 0
+            productVo.setCategoryName("该商品暂未划分类目");
+            productVo.setCategoryId("0");
+        }
+        productVo.setCategoryName(category.getName());
+
+        model.addAttribute("product", productVo);
         return "detail";
     }
 

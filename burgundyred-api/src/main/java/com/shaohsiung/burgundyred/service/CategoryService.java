@@ -58,4 +58,6 @@ public interface CategoryService {
      * @return
      */
     Integer categoryListTotalRecord();
+
+    Category getById(String categoryId);
 }

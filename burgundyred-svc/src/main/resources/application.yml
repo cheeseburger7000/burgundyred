@@ -59,3 +59,10 @@ rabbitmq:
   port: 5672
   username: guest
   password: guest
+
+
+qiniu:
+  accessKey: AiYMNMLUCx5T2KJByydrwa3Yje2pVOFZmMn-XlRW
+  secretKey: MEeHVxsI_sJ_2P-x5Css-9IPBLQ65k_3BWfffNNp
+  bucket: producttable
+  host: pzceg9ngw.bkt.clouddn.com

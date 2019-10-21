@@ -51,6 +51,8 @@ public class IndexController {
             model.addAttribute("user", user);
         }
 
+        // TODO 获取购物车的商品数量
+
         // 获取商品类目列表
         List<CategoryListItemDto> categoryList = categoryService.indexCategoryList();
 

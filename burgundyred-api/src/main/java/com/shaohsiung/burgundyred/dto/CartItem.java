@@ -21,6 +21,8 @@ public class CartItem implements Serializable {
 
     private Integer quantity;
 
+    private String mainPicture;
+
     /** 购物项总价 */
     private BigDecimal amount;
 

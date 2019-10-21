@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>商品详情 - 勃艮第红</title>
+    <link href="./lib/fontawesome/css/all.css" rel="stylesheet" th:href="@{/static/lib/fontawesome/css/all.css}">
+    <link rel="stylesheet" href="./style/index.css" th:href="@{/static/style/index.css}">
+    <link rel="stylesheet" href="./style/navbar.css" th:href="@{/static/style/navbar.css}">
+    <link rel="stylesheet" href="./style/search-form.css" th:href="@{/static/style/search-form.css}">
+    <link rel="stylesheet" href="./style/ad.css" th:href="@{/static/style/ad.css}">
+    <link rel="stylesheet" href="./style/footer.css" th:href="@{/static/style/footer.css}">
+    <style>
+        .bread_nav {
+            height: 50px;
+            border-top: 4px solid #6C0A26;
+            background-color: #1F1122;
+            color: #ffffff;
+            line-height: 2.8em;
+            margin-bottom: 40px;
+        }
+        .bread_nav a {
+            color: #ffffff;
+            text-decoration: none;
+        }
+        .bread_nav a:hover {
+            color: #D3D0D4;
+        }
+
+        .left-container {
+            float: left;
+            /* border: 1px solid red; */
+            height: 530px;
+            width: 400px;
+        }
+        .left-container ul.sm-picture-list li {
+            float: left;
+            list-style-type: none;
+            border: 1px solid #6C0A26;
+            margin-right: 10px;
+        }
+        .right-container {
+            float: left;
+            /* border: 1px solid black; */
+            height: 530px;
+            width: 676px;
+        }
+        .right-container .price-box {
+            height: 36px;
+            background-color: #E5E4E4;
+            margin: 16px;
+        }
+        .right-container .state-box {
+            margin: 16px;
+        }
+        .right-container .stock-box {
+            margin: 16px;
+        }
+        .right-container .stock-box a {
+            text-decoration: none;
+            color: black;
+        }
+        .right-container .category-box {
+            margin: 16px;
+        }
+        .right-container .category-box a {
+            color: black;
+            text-decoration: none;
+            font-size: 18px;
+        }
+        .right-container .category-box a:hover {
+            color: #6C0A26;
+        }
+        .right-container .btn-box-list {
+            margin: 16px;
+        }
+        .right-container .btn-box-list .btn-box1 {
+            float: left;
+            background-color: #fff;
+            border: 1px solid #6C0A26;
+            height: 40px;
+            width: 120px;
+            text-align: center;
+            line-height: 2.6em;
+        }
+        .right-container .btn-box-list .btn-box1 a {
+            color: #6C0A26;
+            text-decoration: none;
+        }
+        .right-container .btn-box-list .btn-box {
+            float: left;
+            margin-left: 10px;
+            background-color: #6C0A26;
+            border: 1px solid #6C0A26;
+            height: 40px;
+            width: 120px;
+            text-align: center;
+            line-height: 2.6em;
+        }
+        .right-container .btn-box-list .btn-box a {
+            color: #fff;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+<!-- 导航 -->
+<div class="navbar">
+    <div class="w">
+        <ul class="user-info">
+            <li class="user-info-item"><a href="#">注册</a></li>
+            <li class="user-info-item"><a href="#">登录</a></li>
+        </ul>
+
+        <ul class="nav-list">
+            <li class="nav-list-item"><a href="#"><i class="fas fa-shopping-cart"></i> 购物车(0)</a></li>
+            <li class="nav-list-item"><a href="#">我的订单</a></li>
+            <li class="nav-list-item"><a href="#">个人中心</a></li>
+        </ul>
+    </div>
+</div>
+
+<!-- logo，搜索框 -->
+<div class="w">
+    <a class="site-logo" href="#"  th:href="@{/}">Burgundyred</a>
+    <div class="search-form">
+        <input class="search-input" id="search-input" placeholder="请输入商品名称">
+        <button class="search-btn" id="search-btn">搜索</button>
+    </div>
+</div>
+
+<!-- 面包削导航 -->
+<div class="bread_nav">
+    <div class="w">
+        <a href="#" th:href="@{/}">Burgundyred</a> > <a href="#">商品详情</a>
+    </div>
+</div>
+
+<div class="w">
+    <div class="left-container">
+        <div class="lg-picture">
+            <img height="420" width="292.99" src="./images/2.jpg" alt="" th:src="@{${product.mainPicture}}">
+        </div>
+        <ul class="sm-picture-list">
+            <li><img src="./images/2.jpg" height="100" width="70" alt="" th:src="@{${product.mainPicture}}"></li>
+            <li><img src="./images/2.jpg" height="100" width="70" alt="" th:src="@{${product.subPicture}}"></li>
+        </ul>
+    </div>
+    <div class="right-container">
+        <h3 style="margin: 16px;" th:text="${product.name}">NIKE Air Jordan 耐克男夏季aj篮球运动五分裤速干短裤AQ3116-010</h3>
+        <div class="price-box">
+            <p>价格：<strong th:text="'￥' +${product.price}" style="color: #6C0A26; font-size: 24px; font-weight: bold;">￥130</strong></p>
+        </div>
+        <div class="stock-box">
+            <p>数量：<a href="#">-</a>&nbsp;<input style="width: 15px;" type="text" value="0">&nbsp;<a href="#">+</a>
+                &nbsp;&nbsp;&nbsp;&nbsp;库存：<span th:text="${product.stock}">12</span> 件
+            </p>
+        </div>
+        <div class="category-box">
+            <p>分类：<a href="#" th:text="${product.categoryName}">勃艮第红</a></p>
+        </div>
+        <div class="state-box">
+            <p>状态：<span th:text="${product.state}">上架中</span></p>
+        </div>
+        <div class="btn-box-list">
+            <div class="btn-box1">
+                <a  th:href="@{'/cart/inc/'+${product.id}}" href="#">立即购买</a>
+            </div>
+            <div class="btn-box">
+                <a href="#"><i class="fas fa-shopping-cart"></i>&nbsp;加入购物车</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="w" style="margin-top: 60px;">
+    <h3 style="color: #911E3B; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 2px solid #911E3B;">商品详情</h3>
+    <p th:text="${product.detail}">智利 紅酒  波塔酒莊 波塔卡本內蘇維濃紅酒产品描述</p>
+    <img src="./images/1.jpg" alt="" th:src="@{${product.mainPicture}}">
+    <img src="./images/2.jpg" alt="" th:src="@{${product.subPicture}}">
+</div>
+
+<div class="ad">
+    <div class="w">
+        广告
+    </div>
+</div>
+
+<div class="footer">
+    <div class="w">
+        版权
+    </div>
+</div>
+<script src="/static/lib/jquery.js"></script>
+</body>
+</html>

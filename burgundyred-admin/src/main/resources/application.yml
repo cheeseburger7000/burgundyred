@@ -18,6 +18,8 @@ redis:
 spring:
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
+  mvc:
+    static-path-pattern: /static/**
 
 qiniu:
   accessKey: AiYMNMLUCx5T2KJByydrwa3Yje2pVOFZmMn-XlRW

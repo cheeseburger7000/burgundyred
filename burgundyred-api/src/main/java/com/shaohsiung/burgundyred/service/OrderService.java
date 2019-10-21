@@ -121,4 +121,6 @@ public interface OrderService {
      * @return
      */
     Integer orderListTotalRecord();
+
+    Order getByOrderNo(String orderNo);
 }

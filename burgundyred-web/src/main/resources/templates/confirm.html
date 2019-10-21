@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>确认订单 - 勃艮第红</title>
+    <link href="./lib/fontawesome/css/all.css" rel="stylesheet" th:href="@{/static/lib/fontawesome/css/all.css}">
+    <link rel="stylesheet" href="./style/index.css" th:href="@{/static/style/index.css}">
+    <link rel="stylesheet" href="./style/navbar.css" th:href="@{/static/style/navbar.css}">
+    <link rel="stylesheet" href="./style/search-form.css" th:href="@{/static/style/search-form.css}">
+    <link rel="stylesheet" href="./style/ad.css" th:href="@{/static/style/ad.css}">
+    <link rel="stylesheet" href="./style/footer.css" th:href="@{/static/style/footer.css}">
+    <style>
+        .bread_nav {
+            height: 50px;
+            border-top: 4px solid #6C0A26;
+            background-color: #1F1122;
+            color: #ffffff;
+            line-height: 2.8em;
+            margin-bottom: 40px;
+        }
+        .bread_nav a {
+            color: #ffffff;
+            text-decoration: none;
+        }
+        .bread_nav a:hover {
+            color: #D3D0D4;
+        }
+
+        .cart-table {
+            width: 1080px;
+        }
+        .cart-table {
+            border: 1px solid #1F1122;
+        }
+        .cart-table .cart-col a {
+            text-decoration: none; 
+            color: black;
+        }
+        .cart-table .cart-col a:hover {
+            color: #911E3B;
+        }
+        .cart-table tr {
+            height: 120px;
+        }
+        .cart-table thead tr {
+            height: 60px;
+        }
+
+        .shipping-list {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        .shipping-list .shipping-item {
+            line-height: 2.4em;
+            height: 40px;
+            padding-left: 4px;
+        }
+        .shipping-list .shipping-item:hover {
+            height: 40px;
+            color: #fff;
+            background-color: #911E3B;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航 -->
+    <div class="navbar">
+        <div class="w">
+            <ul class="user-info">
+                <li class="user-info-item"><a href="#">注册</a></li>
+                <li class="user-info-item"><a href="#">登录</a></li>
+            </ul>
+            
+            <ul class="nav-list">
+                <li class="nav-list-item"><a href="#"><i class="fas fa-shopping-cart"></i> 购物车(0)</a></li>
+                <li class="nav-list-item"><a href="#">我的订单</a></li>
+                <li class="nav-list-item"><a href="#">个人中心</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- logo，搜索框 -->
+    <div class="w">
+        <a class="site-logo" href="#">Burgundyred</a>
+        <div class="search-form"> 
+            <input class="search-input" id="search-input" placeholder="请输入商品名称"> 
+            <button class="search-btn" id="search-btn">搜索</button> 
+        </div>
+    </div>
+
+    <!-- 面包削导航 -->
+    <div class="bread_nav">
+        <div class="w">
+            <a href="#">Burgundyred</a> > <a href="#">确认订单</a>
+        </div>
+    </div>
+
+    <div class="w" style="margin-bottom: 60px;">
+        <h3 style="color: #911E3B; margin-bottom: 10px;">确认收货地址</h3>
+        <ul class="shipping-list">
+            <li th:each="shipping : ${shippings}" class="shipping-item"><input name="shipping" type="radio" th:value="${shipping.id}" th:text="' '+${shipping.receiverProvince}+' '+${shipping.receiverCity}+' '+${shipping.receiverDistrict}+' '+${shipping.receiverAddress}+' ('+${shipping.receiverName}+' 收) '+${shipping.receiverMobile}"></li>
+        </ul>
+        <button>添加新地址</button>
+    </div>
+
+    <div class="w" style="margin-bottom: 60px;">
+        <h3 style="color: #911E3B; margin-bottom: 10px;">确认订单信息</h3>
+        <table border="1" cellspacing="0" class="cart-table">
+            <thead style="text-align: center;">
+                <td>产品图片</td>
+                <td>产品信息</td>
+                <td>单价</td>
+                <td>数量</td>
+                <td>金额</td>
+            </thead>
+            <tr th:each="instance : ${cart.content}" class="cart-row" style="text-align: center;">
+                <td class="cart-col">
+                    <img height="100" width="60" src="./images/2.jpg" alt="" th:src="@{${instance.value.mainPicture}}">
+                </td>
+                <td class="cart-col" style="width: 200px;">
+                    <a th:text="${instance.value.name}" href="#" th:href="@{'/product/' + ${instance.value.productId}}">NIKE Air Jordan 耐克男夏季aj篮球运动五分裤速干短裤AQ3116-010</a>
+                </td>
+                <td class="cart-col">
+                    <p th:text="'￥'+${instance.value.price}">￥289.00</p>
+                </td>
+                <td class="cart-col">
+                    <span th:text="${instance.value.quantity}"> 3 </span>
+                </td>
+                <td class="cart-col">
+                    <p th:text="'￥'+${instance.value.amount}" style="color: #911E3B; font-weight: bold;">￥578.00</p>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="w" style="font-size: 20px; text-align: right;">
+        <p>实付款：<span style="color: #911E3B; font-weight: bold;" th:text="'¥ '+${cart.total}">11.90</span></p>
+        <br>
+        <a href="#" th:href="@{/cart}">返回购物车</a>&nbsp;&nbsp;&nbsp;&nbsp;
+        <button onclick="createOrder();">提交订单</button>
+    </div>
+
+    <div class="ad">
+        <div class="w">
+            广告
+        </div>
+    </div>
+    
+    <div class="footer">
+        <div class="w">
+            版权
+        </div>
+    </div>
+<script src="/static/lib/jquery.js"></script>
+<script>
+    function createOrder() {
+        // 获取物流id
+        var shippingId = $('input[name="shipping"]:checked').val();
+        console.log(shippingId)
+        if (shippingId == undefined) {
+            alert("请选择您的物流信息！")
+            return false;
+        }
+
+        $(location).attr('href', '/order/create/' + shippingId);
+    }
+</script>
+</body>
+</html>

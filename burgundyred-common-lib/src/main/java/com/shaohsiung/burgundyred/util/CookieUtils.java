@@ -1,8 +1,11 @@
 package com.shaohsiung.burgundyred.util;
 
+import com.shaohsiung.burgundyred.constant.AppConstant;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Arrays;
 
 public class CookieUtils {
     public final static String TOKEN = "token";
@@ -32,5 +35,20 @@ public class CookieUtils {
             }
         }
         return null;
+    }
+
+    /**
+     * 获取Cookie中的JWT
+     * @param request
+     * @return
+     */
+    public static String getToken(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies == null || cookies.length == 0) return null;
+        Cookie tokenCookie = Arrays.stream(cookies)
+                .filter(cookie -> AppConstant.JWT_COOKIE_NAME.equals(cookie.getName()))
+                .findAny().orElse(null);
+        if (tokenCookie == null) return null;
+        return tokenCookie.getValue();
     }
 }

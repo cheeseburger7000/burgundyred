@@ -10,6 +10,7 @@ import com.shaohsiung.burgundyred.service.CartService;
 import com.shaohsiung.burgundyred.util.BaseResponseUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,16 +29,80 @@ public class CartController {
     @Reference(version = "1.0.0")
     private CartService cartService;
 
-    @PostMapping("/{productId}")
-    @ResponseBody
-    public BaseResponse add(HttpServletRequest request,
-                            @PathVariable("productId") String productId) {
+    /**
+     * 获取购物车页面
+     * @param request
+     * @param model
+     * @return
+     */
+    @GetMapping
+    public String getCart(HttpServletRequest request,
+                          Model model) {
+        // 登陆校验
+        User user = (User) request.getAttribute("user");
+        if (user == null) {
+            throw new FrontEndException(ErrorState.USER_NOT_LOGGED_IN);
+        }
+
+        Cart cart = cartService.get(user.getId());
+
+        model.addAttribute("cart", cart);
+
+        return "cart";
+    }
+
+    /**
+     * 删除购物车商品项
+     * @param request
+     * @param productId
+     * @param model
+     * @return
+     */
+    @GetMapping("/delete/{productId}")
+    public String deleteCartItem(HttpServletRequest request,
+                                 @PathVariable("productId") String productId,
+                                 Model model) {
+        // 登陆校验
+        User user = (User) request.getAttribute("user");
+        if (user == null) {
+            throw new FrontEndException(ErrorState.USER_NOT_LOGGED_IN);
+        }
+
+        Cart cart = cartService.deleteCartItem(productId, user.getId());
+
+        model.addAttribute("cart", cart);
+        return "cart";
+    }
+
+    @GetMapping("/inc/{productId}")
+    public String add(HttpServletRequest request,
+                            @PathVariable("productId") String productId,
+                      Model model) {
         User user = (User) request.getAttribute("user");
         if (user == null) {
             throw new FrontEndException(ErrorState.USER_NOT_LOGGED_IN);
         }
 
         Cart cart = cartService.add(productId, user.getId());
-        return BaseResponseUtils.success(cart);
+
+        model.addAttribute("cart", cart);
+
+        return "cart";
+    }
+
+    @GetMapping("/decrease/{productId}")
+    public String decrease(HttpServletRequest request,
+                      @PathVariable("productId") String productId,
+                      Model model) {
+        User user = (User) request.getAttribute("user");
+        if (user == null) {
+            throw new FrontEndException(ErrorState.USER_NOT_LOGGED_IN);
+        }
+
+        Cart cart = cartService.decrease(productId, user.getId());
+
+        model.addAttribute("cart", cart);
+
+        return "cart";
     }
 }

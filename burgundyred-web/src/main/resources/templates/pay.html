@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>收银台 - 勃艮第红</title>
+    <link href="./lib/fontawesome/css/all.css" rel="stylesheet" th:href="@{/static/lib/fontawesome/css/all.css}">
+    <link rel="stylesheet" href="./style/index.css" th:href="@{/static/style/index.css}">
+    <link rel="stylesheet" href="./style/navbar.css" th:href="@{/static/style/navbar.css}">
+    <link rel="stylesheet" href="./style/search-form.css" th:href="@{/static/style/search-form.css}">
+    <link rel="stylesheet" href="./style/ad.css" th:href="@{/static/style/ad.css}">
+    <link rel="stylesheet" href="./style/footer.css" th:href="@{/static/style/footer.css}">
+    <style>
+        .bread_nav {
+            height: 50px;
+            border-top: 4px solid #6C0A26;
+            background-color: #1F1122;
+            color: #ffffff;
+            line-height: 2.8em;
+            margin-bottom: 40px;
+        }
+        .bread_nav a {
+            color: #ffffff;
+            text-decoration: none;
+        }
+        .bread_nav a:hover {
+            color: #D3D0D4;
+        }
+        .show-qr-code {
+            border: 2px solid #EFF0F2;
+            height: 400px;
+            padding-top: 100px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航 -->
+    <div class="navbar">
+        <div class="w">
+            <ul class="user-info">
+                <li class="user-info-item"><a href="#">注册</a></li>
+                <li class="user-info-item"><a href="#">登录</a></li>
+            </ul>
+            
+            <ul class="nav-list">
+                <li class="nav-list-item"><a href="#"><i class="fas fa-shopping-cart"></i> 购物车(0)</a></li>
+                <li class="nav-list-item"><a href="#">我的订单</a></li>
+                <li class="nav-list-item"><a href="#">个人中心</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- logo，搜索框 -->
+    <div class="w">
+        <a class="site-logo" href="#">Burgundyred</a>
+        <div class="search-form"> 
+            <input class="search-input" id="search-input" placeholder="请输入商品名称"> 
+            <button class="search-btn" id="search-btn">搜索</button> 
+        </div>
+    </div>
+
+    <!-- 面包削导航 -->
+    <div class="bread_nav">
+        <div class="w">
+            <a href="#">Burgundyred</a> > <a href="#">收银台</a>
+        </div>
+    </div>
+
+    <div class="w">
+        <p style="margin-bottom: 6px;">
+            <span th:text="'订单号：'+${orderNo}">订单号：00000000000</span>
+            <span style="float: right; color: red; font-weight: bold;" th:text="'￥ '+${total}">￥800.00元</span>
+        </p>
+        <input type="hidden" id="orderNoHidden" th:value="${orderNo}" />
+        <div class="show-qr-code">
+            <p>扫一扫付款（元）</p>
+            <p style="color: red; font-weight: bold;" th:text="'￥ '+${total}">￥800.00元</p>
+            <img th:src="@{${qrcode}}" src="./images/1.jpg" alt="" height="200" width="200">
+            <p>打开手机支付宝</p>
+            <p>扫一扫继续付款</p>
+        </div>
+    </div>
+
+    <div class="ad">
+        <div class="w">
+            广告
+        </div>
+    </div>
+    
+    <div class="footer">
+        <div class="w">
+            版权
+        </div>
+    </div>
+<script src="/static/lib/jquery.js"></script>
+<script>
+    // 定时器：每2秒请求后端，若data为true，则跳转到支付成功提示页面
+    window.setInterval(queryOrderPayState, 2000);
+
+    function queryOrderPayState() {
+        var orderNo = $('#orderNoHidden').val();
+        console.log(orderNo);
+        if (orderNo == undefined) {
+            return false;
+        }
+
+        $.ajax({
+            type: "get",
+            url: "/order/query_order_pay_state/" + orderNo,
+            success: function (result) {
+                console.log('get请求成功！ result: ');
+                console.log(result);
+
+                var data = result.data;
+                if (data == true) {
+                    $(location).attr('href', '/order/success/'+orderNo);
+                }
+                return;
+            },
+            error: function (e) {
+                console.log('get请求错误！ e: ');
+                console.log(e);
+                return;
+            }
+        })
+    }
+</script>
+</body>
+</html>

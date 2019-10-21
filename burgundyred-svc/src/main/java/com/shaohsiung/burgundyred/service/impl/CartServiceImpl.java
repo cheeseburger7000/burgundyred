@@ -107,6 +107,7 @@ public class CartServiceImpl implements CartService {
                 .price(product.getPrice())
                 .amount(product.getPrice())
                 .quantity(1)
+                .mainPicture(product.getMainPicture())
                 .name(product.getName())
                 .build();
         cart.getContent().put(productId, newCartItem);

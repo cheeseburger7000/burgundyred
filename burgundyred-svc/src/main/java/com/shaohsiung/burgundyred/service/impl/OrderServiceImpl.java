@@ -14,10 +14,17 @@ import com.alipay.demo.trade.service.AlipayTradeService;
 import com.alipay.demo.trade.service.impl.AlipayTradeServiceImpl;
 import com.alipay.demo.trade.utils.ZxingUtils;
 import com.google.common.collect.Maps;
+import com.google.gson.Gson;
+import com.qiniu.common.QiniuException;
+import com.qiniu.common.Zone;
+import com.qiniu.http.Response;
+import com.qiniu.storage.Configuration;
+import com.qiniu.storage.UploadManager;
+import com.qiniu.storage.model.DefaultPutRet;
+import com.qiniu.util.Auth;
 import com.shaohsiung.burgundyred.api.BaseResponse;
 import com.shaohsiung.burgundyred.api.ResultCode;
 import com.shaohsiung.burgundyred.constant.AlipayCallback;
-import com.shaohsiung.burgundyred.constant.AppConstant;
 import com.shaohsiung.burgundyred.dto.Cart;
 import com.shaohsiung.burgundyred.dto.CartItem;
 import com.shaohsiung.burgundyred.dto.OrderDetailDto;
@@ -44,9 +51,13 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -54,6 +65,18 @@ import java.util.stream.Collectors;
 @Transactional
 @Service(version = "1.0.0")
 public class OrderServiceImpl implements OrderService {
+
+    @Value("${qiniu.accessKey}")
+    private String QINIU_ACCESSKEY;
+
+    @Value("${qiniu.secretKey}")
+    private String QINIU_SECRETKEY;
+
+    @Value("${qiniu.bucket}")
+    private String QINIU_BUCKET;
+
+    @Value("${qiniu.host}")
+    private String QINIU_HOST;
 
     private static AlipayTradeService tradeService;
 
@@ -243,15 +266,25 @@ public class OrderServiceImpl implements OrderService {
 
                 File targetFile = new File(path, qrFileName);
 
-                // TODO 上传二维码到七牛云
+                // 上传二维码到七牛云
+                String qrUrl = "";
+                try {
+                    FileInputStream fileInputStream = new FileInputStream(targetFile);
+                    qrUrl = uploadQiniuImg(fileInputStream, UUID.randomUUID().toString());
+                } catch (QiniuException e) {
+                    e.printStackTrace();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+
                 //try {
                 //    FTPUtil.uploadFile(Lists.newArrayList(targetFile));
                 //} catch (IOException e) {
                 //    log.error("上传二维码异常", e);
                 //}
 
-                log.info("qrPath:" + qrPath);
-                String qrUrl = PropertiesUtils.getProperty("ftp.server.http.prefix") + targetFile.getName();
+                //log.info("qrPath:" + qrPath);
+                //String qrUrl = PropertiesUtils.getProperty("ftp.server.http.prefix") + targetFile.getName();
                 resultMap.put("qrUrl", qrUrl);
 
                 return BaseResponseUtils.success(ResultCode.ALIPAY_PAY_SUCCESS, resultMap);
@@ -623,5 +656,31 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Integer orderListTotalRecord() {
         return orderMapper.orderListTotalRecord();
+    }
+
+    @Override
+    public Order getByOrderNo(String orderNo) {
+        return orderMapper.getByOrderNo(orderNo);
+    }
+
+    /**
+     *  七牛云上传图片
+     * @param inputStream 输入流
+     * @param fileName 图片服务器上文件名称
+     * @return URL 文件资源路径
+     */
+    private String uploadQiniuImg(FileInputStream inputStream, String fileName) throws QiniuException {
+        Configuration cfg = new Configuration(Zone.zone2());
+        UploadManager uploadManager = new UploadManager(cfg);
+
+        Auth auth = Auth.create(QINIU_ACCESSKEY, QINIU_SECRETKEY);
+        String upToken = auth.uploadToken(QINIU_BUCKET);
+
+        Response response = uploadManager.put(inputStream, fileName, upToken, null, null);
+        // 解析上传成功的结果
+        DefaultPutRet putRet = new Gson().fromJson(response.bodyString(), DefaultPutRet.class);
+        String result = "http://" + QINIU_HOST + "/" + putRet.key;
+
+        return result;
     }
 }
