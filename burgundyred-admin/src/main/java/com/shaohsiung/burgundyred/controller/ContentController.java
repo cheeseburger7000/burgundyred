@@ -12,6 +12,9 @@ import com.qiniu.util.Auth;
 import com.shaohsiung.burgundyred.api.BaseResponse;
 import com.shaohsiung.burgundyred.constant.AppConstant;
 import com.shaohsiung.burgundyred.constant.QiniuConstant;
+import com.shaohsiung.burgundyred.error.BackEndException;
+import com.shaohsiung.burgundyred.error.ErrorState;
+import com.shaohsiung.burgundyred.model.Administrator;
 import com.shaohsiung.burgundyred.model.Banner;
 import com.shaohsiung.burgundyred.model.Category;
 import com.shaohsiung.burgundyred.param.BannerParam;
@@ -26,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -40,6 +44,7 @@ import java.util.UUID;
 @Slf4j
 @RestController
 @RequestMapping("/content")
+@CrossOrigin(allowCredentials="true", maxAge = 3600)
 public class ContentController {
 
     @Reference(version = "1.0.0")
@@ -77,32 +82,42 @@ public class ContentController {
     }
 
     @GetMapping("/banner/{pageNum}")
-    public BaseResponse bannerList(@PathVariable("pageNum") Integer pageNum) {
+    public BaseResponse bannerList(@PathVariable("pageNum") Integer pageNum, HttpServletRequest request) {
+        Administrator admin = (Administrator) request.getAttribute("admin");
+        if (admin == null) {
+            throw  new BackEndException(ErrorState.ADMIN_AUTHENTICATION_FAILED);
+        }
+        log.info("【产品管理】当前管理员：{}", admin);
+
         BaseResponse bannerList = sellerBannerService.bannerList(pageNum, AppConstant.BANNER_PAGE_SIZE);
 
         // 计算总页数
         Integer totalRecord = sellerBannerService.bannerListTotalRecord();
-        Integer totalPage = (totalRecord + AppConstant.BANNER_PAGE_SIZE - 1) / AppConstant.BANNER_PAGE_SIZE;
 
         Map result = new HashMap();
         result.put("bannerList", bannerList.getData());
-        result.put("page", pageNum);
-        result.put("totalPage", totalPage);
+        result.put("pageSize", AppConstant.BANNER_PAGE_SIZE);
+        result.put("totalRecord", totalRecord);
         return BaseResponseUtils.success(result);
     }
 
     @GetMapping("/category/{pageNum}")
-    public BaseResponse categoryList(@PathVariable("pageNum") Integer pageNum) {
+    public BaseResponse categoryList(@PathVariable("pageNum") Integer pageNum, HttpServletRequest request) {
+        Administrator admin = (Administrator) request.getAttribute("admin");
+        if (admin == null) {
+            throw  new BackEndException(ErrorState.ADMIN_AUTHENTICATION_FAILED);
+        }
+        log.info("【产品管理】当前管理员：{}", admin);
+
         List<Category> categories = categoryService.categoryList(pageNum, AppConstant.CATEGORY_PAGE_SIZE);
 
         // 计算总页数
         Integer totalRecord = categoryService.categoryListTotalRecord();
-        Integer totalPage = (totalRecord + AppConstant.CATEGORY_PAGE_SIZE - 1) / AppConstant.CATEGORY_PAGE_SIZE;
 
         Map result = new HashMap();
         result.put("categories", categories);
-        result.put("page", pageNum);
-        result.put("totalPage", totalPage);
+        result.put("pageSize", AppConstant.CATEGORY_PAGE_SIZE);
+        result.put("totalRecord", totalRecord);
         return BaseResponseUtils.success(result);
     }
 

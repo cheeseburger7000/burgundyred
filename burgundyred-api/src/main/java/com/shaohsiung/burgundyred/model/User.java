@@ -30,4 +30,6 @@ public class User implements Serializable {
     private UserState state;
 
     private Date createTime;
+
+    private Date updateTime;
 }

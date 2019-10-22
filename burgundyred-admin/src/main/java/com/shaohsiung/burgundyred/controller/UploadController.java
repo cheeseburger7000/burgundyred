@@ -23,6 +23,7 @@ import java.util.UUID;
 @Slf4j
 @RestController
 @RequestMapping("/upload")
+@CrossOrigin(allowCredentials="true", maxAge = 3600)
 public class UploadController {
 
     @Autowired

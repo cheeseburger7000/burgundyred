@@ -1,7 +1,7 @@
 package com.shaohsiung.burgundyred.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
-import com.shaohsiung.burgundyred.ProductVo;
+import com.shaohsiung.burgundyred.vo.ProductVo;
 import com.shaohsiung.burgundyred.constant.AppConstant;
 import com.shaohsiung.burgundyred.document.ProductDocument;
 import com.shaohsiung.burgundyred.model.Category;

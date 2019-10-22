@@ -3,12 +3,16 @@ package com.shaohsiung.burgundyred.controller;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.shaohsiung.burgundyred.api.BaseResponse;
 import com.shaohsiung.burgundyred.constant.AppConstant;
+import com.shaohsiung.burgundyred.error.BackEndException;
+import com.shaohsiung.burgundyred.error.ErrorState;
+import com.shaohsiung.burgundyred.model.Administrator;
 import com.shaohsiung.burgundyred.model.Order;
 import com.shaohsiung.burgundyred.service.OrderService;
 import com.shaohsiung.burgundyred.util.BaseResponseUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +23,7 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequestMapping("/order")
+@CrossOrigin(allowCredentials="true", maxAge = 3600)
 public class OrderController {
 
     @Reference(version = "1.0.0")
@@ -30,17 +35,22 @@ public class OrderController {
      * @return
      */
     @GetMapping("/{pageNum}")
-    public BaseResponse orderList(@PathVariable("pageNum") Integer pageNum) {
+    public BaseResponse orderList(@PathVariable("pageNum") Integer pageNum, HttpServletRequest request) {
+        Administrator admin = (Administrator) request.getAttribute("admin");
+        if (admin == null) {
+            throw  new BackEndException(ErrorState.ADMIN_AUTHENTICATION_FAILED);
+        }
+        log.info("【产品管理】当前管理员：{}", admin);
+
         List<Order> orderList = orderService.orderList(pageNum, AppConstant.ORDER_PAGE_SIZE);
 
         // 计算总页数
         Integer totalRecord = orderService.orderListTotalRecord();
-        Integer totalPage = (totalRecord + AppConstant.ORDER_PAGE_SIZE - 1) / AppConstant.ORDER_PAGE_SIZE;
 
         Map result = new HashMap();
         result.put("orderList", orderList);
-        result.put("page", pageNum);
-        result.put("totalPage", totalPage);
+        result.put("pageSize", AppConstant.ORDER_PAGE_SIZE);
+        result.put("totalRecord", totalRecord);
         return BaseResponseUtils.success(result);
     }
 

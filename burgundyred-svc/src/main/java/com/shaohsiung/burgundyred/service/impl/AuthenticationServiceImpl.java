@@ -218,10 +218,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public Administrator adminLogin(String adminName, String password) {
         String encryptPassword = AppUtils.sha256Encrypt(password);
         Administrator administrator = adminMapper.findByAdminNameAndPassword(adminName, encryptPassword);
-        if (administrator == null) {
-            throw new BackEndException(ErrorState.ADMIN_AUTHENTICATION_FAILED);
+        if (administrator != null) {
+            administrator.setPassword("");
         }
-        administrator.setPassword("");
         return administrator;
     }
 

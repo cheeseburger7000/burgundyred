@@ -27,4 +27,6 @@ public interface AppConstant {
     Integer ORDER_PAGE_SIZE = 4;
 
     String JWT_COOKIE_NAME = "token";
+
+    String ADMIN_JWT_COOKIE_NAME = "admin_token";
 }

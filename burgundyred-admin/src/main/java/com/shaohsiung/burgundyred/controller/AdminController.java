@@ -2,6 +2,10 @@ package com.shaohsiung.burgundyred.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.shaohsiung.burgundyred.api.BaseResponse;
+import com.shaohsiung.burgundyred.api.ResultCode;
+import com.shaohsiung.burgundyred.constant.AppConstant;
+import com.shaohsiung.burgundyred.error.BackEndException;
+import com.shaohsiung.burgundyred.error.ErrorState;
 import com.shaohsiung.burgundyred.model.Administrator;
 import com.shaohsiung.burgundyred.model.User;
 import com.shaohsiung.burgundyred.param.AdminParam;
@@ -10,11 +14,9 @@ import com.shaohsiung.burgundyred.util.BaseResponseUtils;
 import com.shaohsiung.burgundyred.util.CookieUtils;
 import com.shaohsiung.burgundyred.util.JwtUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.jni.Error;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -22,6 +24,7 @@ import javax.validation.Valid;
 @Slf4j
 @RestController
 @RequestMapping("/admin")
+@CrossOrigin(allowCredentials="true", maxAge = 3600)
 public class AdminController {
 
     @Reference(version = "1.0.0")
@@ -30,17 +33,22 @@ public class AdminController {
     @Autowired
     private JwtUtils jwtUtils;
 
-    @PostMapping
+    @PostMapping("/login")
     public BaseResponse login(@Valid @RequestBody AdminParam adminParam, HttpServletResponse response) {
         Administrator administrator = authenticationService.adminLogin(adminParam.getAdminName(), adminParam.getPassword());
+        if (administrator == null) {
+            return BaseResponseUtils.failure(ResultCode.FAILURE);
+        }
+        String token = "";
         try {
             // 生成JWT
-            String token = jwtUtils.createJWT(administrator.getId(), administrator.getAdminName(), administrator.getAvatar());
+            token = jwtUtils.createJWT(administrator.getId(), administrator.getAdminName(), administrator.getAvatar());
             // 将token放在cookie中
-            CookieUtils.set(response, CookieUtils.TOKEN, token, CookieUtils.expire);
+            CookieUtils.set(response, AppConstant.ADMIN_JWT_COOKIE_NAME, token, CookieUtils.expire);
         } catch (Exception e) {
-            log.error("鉴权失败");
+            log.warn("【卖家应用】-【管理员服务】JWT生成失败！");
+            throw new BackEndException(ErrorState.ADMIN_AUTHENTICATION_FAILED);
         }
-        return BaseResponseUtils.success(administrator);
+        return BaseResponseUtils.success(ResultCode.SUCCESS, token);
     }
 }

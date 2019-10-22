@@ -62,6 +62,7 @@ public enum ErrorState {
     PRODUCT_REMOVE_FAILED(5401, "商品下架失败"),
 
     ADMIN_AUTHENTICATION_FAILED(5501, "管理员认证失败"),
+    ADMIN_AUTHENTICATION_SUCCESS(5502, "管理员认证成功")
     ;
 
     private Integer code;

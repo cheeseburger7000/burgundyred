@@ -4,6 +4,9 @@ import com.alibaba.dubbo.config.annotation.Reference;
 import com.shaohsiung.burgundyred.api.BaseResponse;
 import com.shaohsiung.burgundyred.api.ResultCode;
 import com.shaohsiung.burgundyred.constant.AppConstant;
+import com.shaohsiung.burgundyred.error.BackEndException;
+import com.shaohsiung.burgundyred.error.ErrorState;
+import com.shaohsiung.burgundyred.model.Administrator;
 import com.shaohsiung.burgundyred.model.Product;
 import com.shaohsiung.burgundyred.param.ProductParam;
 import com.shaohsiung.burgundyred.service.ProductService;
@@ -13,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +28,7 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequestMapping("/product")
+@CrossOrigin(allowCredentials="true", maxAge = 3600)
 public class ProductController {
 
     @Reference(version = "1.0.0")
@@ -48,17 +53,27 @@ public class ProductController {
      * @return
      */
     @GetMapping("/list/{page}")
-    public BaseResponse productList(@PathVariable("page") Integer pageNum) {
+    public BaseResponse productList(@PathVariable("page") Integer pageNum, HttpServletRequest request) {
+        Administrator admin = (Administrator) request.getAttribute("admin");
+        if (admin == null) {
+            throw  new BackEndException(ErrorState.ADMIN_AUTHENTICATION_FAILED);
+        }
+        log.info("【产品管理】当前管理员：{}", admin);
+
         List<Product> products = productService.sellerProductList(pageNum, AppConstant.PRODUCT_PAGE_SIZE);
 
         // 计算总页数
         Integer totalRecord = productService.sellerProductListTotalRecord();
-        Integer totalPage = (totalRecord + AppConstant.PRODUCT_PAGE_SIZE - 1) / AppConstant.PRODUCT_PAGE_SIZE;
+//        Integer totalPage = (totalRecord + AppConstant.PRODUCT_PAGE_SIZE - 1) / AppConstant.PRODUCT_PAGE_SIZE;
 
         Map result = new HashMap();
+//        result.put("admin", admin);
         result.put("products", products);
-        result.put("page", pageNum);
-        result.put("totalPage", totalPage);
+        result.put("pageSize", AppConstant.PRODUCT_PAGE_SIZE);
+        result.put("totalRecord", totalRecord);
+//        result.put("pageNum", pageNum);
+//        result.put("totalPage", totalPage);
+
         return BaseResponseUtils.success(result);
     }
 

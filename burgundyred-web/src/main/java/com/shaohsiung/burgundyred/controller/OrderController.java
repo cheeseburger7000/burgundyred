@@ -212,6 +212,7 @@ public class OrderController {
      * @return
      */
     @PostMapping("/cancel")
+    @ResponseBody
     public BaseResponse cancel(HttpServletRequest request, @NotBlank @RequestParam("orderId") String orderId) {
         User user = (User) request.getAttribute("user");
         if (user == null) {
