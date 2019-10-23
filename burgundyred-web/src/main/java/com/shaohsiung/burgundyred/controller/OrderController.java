@@ -210,20 +210,21 @@ public class OrderController {
     }
 
     /**
-     * TODO 用户取消订单
+     * 用户取消订单
      * @param orderId
      * @return
      */
-    @PostMapping("/cancel")
-    @ResponseBody
-    public BaseResponse cancel(HttpServletRequest request, @NotBlank @RequestParam("orderId") String orderId) {
+    @GetMapping("/cancel/{orderId}")
+    public String cancel(HttpServletRequest request, @PathVariable("orderId") String orderId) {
         User user = (User) request.getAttribute("user");
         if (user == null) {
             throw new FrontEndException(ErrorState.USER_NOT_LOGGED_IN);
         }
 
         Order cancel = orderService.cancel(orderId, user.getId());
-        return BaseResponseUtils.success(cancel);
+
+        return "redirect:/order/orders/0";
+//        return BaseResponseUtils.success(cancel);
     }
 
     @GetMapping("/orders/{pageNum}")
@@ -244,5 +245,17 @@ public class OrderController {
         model.addAttribute("totalPage", totalPage);
 
         return "orders";
+    }
+
+    @GetMapping("/receipt/{orderId}")
+    public String receipt(@PathVariable("orderId") String orderId, HttpServletRequest request) {
+        User user = (User) request.getAttribute("user");
+        if (user == null) {
+            throw new FrontEndException(ErrorState.USER_NOT_LOGGED_IN);
+        }
+
+        Order receipt = orderService.receipt(orderId, user.getId());
+
+        return "redirect:/order/orders/0";
     }
 }

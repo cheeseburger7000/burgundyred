@@ -24,7 +24,7 @@ public interface OrderMapper {
     @Update("update t_order set state = #{state} where id = #{id}")
     int update(Order order);
 
-    @Select("select * from t_order where user_id = #{userId} order by state desc, create_time desc")
+    @Select("select * from t_order where user_id = #{userId} order by state asc, create_time desc")
     List<Order> userOrderList(@Param("userId") String userId, RowBounds rowBounds);
 
     @Select("select count(1) from t_order where user_id = #{userId}")

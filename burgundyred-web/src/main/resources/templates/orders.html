@@ -104,9 +104,9 @@
                             <td th:text="${order.updateTime}">2019-10-16 03:18:29</td>
                             <td class="css-width-75">
                                 <span><a href="#">详情</a><br><br></span>
-                                <span th:if="${order.state.name() == 'SHIPPED'}"><a href="#">收货</a><br><br></span>
-                                <span th:if="${order.state.name() == 'UNPAID' || order.state.name() == 'NOT_SHIPPED' || order.state.name() == 'SHIPPED'}"><a href="#">取消订单</a><br><br></span>
-                                <span th:if="${order.state.name() == 'UNPAID'}"><a href="#">去支付</a><br><br></span>
+                                <span th:if="${order.state.name() == 'SHIPPED'}"><a th:href="'javascript:confirmReceipt(\'' + ${order.id}+'\');'" href="#">收货</a><br><br></span>
+                                <span th:if="${order.state.name() == 'UNPAID' || order.state.name() == 'NOT_SHIPPED' || order.state.name() == 'SHIPPED'}"><a th:href="'javascript:cancelOrder(\'' + ${order.id}+'\');'" href="#">取消订单</a><br><br></span>
+                                <span th:if="${order.state.name() == 'UNPAID'}"><a th:href="@{'/order/pay/' + ${order.orderNo}}" href="#">去支付</a><br><br></span>
                             </td>
                         </tr>
                         <!--/*-->
@@ -145,5 +145,30 @@
 
     <script src="/static/lib/jquery.js"></script>
     <th:block th:replace="_fragments :: script"></th:block>
+    <script>
+        function cancelOrder(orderId) {
+            if (orderId == undefined) {
+                alert("订单异常！")
+                return false;
+            }
+            var truthBeTold = window.confirm("您真的想取消订单？")
+            if (truthBeTold) {
+                $(location).attr('href', '/order/cancel/' + orderId);
+            }
+            return false;
+        }
+
+        function confirmReceipt(orderId) {
+            if (orderId == undefined) {
+                alert("订单异常！")
+                return false;
+            }
+            var truthBeTold = window.confirm("确认收货？")
+            if (truthBeTold) {
+                $(location).attr('href', '/order/receipt/' + orderId);
+            }
+            return false;
+        }
+    </script>
 </body>
 </html>
