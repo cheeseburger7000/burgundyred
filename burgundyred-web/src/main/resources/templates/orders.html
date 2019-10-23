@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>我的订单 - 勃艮第红</title>
+    <link href="./lib/fontawesome/css/all.css" rel="stylesheet" th:href="@{/static/lib/fontawesome/css/all.css}">
+    <link rel="stylesheet" href="./style/index.css" th:href="@{/static/style/index.css}">
+    <link rel="stylesheet" href="./style/navbar.css" th:href="@{/static/style/navbar.css}">
+    <link rel="stylesheet" href="./style/search-form.css" th:href="@{/static/style/search-form.css}">
+    <link rel="stylesheet" href="./style/product-item.css" th:href="@{/static/style/product-item.css}">
+    <link rel="stylesheet" href="./style/ad.css" th:href="@{/static/style/ad.css}">
+    <link rel="stylesheet" href="./style/footer.css" th:href="@{/static/style/footer.css}">
+    <link rel="stylesheet" href="./style/ie-list-style.css" th:href="@{/static/style/ie-list-style.css}">
+    <style>
+        .bread_nav {
+            height: 50px;
+            border-top: 4px solid #6C0A26;
+            background-color: #1F1122;
+            color: #ffffff;
+            line-height: 2.8em;
+        }
+        .bread_nav a {
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        .bread_nav a:hover {
+            color: #D3D0D4;
+        }
+
+        .pageable {
+            float: right;
+            margin-top: 28px;
+            font-size: 20px;
+        }
+
+        a {
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div th:replace="_fragments :: header"></div>
+
+    <!-- 面包削导航 -->
+    <div class="bread_nav">
+        <div class="w">
+            <a href="#">Burgundyred</a> > <a href="#">我的订单</a>
+            
+        </div>
+    </div>
+
+    <!-- 列表 -->
+    <div class="w" style="padding-top: 40px;">
+        <div class="css-panel">
+            <div class="css-panel-header">
+                <div class="css-left">
+                    <h3>订单列表</h3>
+                </div>
+                <div class="css-right">
+                </div>
+            </div>
+            <div class="css-panel-content">
+                <div class="css-row">
+                    <div class="css-left">
+                        <button>全部</button>
+                        <button>未支付</button>
+                        <button>未收货</button>
+                        <button>已收货</button>
+                    </div>
+                    <div class="css-right">
+                        <div id="product_pager"></div>
+                    </div>
+                </div>
+                <table id="product_table" class="css-table">
+                    <thead>
+                        <tr>
+                            <td>订单号</td>
+                            <td>总额</td>
+                            <td>状态</td>
+                            <td>创建时间</td>
+                            <td>更新时间</td>
+                            <td class="css-width-75">操作</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:if="${#lists.isEmpty(orderList)}">
+                            什么也没找到！
+                        </tr>
+                        <tr th:each="order : ${orderList}">
+                            <td th:text="${order.orderNo}">1184307595062677505</td>
+                            <td th:text="'￥'+${order.total}">￥100.00</td>
+                            <!--<td th:text="${order.state}">未发货</td>-->
+                            <td th:if="${order.state.name() == 'UNPAID'}" th:text="未支付">未支付</td>
+                            <td th:if="${order.state.name() == 'NOT_SHIPPED'}" th:text="未发货">未发货</td>
+                            <td style="color: red;" th:if="${order.state.name() == 'CANCEL'}" th:text="取消中">取消中</td>
+                            <td th:if="${order.state.name() == 'SHIPPED'}" th:text="已发货">已发货</td>
+                            <td th:if="${order.state.name() == 'COMPLETED'}" th:text="已完成">已完成</td>
+                            <td th:if="${order.state.name() == 'CLOSED'}" th:text="已关闭">已关闭</td>
+                            <td th:text="${order.createTime}">2019-10-16 03:18:29</td>
+                            <td th:text="${order.updateTime}">2019-10-16 03:18:29</td>
+                            <td class="css-width-75">
+                                <span><a href="#">详情</a><br><br></span>
+                                <span th:if="${order.state.name() == 'SHIPPED'}"><a href="#">收货</a><br><br></span>
+                                <span th:if="${order.state.name() == 'UNPAID' || order.state.name() == 'NOT_SHIPPED' || order.state.name() == 'SHIPPED'}"><a href="#">取消订单</a><br><br></span>
+                                <span th:if="${order.state.name() == 'UNPAID'}"><a href="#">去支付</a><br><br></span>
+                            </td>
+                        </tr>
+                        <!--/*-->
+                        <tr>
+                          <td>1184307595062677505</td>
+                          <td>￥100.00</td>
+                          <td>未发货</td>
+                          <td>2019-10-16 03:18:29</td>
+                          <td>2019-10-16 03:18:29</td>
+                          <td class="css-width-75">
+                            <a href="#">详情</a><br><br>
+                            <a href="#">收货</a><br><br>
+                            <a href="#">取消订单</a><br><br>
+                          </td>
+                        </tr>
+                        <!--*/-->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="w">
+        <div class="pageable">
+            <span th:text="'当前第['+ ${pageNum + 1} +']页'">当前第[1]页</span>
+            &nbsp;&nbsp;
+            <span th:each="pageNo : ${#numbers.sequence(1, totalPage)}">
+                [<a th:href="@{'/order/orders/'+ ${pageNo - 1}}" th:text="${pageNo}" href="#">1</a>]
+            </span>
+            &nbsp;&nbsp;
+            <span th:text="'总共['+ ${totalPage} +']页，总['+ ${totalRecord} +']记录'">总共[3]页，总[12]记录</span>
+        </div>
+    </div>
+
+    <div th:replace="_fragments :: footer"></div>
+
+    <script src="/static/lib/jquery.js"></script>
+    <th:block th:replace="_fragments :: script"></th:block>
+</body>
+</html>

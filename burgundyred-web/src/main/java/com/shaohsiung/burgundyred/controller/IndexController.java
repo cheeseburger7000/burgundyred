@@ -2,10 +2,12 @@ package com.shaohsiung.burgundyred.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.shaohsiung.burgundyred.constant.AppConstant;
+import com.shaohsiung.burgundyred.dto.Cart;
 import com.shaohsiung.burgundyred.dto.CategoryListItemDto;
 import com.shaohsiung.burgundyred.dto.ProductItemDto;
 import com.shaohsiung.burgundyred.model.Banner;
 import com.shaohsiung.burgundyred.model.User;
+import com.shaohsiung.burgundyred.service.CartService;
 import com.shaohsiung.burgundyred.service.CategoryService;
 import com.shaohsiung.burgundyred.service.ProductService;
 import com.shaohsiung.burgundyred.service.SellerBannerService;
@@ -50,8 +52,6 @@ public class IndexController {
             log.info("【前台应用】门户服务-当前用户：{}", user.getUserName());
             model.addAttribute("user", user);
         }
-
-        // TODO 获取购物车的商品数量
 
         // 获取商品类目列表
         List<CategoryListItemDto> categoryList = categoryService.indexCategoryList();

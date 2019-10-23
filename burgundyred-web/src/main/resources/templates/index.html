@@ -22,41 +22,14 @@
     </style>
 </head>
 <body>
-    <!-- 导航 -->
-    <div class="navbar">
-        <div class="w">
-            <ul class="user-info" th:if="${user} == null">
-                <li class="user-info-item"><a href="#" th:href="@{/user/register}">注册</a></li>
-                <li class="user-info-item"><a href="#" th:href="@{/user/login}">登录</a></li>
-            </ul>
-            <ul class="user-info" th:if="${user} != null">
-                <li class="user-info-item"><a href="#" th:text="'欢迎您：'+ ${user.userName}">欢迎您：hello</a></li>
-                <li class="user-info-item"><a href="#" th:href="@{/user/logout}">登出</a></li>
-            </ul>
-            
-            <ul class="nav-list">
-                <li class="nav-list-item"><a th:href="@{/cart}" href="#"><i class="fas fa-shopping-cart"></i> 购物车(0)</a></li>
-                <li class="nav-list-item"><a href="#">我的订单</a></li>
-                <li class="nav-list-item"><a href="#">个人中心</a></li>
-            </ul>
-        </div>
-    </div>
-
-    <!-- logo，搜索框 -->
-    <div class="w">
-        <a class="site-logo" th:href="@{/}" href="#">Burgundyred</a>
-        <div class="search-form"> 
-            <input class="search-input" id="search-input" placeholder="请输入商品名称"> 
-            <button class="search-btn" id="search-btn">搜索</button> 
-        </div>
-    </div>
+    <div th:replace="_fragments :: header"></div>
 
     <!-- 类目列表，轮播图 -->
     <div class="w">
         <div class="category-list-wrap">
             <ul class="category_list">
                 <li class="category_item" th:each="category : ${categoryList}">
-                    <a href="#" th:text="${category.name}">勃艮第</a>
+                    <a href="#" th:href="@{'/product/category/'+${category.id}+'/0'}" th:text="${category.name}">勃艮第</a>
                 </li>
                 <!--/*-->
                 <li class="category_item">
@@ -310,25 +283,16 @@
 
     </div>
 
-    <div class="ad">
-        <div class="w">
-            广告
-        </div>
-    </div>
-    
-    <div class="footer">
-        <div class="w">
-            版权
-        </div>
-    </div>
+    <div th:replace="_fragments :: footer"></div>
 
-<script src="/static/lib/jquery.js"></script>
-<script src="/static/lib/swiper/swiper.min.js"></script>
-<script src="/static/script/banner.js"></script>
-<script>
-    $(document).ready(function (){
-        $(".product-list .product-item:last-child").addClass('product-item-margin');
-    });
-</script>
+    <script src="/static/lib/jquery.js"></script>
+    <script src="/static/lib/swiper/swiper.min.js"></script>
+    <script src="/static/script/banner.js"></script>
+    <th:block th:replace="_fragments :: script"></th:block>
+    <script>
+        $(document).ready(function (){
+            $(".product-list .product-item:last-child").addClass('product-item-margin');
+        });
+    </script>
 </body>
 </html>

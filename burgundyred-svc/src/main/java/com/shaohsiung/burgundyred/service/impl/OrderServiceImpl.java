@@ -664,6 +664,17 @@ public class OrderServiceImpl implements OrderService {
     }
 
     /**
+     * 根据userid获取订单数量
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public Integer orderListTotalRecordByUserId(String userId) {
+        return orderMapper.orderListTotalRecordByUserId(userId);
+    }
+
+    /**
      *  七牛云上传图片
      * @param inputStream 输入流
      * @param fileName 图片服务器上文件名称

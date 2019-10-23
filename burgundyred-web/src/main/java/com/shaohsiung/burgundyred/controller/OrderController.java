@@ -8,6 +8,7 @@ import com.google.common.collect.Maps;
 import com.shaohsiung.burgundyred.api.BaseResponse;
 import com.shaohsiung.burgundyred.api.ResultCode;
 import com.shaohsiung.burgundyred.constant.AlipayCallback;
+import com.shaohsiung.burgundyred.constant.AppConstant;
 import com.shaohsiung.burgundyred.dto.Cart;
 import com.shaohsiung.burgundyred.error.ErrorState;
 import com.shaohsiung.burgundyred.error.FrontEndException;
@@ -128,8 +129,10 @@ public class OrderController {
         }
 
         Map<String, String> resultMap = (Map<String, String>) result.getData();
+        if (resultMap != null) {
+            model.addAttribute("qrcode", resultMap.get("qrUrl"));
+        }
 
-        model.addAttribute("qrcode", resultMap.get("qrUrl"));
         model.addAttribute("orderNo", orderNo);
         model.addAttribute("total", order.getTotal());
 
@@ -221,5 +224,25 @@ public class OrderController {
 
         Order cancel = orderService.cancel(orderId, user.getId());
         return BaseResponseUtils.success(cancel);
+    }
+
+    @GetMapping("/orders/{pageNum}")
+    public String userOrders(HttpServletRequest request, Model model, @PathVariable("pageNum") Integer pageNum) {
+        User user = (User) request.getAttribute("user");
+        if (user == null) {
+            throw new FrontEndException(ErrorState.USER_NOT_LOGGED_IN);
+        }
+
+        List<Order> orderList = orderService.userOrderList(user.getId(), pageNum, AppConstant.ORDER_PAGE_SIZE);
+        Integer totalRecord = orderService.orderListTotalRecordByUserId(user.getId());
+        Integer totalPage = (totalRecord + AppConstant.ORDER_PAGE_SIZE -1) / AppConstant.ORDER_PAGE_SIZE;
+
+        model.addAttribute("orderList", orderList);
+        model.addAttribute("pageNum", pageNum);
+        model.addAttribute("pageSize", AppConstant.ORDER_PAGE_SIZE);
+        model.addAttribute("totalRecord", totalRecord);
+        model.addAttribute("totalPage", totalPage);
+
+        return "orders";
     }
 }

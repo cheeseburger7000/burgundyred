@@ -101,4 +101,11 @@ public interface ProductService {
      * @return
      */
     BaseResponse remove(String productId);
+
+    /**
+     * 根据类目id获取产品数量
+     * @param categoryId
+     * @return
+     */
+    Integer productTotalRecordByCategoryId(String categoryId);
 }

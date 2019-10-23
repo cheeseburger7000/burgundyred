@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<!--头部-->
+<head th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:replace="${title}"></title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
+    <link rel="stylesheet" href="../static/css/typo.css" th:href="@{/css/typo.css}">
+    <link rel="stylesheet" href="../static/css/animate.css" th:href="@{/css/animate.css}">
+    <link rel="stylesheet" href="../static/lib/prism/prism.css" th:href="@{/lib/prism/prism.css}">
+    <link rel="stylesheet" href="../static/lib/tocbot/tocbot.css" th:href="@{/lib/tocbot/tocbot.css}">
+    <link rel="stylesheet" href="../static/css/me.css" th:href="@{/css/me.css}">
+</head>
+<body>
+
+
+<div th:fragment="header">
+    <!-- 导航 -->
+    <div class="navbar">
+        <div class="w">
+            <ul class="user-info" th:if="${user} == null">
+                <li class="user-info-item"><a href="#" th:href="@{/user/register}">注册</a></li>
+                <li class="user-info-item"><a href="#" th:href="@{/user/login}">登录</a></li>
+            </ul>
+            <ul class="user-info" th:if="${user} != null">
+                <li class="user-info-item"><a href="#" th:text="'欢迎您：'+ ${user.userName}">欢迎您：hello</a></li>
+                <li class="user-info-item"><a href="#" th:href="@{/user/logout}">登出</a></li>
+            </ul>
+
+            <ul class="nav-list">
+                <li class="nav-list-item">
+                    <a th:href="@{/cart}" href="#"><i class="fas fa-shopping-cart"></i> <span th:if="${cartCount != null}" th:text="'购物车('+${cartCount}+')'">购物车(0)</span><span th:if="${cartCount == null}" th:text="'购物车(0)'">购物车(0)</span></a>
+                </li>
+                <li class="nav-list-item"><a th:href="@{/order/orders/0}" href="#">我的订单</a></li>
+                <li class="nav-list-item"><a href="#">个人中心</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- logo，搜索框 -->
+    <div class="w">
+        <a class="site-logo" th:href="@{/}" href="#">Burgundyred</a>
+        <div class="search-form">
+            <input class="search-input" id="search-input" placeholder="请输入商品名称">
+            <button class="search-btn" id="search-btn">搜索</button>
+        </div>
+    </div>
+</div>
+
+
+<div th:fragment="footer">
+    <div class="ad">
+        <div class="w">
+            广告
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="w">
+            版权
+        </div>
+    </div>
+</div>
+
+<!--脚本-->
+<th:block th:fragment="script">
+    <script src="/static/lib/jquery.js"></script>
+    <script>
+        // 高亮搜索点击事件
+        $('#search-btn').click(function () {
+            var keyword = $('#search-input').val();
+            if (keyword == undefined || keyword.trim() == '') {
+                alert("请先输入关键字!");
+                return;
+            }
+            $(location).attr('href', '/product/search/' + keyword);
+        });
+    </script>
+</th:block>
+
+</body>
+</html>

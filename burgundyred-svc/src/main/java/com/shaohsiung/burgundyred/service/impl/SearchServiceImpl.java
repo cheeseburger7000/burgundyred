@@ -5,6 +5,7 @@ import com.shaohsiung.burgundyred.document.ProductDocument;
 import com.shaohsiung.burgundyred.model.Product;
 import com.shaohsiung.burgundyred.repository.ProductDocumentRepository;
 import com.shaohsiung.burgundyred.service.SearchService;
+import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
@@ -26,6 +27,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Service(version = "1.0.0")
 public class SearchServiceImpl implements SearchService {
 
@@ -42,10 +44,11 @@ public class SearchServiceImpl implements SearchService {
      * @return
      */
     @Override
-    public List<ProductDocument> search(String keyword, int pageNum, int pageSize) {
+    public List<ProductDocument> search(String keyword) {
         List<ProductDocument> result = null;
 
-        Pageable pageable = PageRequest.of(pageNum, pageSize);
+        // 取消高亮搜索分页 1
+//        Pageable pageable = PageRequest.of(pageNum, pageSize);
 
         String preTag = "<font color='#dd4b39'>";
         String postTag = "</font>";
@@ -57,9 +60,11 @@ public class SearchServiceImpl implements SearchService {
                                 new HighlightBuilder.Field("name").preTags(preTag).postTags(postTag),
                                 new HighlightBuilder.Field("detail").preTags(preTag).postTags(postTag)
                         ).build();
-        searchQuery.setPageable(pageable);
 
-        AggregatedPage<ProductDocument> ProductDocumentList = elasticsearchTemplate.queryForPage(searchQuery, ProductDocument.class, new SearchResultMapper() {
+        // 取消高亮搜索分页 2
+//        searchQuery.setPageable(pageable);
+
+        AggregatedPage<ProductDocument> productDocumentList = elasticsearchTemplate.queryForPage(searchQuery, ProductDocument.class, new SearchResultMapper() {
             @Override
             public <T> AggregatedPage<T> mapResults(SearchResponse response, Class<T> clazz, Pageable pageable) {
                 List<ProductDocument> chunk = new ArrayList<>();
@@ -74,7 +79,7 @@ public class SearchServiceImpl implements SearchService {
                     productDocument.setId(searchHit.getId());
                     productDocument.setMainPicture((String) sourceAsMap.get("mainPicture"));
                     // FIXME 处理 BigDecimal 和 Double 转换
-                    productDocument.setPrice(new BigDecimal((Double) sourceAsMap.get("price")));
+                    productDocument.setPrice(new BigDecimal((Integer) sourceAsMap.get("price")));
 
                     // 2.获取高亮字段
                     Map<String, HighlightField> highlightFields = searchHit.getHighlightFields();
@@ -99,11 +104,14 @@ public class SearchServiceImpl implements SearchService {
                 return null;
             }
         });
-        if (ProductDocumentList != null) {
-            result = ProductDocumentList.getContent();
+
+        if (productDocumentList != null) {
+            result = productDocumentList.getContent();
         } else {
             result = Collections.emptyList();
         }
+
+
         return result;
     }
 }

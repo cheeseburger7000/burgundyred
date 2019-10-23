@@ -75,14 +75,12 @@ public class ProductController {
     /**
      * 搜索商品
      * @param keyword
-     * @param page
      * @param model
      * @return
      */
-    @GetMapping("/search/{keyword}/{page}")
+    @GetMapping("/search/{keyword}")
     public String search(HttpServletRequest request,
                          @PathVariable("keyword") String keyword,
-                         @PathVariable("page") Integer page,
                          Model model) {
         // 判断用户是否登录
         User user = (User) request.getAttribute("user");
@@ -91,23 +89,24 @@ public class ProductController {
             model.addAttribute("user", user);
         }
 
-        List<ProductDocument> productDocuments = searchService.search(keyword, page, AppConstant.PRODUCT_PAGE_SIZE);
+        List<ProductDocument> productDocuments = searchService.search(keyword);
+
         model.addAttribute("products", productDocuments);
-        return "list";
+        return "search";
     }
 
     /**
      * 按类目获取商品列表
      * @param request
      * @param categoryId
-     * @param page
+     * @param pageNum
      * @param model
      * @return
      */
-    @GetMapping("/list/{id}/{page}")
+    @GetMapping("/category/{id}/{pageNum}")
     public String listByCategoryId(HttpServletRequest request,
                                    @PathVariable("id") String categoryId,
-                                   @PathVariable("page") Integer page,
+                                   @PathVariable("pageNum") Integer pageNum,
                                    Model model) {
         // 判断用户是否登录
         User user = (User) request.getAttribute("user");
@@ -116,8 +115,18 @@ public class ProductController {
             model.addAttribute("user", user);
         }
 
-        List<Product> productList = productService.getProductListByCategoryId(categoryId, page, AppConstant.PRODUCT_PAGE_SIZE);
+        List<Product> productList = productService.getProductListByCategoryId(categoryId, pageNum, AppConstant.PRODUCT_PAGE_SIZE);
+
+        Integer totalRecord = productService.productTotalRecordByCategoryId(categoryId);
+        Integer totalPage = (totalRecord + AppConstant.PRODUCT_PAGE_SIZE -1) / AppConstant.PRODUCT_PAGE_SIZE;
+
         model.addAttribute("products", productList);
+        model.addAttribute("pageNum", pageNum);
+        model.addAttribute("pageSize", AppConstant.PRODUCT_PAGE_SIZE);
+        model.addAttribute("totalRecord", totalRecord);
+        model.addAttribute("totalPage", totalPage);
+        model.addAttribute("categoryId", categoryId);
+
         return "list";
     }
 }

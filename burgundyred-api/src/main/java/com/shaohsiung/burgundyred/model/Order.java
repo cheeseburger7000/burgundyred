@@ -1,5 +1,6 @@
 package com.shaohsiung.burgundyred.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.shaohsiung.burgundyred.enums.OrderState;
 import lombok.*;
 import java.io.Serializable;

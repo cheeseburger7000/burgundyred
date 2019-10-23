@@ -53,4 +53,7 @@ public interface ProductMapper {
 
     @Update("update t_product set stock = #{stock} where id = #{id}")
     int updateStock(Product product);
+
+    @Select("select count(1) from t_product where category_id = #{categoryId}")
+    Integer productTotalRecordByCategoryId(@Param("categoryId") String categoryId);
 }

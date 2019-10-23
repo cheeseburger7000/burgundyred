@@ -123,4 +123,11 @@ public interface OrderService {
     Integer orderListTotalRecord();
 
     Order getByOrderNo(String orderNo);
+
+    /**
+     * 根据userid获取订单数量
+     * @param id
+     * @return
+     */
+    Integer orderListTotalRecordByUserId(String userId);
 }

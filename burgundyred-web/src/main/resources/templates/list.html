@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>商品列表 - 勃艮第红</title>
+    <link href="./lib/fontawesome/css/all.css" rel="stylesheet" th:href="@{/static/lib/fontawesome/css/all.css}">
+    <link rel="stylesheet" href="./style/index.css" th:href="@{/static/style/index.css}">
+    <link rel="stylesheet" href="./style/navbar.css" th:href="@{/static/style/navbar.css}">
+    <link rel="stylesheet" href="./style/search-form.css" th:href="@{/static/style/search-form.css}">
+    <link rel="stylesheet" href="./style/product-item.css" th:href="@{/static/style/product-item.css}">
+    <link rel="stylesheet" href="./style/ad.css" th:href="@{/static/style/ad.css}">
+    <link rel="stylesheet" href="./style/footer.css" th:href="@{/static/style/footer.css}">
+    <style>
+        .bread_nav {
+            height: 50px;
+            border-top: 4px solid #6C0A26;
+            background-color: #1F1122;
+            color: #ffffff;
+            line-height: 2.8em;
+        }
+        .bread_nav a {
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        .bread_nav a:hover {
+            color: #D3D0D4;
+        }
+
+        .order_btn_box {
+            font-size: 14px;
+            margin-top: 24px;
+        }
+        .order_btn_box .default_order {
+            float: left;
+            text-align: center;
+            width: 70px;
+            border: 1px solid #CACACA;
+            padding: 4px;
+            border: 1px solid #6C0A26;
+            cursor: pointer;
+
+            color: #ffffff;
+            background-color: #6C0A26;
+        }
+        .order_btn_box .price_order {
+            float: left;
+            text-align: center;
+            width: 50px;
+            border: 1px solid #CACACA;
+            padding: 4px;
+            border: 1px solid #6C0A26;
+            cursor: pointer;
+
+            color: #6C0A26;
+        }
+
+        .product-item {
+            margin-right: 30px;
+            margin-top: 20px;
+        }
+
+        .pageable {
+            float: right;
+            margin-top: 28px;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div th:replace="_fragments :: header"></div>
+
+    <!-- 面包削导航 -->
+    <div class="bread_nav">
+        <div class="w">
+            <a href="#">Burgundyred</a> > <a href="#">商品列表</a>
+            
+            
+        </div>
+    </div>
+
+    <div class="w">
+        <div class="order_btn_box">
+            <div class="default_order">
+                推荐排序
+            </div>
+            <div class="price_order">
+                结果
+            </div>
+        </div>
+    </div>
+
+    <!-- 列表 -->
+    <div class="w">
+        <div style="margin-top:18px;"></div>
+
+        <div class="product-list">
+
+            <div th:if="${#lists.isEmpty(products)}">
+                什么也没找到！
+            </div>
+            <div class="product-item" th:each="product : ${products}">
+                <a href="#"  th:href="@{'/product/' + ${product.id}}" style="text-decoration: none; color: black;">
+                    <div class="product-img">
+                        <img height="289.48" width="192.99" th:src="@{${product.mainPicture}}" src="./images/1.jpg" alt="">
+                    </div>
+                    <h4 th:utext="${product.name}">天山 遊花 純米吟釀生貯 300ml（熱銷完售）</h4>
+                    <span th:text="'￥'+${product.price}" style="font-weight: bold; color: #ff1a55;">￥600.00</span>
+                </a>
+            </div>
+
+            <!--/*-->
+            <div class="product-item">
+                <div class="product-img">
+                    <img height="289.48" width="192.99" src="./images/1.jpg" alt="">
+                </div>
+                <h4>天山 遊花 純米吟釀生貯 300ml（熱銷完售）</h4>
+                <span style="font-weight: bold; color: #ff1a55;">￥600.00</span>
+            </div>
+            <div class="product-item">
+                <div class="product-img">
+                    <img height="289.48" width="192.99" src="./images/1.jpg" alt="">
+                </div>
+                <h4>天山 遊花 純米吟釀生貯 300ml（熱銷完售）</h4>
+                <span style="font-weight: bold; color: #ff1a55;">￥600.00</span>
+            </div>
+            <div class="product-item" style="margin-right: 0;">
+                <div class="product-img">
+                    <img height="289.48" width="192.99" src="./images/1.jpg" alt="">
+                </div>
+                <h4>天山 遊花 純米吟釀生貯 300ml（熱銷完售）</h4>
+                <span style="font-weight: bold; color: #ff1a55;">￥600.00</span>
+            </div>
+            <!--*/-->
+        </div>
+        <div style="clear: both;"></div>
+
+        <!-- 分页 -->
+        <div class="w">
+            <div class="pageable">
+                <span th:text="'当前第['+ ${pageNum + 1} +']页'">当前第[1]页</span>
+                &nbsp;&nbsp;
+                <span th:each="pageNo : ${#numbers.sequence(1, totalPage)}">
+                    [<a th:href="@{'/product/category/'+${categoryId}+'/'+ ${pageNo - 1}}" th:text="${pageNo}" href="#">1</a>]
+                </span>
+                &nbsp;&nbsp;
+                <span th:text="'总共['+ ${totalPage} +']页，总['+ ${totalRecord} +']记录'">总共[3]页，总[12]记录</span>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="_fragments :: footer"></div>
+
+    <script src="/static/lib/jquery.js"></script>
+    <th:block th:replace="_fragments :: script"></th:block>
+
+</body>
+</html>

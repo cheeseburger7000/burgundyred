@@ -60,6 +60,9 @@
             outline: none;
             color: #FFF;
         }
+        .ad {
+            margin-top: 0;
+        }
     </style>
 </head>
 <body>
@@ -97,16 +100,7 @@
             </div>
         </div>
     </div>
-    <div class="ad" style="margin-top: 0">
-        <div class="w">
-            广告
-        </div>
-    </div>
-    
-    <div class="footer">
-        <div class="w">
-            版权
-        </div>
-    </div>
+
+    <div th:replace="_fragments :: footer"></div>
 </body>
 </html>

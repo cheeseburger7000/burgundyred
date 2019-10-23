@@ -36,30 +36,7 @@
     </style>
 </head>
 <body>
-    <!-- 导航 -->
-    <div class="navbar">
-        <div class="w">
-            <ul class="user-info">
-                <li class="user-info-item"><a href="#">注册</a></li>
-                <li class="user-info-item"><a href="#">登录</a></li>
-            </ul>
-            
-            <ul class="nav-list">
-                <li class="nav-list-item"><a href="#"><i class="fas fa-shopping-cart"></i> 购物车(0)</a></li>
-                <li class="nav-list-item"><a href="#">我的订单</a></li>
-                <li class="nav-list-item"><a href="#">个人中心</a></li>
-            </ul>
-        </div>
-    </div>
-
-    <!-- logo，搜索框 -->
-    <div class="w">
-        <a class="site-logo" href="#">Burgundyred</a>
-        <div class="search-form"> 
-            <input class="search-input" id="search-input" placeholder="请输入商品名称"> 
-            <button class="search-btn" id="search-btn">搜索</button> 
-        </div>
-    </div>
+    <div th:replace="_fragments :: header"></div>
 
     <!-- 面包削导航 -->
     <div class="bread_nav">
@@ -83,19 +60,11 @@
         </div>
     </div>
 
-    <div class="ad">
-        <div class="w">
-            广告
-        </div>
-    </div>
-    
-    <div class="footer">
-        <div class="w">
-            版权
-        </div>
-    </div>
-<script src="/static/lib/jquery.js"></script>
-<script>
+    <div th:replace="_fragments :: footer"></div>
+
+    <script src="/static/lib/jquery.js"></script>
+    <th:block th:replace="_fragments :: script"></th:block>
+    <script>
     // 定时器：每2秒请求后端，若data为true，则跳转到支付成功提示页面
     window.setInterval(queryOrderPayState, 2000);
 

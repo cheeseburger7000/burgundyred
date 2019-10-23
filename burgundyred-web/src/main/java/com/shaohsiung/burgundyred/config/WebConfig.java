@@ -1,5 +1,6 @@
 package com.shaohsiung.burgundyred.config;
 
+import com.shaohsiung.burgundyred.interceptor.CartInterceptor;
 import com.shaohsiung.burgundyred.interceptor.JwtInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,9 +17,20 @@ public class WebConfig implements WebMvcConfigurer {
         return new JwtInterceptor();
     }
 
+    @Bean
+    public CartInterceptor cartInterceptor() {
+        return new CartInterceptor();
+    }
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(jwtInterceptor())
+        registry.addInterceptor(jwtInterceptor()).order(0)
+                .addPathPatterns("/**")
+                .excludePathPatterns("/user/register")
+                .excludePathPatterns("/user/login")
+                .excludePathPatterns("/static/**");
+
+        registry.addInterceptor(cartInterceptor()).order(1)
                 .addPathPatterns("/**")
                 .excludePathPatterns("/user/register")
                 .excludePathPatterns("/user/login")

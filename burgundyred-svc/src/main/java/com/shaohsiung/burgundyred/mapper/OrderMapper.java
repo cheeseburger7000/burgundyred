@@ -41,4 +41,7 @@ public interface OrderMapper {
 
     @Select("select * from t_order where order_no = #{orderNo}")
     Order getByOrderNo(@Param("orderNo") String orderNo);
+
+    @Select("select count(1) from t_order where user_id = #{userId}")
+    Integer orderListTotalRecordByUserId(@Param("userId") String userId);
 }

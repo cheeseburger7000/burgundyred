@@ -14,5 +14,5 @@ public interface SearchService {
      * @param keyword
      * @return
      */
-    List<ProductDocument> search(String keyword, int pageNum, int pageSize);
+    List<ProductDocument> search(String keyword);
 }

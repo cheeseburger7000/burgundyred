@@ -27,6 +27,7 @@ public class ProductDocument implements Serializable {
     @Field(type = FieldType.Text, analyzer = "ik_max_word")
     private String detail;
 
+    @Field(type = FieldType.Double)
     private BigDecimal price;
 
     private String mainPicture;

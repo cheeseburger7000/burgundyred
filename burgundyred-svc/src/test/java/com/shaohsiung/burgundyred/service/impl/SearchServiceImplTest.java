@@ -22,6 +22,6 @@ public class SearchServiceImplTest {
 
     @Test
     public void search() {
-        List<ProductDocument> productDocuments = searchService.search("招牌", 0, 1);
+        List<ProductDocument> productDocuments = searchService.search("酒");
     }
 }

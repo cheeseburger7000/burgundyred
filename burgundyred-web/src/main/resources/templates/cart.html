@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>index</title>
+    <title>我的购物车</title>
     <link href="./lib/fontawesome/css/all.css" rel="stylesheet" th:href="@{/static/lib/fontawesome/css/all.css}">
     <link rel="stylesheet" href="./style/index.css" th:href="@{/static/style/index.css}">
     <link rel="stylesheet" href="./style/navbar.css" th:href="@{/static/style/navbar.css}">
@@ -58,30 +58,7 @@
     </style>
 </head>
 <body>
-<!-- 导航 -->
-<div class="navbar">
-    <div class="w">
-        <ul class="user-info">
-            <li class="user-info-item"><a href="#">注册</a></li>
-            <li class="user-info-item"><a href="#">登录</a></li>
-        </ul>
-
-        <ul class="nav-list">
-            <li class="nav-list-item"><a href="#"><i class="fas fa-shopping-cart"></i> 购物车(0)</a></li>
-            <li class="nav-list-item"><a href="#">我的订单</a></li>
-            <li class="nav-list-item"><a href="#">个人中心</a></li>
-        </ul>
-    </div>
-</div>
-
-<!-- logo，搜索框 -->
-<div class="w">
-    <a class="site-logo" href="#">Burgundyred</a>
-    <div class="search-form">
-        <input class="search-input" id="search-input" placeholder="请输入商品名称">
-        <button class="search-btn" id="search-btn">搜索</button>
-    </div>
-</div>
+<div th:replace="_fragments :: header"></div>
 
 <!-- 面包削导航 -->
 <div class="bread_nav">
@@ -139,17 +116,9 @@
     </div>
 </div>
 
-<div class="ad">
-    <div class="w">
-        广告
-    </div>
-</div>
+    <div th:replace="_fragments :: footer"></div>
 
-<div class="footer">
-    <div class="w">
-        版权
-    </div>
-</div>
-<script src="/static/lib/jquery.js"></script>
+    <script src="/static/lib/jquery.js"></script>
+    <th:block th:replace="_fragments :: script"></th:block>
 </body>
 </html>

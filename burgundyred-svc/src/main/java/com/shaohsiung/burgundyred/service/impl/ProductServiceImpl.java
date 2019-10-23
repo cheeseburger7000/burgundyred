@@ -300,4 +300,15 @@ public class ProductServiceImpl implements ProductService {
         }
         throw new BackEndException(ErrorState.PRODUCT_REMOVE_FAILED);
     }
+
+    /**
+     * 根据类目id获取产品数量
+     *
+     * @param categoryId
+     * @return
+     */
+    @Override
+    public Integer productTotalRecordByCategoryId(String categoryId) {
+        return productMapper.productTotalRecordByCategoryId(categoryId);
+    }
 }
