@@ -2,6 +2,7 @@ package com.shaohsiung.burgundyred.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.shaohsiung.burgundyred.api.BaseResponse;
+import com.shaohsiung.burgundyred.api.ResultCode;
 import com.shaohsiung.burgundyred.dto.Cart;
 import com.shaohsiung.burgundyred.error.ErrorState;
 import com.shaohsiung.burgundyred.error.FrontEndException;
@@ -88,6 +89,20 @@ public class CartController {
         model.addAttribute("cart", cart);
 
         return "cart";
+    }
+
+    @GetMapping("/inc2cart/{productId}")
+    public String addToCart(HttpServletRequest request,
+                            @PathVariable("productId") String productId) {
+
+        User user = (User) request.getAttribute("user");
+        if (user == null) {
+            throw new FrontEndException(ErrorState.USER_NOT_LOGGED_IN);
+        }
+
+        Cart cart = cartService.add(productId, user.getId());
+
+        return "redirect:/product/" + productId;
     }
 
     @GetMapping("/decrease/{productId}")

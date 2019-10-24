@@ -173,7 +173,8 @@ public class ProductServiceImpl implements ProductService {
                 log.warn("【商品基础SVC】商品库存不足，商品id：{}，减少库存：{}，实际商品库存：{}", productStockDto.getProductId(),
                         productStockDto.getQuanity(),
                         product.getStock());
-                throw new FrontEndException(ErrorState.PRODUCT_STOCK_LACK);
+                String message = String.format("商品：%s 库存不足！该商品实际库存：%s", product.getName(), product.getStock());
+                throw new FrontEndException(ErrorState.PRODUCT_STOCK_LACK, message);
             }
             product.setStock(result);
 

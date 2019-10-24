@@ -75,7 +75,8 @@
                         <div id="product_pager"></div>
                     </div>
                 </div>
-                <table id="product_table" class="css-table">
+                <table th:if="${#lists.isEmpty(orderList)}">什么也没找到！</table>
+                <table th:if="${not #lists.isEmpty(orderList)}" id="product_table" class="css-table">
                     <thead>
                         <tr>
                             <td>订单号</td>
@@ -87,9 +88,6 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:if="${#lists.isEmpty(orderList)}">
-                            什么也没找到！
-                        </tr>
                         <tr th:each="order : ${orderList}">
                             <td th:text="${order.orderNo}">1184307595062677505</td>
                             <td th:text="'￥'+${order.total}">￥100.00</td>
@@ -130,7 +128,7 @@
     </div>
 
     <div class="w">
-        <div class="pageable">
+        <div class="pageable" th:if="${not #lists.isEmpty(orderList)}">
             <span th:text="'当前第['+ ${pageNum + 1} +']页'">当前第[1]页</span>
             &nbsp;&nbsp;
             <span th:each="pageNo : ${#numbers.sequence(1, totalPage)}">

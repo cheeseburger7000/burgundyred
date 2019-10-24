@@ -1,8 +1,8 @@
 package com.shaohsiung.burgundyred.constant;
 
 public interface AppConstant {
-    /** 用户默认头像*/
-    String DEFAULT_AVATAR_PATH = "/images/avatar/default_profile.png";
+    /** TODO 会员默认头像 */
+    String DEFAULT_AVATAR_PATH = "http://pzceg9ngw.bkt.clouddn.com/bc6a10a1-3797-4d8a-994b-6facc513ffc5";
 
     /** 用户激活 token key 前缀 */
     String USER_ACTIVATE_PREFIX = "user_activate_key_";

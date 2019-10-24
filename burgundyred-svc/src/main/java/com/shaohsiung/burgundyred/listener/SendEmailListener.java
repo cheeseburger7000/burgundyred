@@ -37,8 +37,10 @@ public class SendEmailListener {
         //发送的内容
         String uuid_token = AppUtils.UUID();
         redisTemplate.opsForValue().set(USER_ACTIVATE_PREFIX + user.getId(), uuid_token);
-        mainMessage.setText("请点击链接来激活您的账户：" + String.format(ACTIVATE_USER_PATH, user.getId(), uuid_token));
+        String message= "请点击链接来激活您的账户：" + String.format(ACTIVATE_USER_PATH, user.getId(), uuid_token);
+        mainMessage.setText(message);
         javaMailSender.send(mainMessage);
+        log.info(message);
         log.info("发送用户激活邮件成功！用户id：{}", user.getId());
     }
 }

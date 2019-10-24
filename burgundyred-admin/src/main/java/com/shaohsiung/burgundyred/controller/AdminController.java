@@ -18,6 +18,7 @@ import org.apache.tomcat.jni.Error;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
@@ -50,5 +51,15 @@ public class AdminController {
             throw new BackEndException(ErrorState.ADMIN_AUTHENTICATION_FAILED);
         }
         return BaseResponseUtils.success(ResultCode.SUCCESS, token);
+    }
+
+    @GetMapping("/name")
+    public  BaseResponse getAdminName(HttpServletRequest request) {
+        Administrator admin = (Administrator) request.getAttribute("admin");
+        if (admin == null) {
+            throw  new BackEndException(ErrorState.ADMIN_AUTHENTICATION_FAILED);
+        }
+
+        return BaseResponseUtils.success(ResultCode.SUCCESS, admin.getAdminName());
     }
 }

@@ -139,7 +139,7 @@
 
         <!-- 分页 -->
         <div class="w">
-            <div class="pageable">
+            <div th:if="${not #lists.isEmpty(products)}" class="pageable">
                 <span th:text="'当前第['+ ${pageNum + 1} +']页'">当前第[1]页</span>
                 &nbsp;&nbsp;
                 <span th:each="pageNo : ${#numbers.sequence(1, totalPage)}">

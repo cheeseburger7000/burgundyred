@@ -68,7 +68,8 @@ public class CartServiceImpl implements CartService {
         // 根据id获取商品， 判断商品是否上架
         Product product = productService.getProductById(productId);
         if (product.getState().equals(ProductState.HAS_BEEN_REMOVED)) {
-            throw new FrontEndException(ErrorState.PRODUCT_HAS_BEEN_REMOVED);
+            String message = String.format("商品：%s 已下架！", product.getName());
+            throw new FrontEndException(ErrorState.PRODUCT_HAS_BEEN_REMOVED, message);
         }
 
         // 判断库存

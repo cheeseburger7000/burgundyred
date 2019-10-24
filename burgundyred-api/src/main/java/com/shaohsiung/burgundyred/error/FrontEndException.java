@@ -21,6 +21,14 @@ public class FrontEndException extends RuntimeException implements Serializable 
         this.code = errorState.getCode();
     }
 
+    public FrontEndException(ErrorState errorState, String message) {
+        if (message == null || message.equals("")) {
+            this.message = errorState.getMessage();
+        }
+        this.message = message;
+        this.code = errorState.getCode();
+    }
+
     @Override
     public String getMessage() {
         return message;

@@ -138,14 +138,14 @@
             <p>分类：<a href="#" th:text="${product.categoryName}">勃艮第红</a></p>
         </div>
         <div class="state-box">
-            <p>状态：<span th:text="${product.state}">上架中</span></p>
+            <p>状态：<span th:if="${product.state.name() == 'ON_THE_SHELF'}" th:text="上架中">上架中</span><span th:if="${product.state.name() == 'HAS_BEEN_REMOVED'}" th:text="已下架">已下架</span></p>
         </div>
         <div class="btn-box-list">
             <div class="btn-box1">
                 <a  th:href="@{'/cart/inc/'+${product.id}}" href="#">立即购买</a>
             </div>
             <div class="btn-box">
-                <a href="#"><i class="fas fa-shopping-cart"></i>&nbsp;加入购物车</a>
+                <a th:href="@{'/cart/inc2cart/'+${product.id}}" href="#"><i class="fas fa-shopping-cart"></i>&nbsp;加入购物车</a>
             </div>
         </div>
 
@@ -163,6 +163,5 @@
 
 <script src="/static/lib/jquery.js"></script>
 <th:block th:replace="_fragments :: script"></th:block>
-
 </body>
 </html>
