@@ -60,4 +60,12 @@ public interface CategoryService {
     Integer categoryListTotalRecord();
 
     Category getById(String categoryId);
+
+    /**
+     * 获取所有产品类目
+     *  - 无分页
+     *  - 有
+     * @return
+     */
+    BaseResponse categories();
 }

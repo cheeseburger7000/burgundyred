@@ -7,10 +7,13 @@ import com.shaohsiung.burgundyred.constant.AppConstant;
 import com.shaohsiung.burgundyred.error.BackEndException;
 import com.shaohsiung.burgundyred.error.ErrorState;
 import com.shaohsiung.burgundyred.model.Administrator;
+import com.shaohsiung.burgundyred.model.Category;
 import com.shaohsiung.burgundyred.model.Product;
 import com.shaohsiung.burgundyred.param.ProductParam;
+import com.shaohsiung.burgundyred.service.CategoryService;
 import com.shaohsiung.burgundyred.service.ProductService;
 import com.shaohsiung.burgundyred.util.BaseResponseUtils;
+import com.shaohsiung.burgundyred.vo.CategoryVo;
 import jdk.nashorn.internal.objects.annotations.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -21,6 +24,7 @@ import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 商品管理
@@ -33,6 +37,9 @@ public class ProductController {
 
     @Reference(version = "1.0.0")
     public ProductService productService;
+
+    @Reference(version = "1.0.0")
+    public CategoryService categoryService;
 
     /**
      * 添加商品
@@ -106,5 +113,19 @@ public class ProductController {
 
         log.info("【后台应用】下架商品请求，商品id：{}", productId);
         return productService.remove(productId);
+    }
+
+    @GetMapping("/categories")
+    public BaseResponse categories() {
+        BaseResponse request = categoryService.categories();
+
+        // List<Category> to List<CategoryVo>
+        List<Category> categories= (List<Category>) request.getData();
+        List<CategoryVo> result = categories.stream().map(category -> {
+            CategoryVo categoryVo = new CategoryVo();
+            BeanUtils.copyProperties(category, categoryVo);
+            return categoryVo;
+        }).collect(Collectors.toList());
+        return BaseResponseUtils.success(result);
     }
 }

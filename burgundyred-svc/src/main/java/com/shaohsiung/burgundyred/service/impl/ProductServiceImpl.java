@@ -87,6 +87,7 @@ public class ProductServiceImpl implements ProductService {
 
         product.setCreateTime(new Date());
         product.setId(idWorker.nextId()+"");
+        // 商品状态默认上架
         product.setState(ProductState.ON_THE_SHELF);
         product.setUpdateTime(new Date());
 

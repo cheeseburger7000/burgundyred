@@ -146,4 +146,17 @@ public class CategoryServiceImpl implements CategoryService {
     public Category getById(String categoryId) {
         return categoryMapper.getById(categoryId);
     }
+
+    /**
+     * 获取所有产品类目
+     * - 无分页
+     * - 有
+     *
+     * @return
+     */
+    @Override
+    public BaseResponse categories() {
+        List<Category> result = categoryMapper.categories();
+        return BaseResponseUtils.success(result);
+    }
 }

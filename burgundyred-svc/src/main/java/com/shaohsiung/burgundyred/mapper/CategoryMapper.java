@@ -35,4 +35,7 @@ public interface CategoryMapper {
 
     @Select("select count(1) from t_category where hot = 1")
     Integer calcHotCount();
+
+    @Select("select * from t_category")
+    List<Category> categories();
 }
