@@ -58,7 +58,6 @@ public class ProductController {
         if (admin == null) {
             throw  new BackEndException(ErrorState.ADMIN_AUTHENTICATION_FAILED);
         }
-        log.info("【产品管理】当前管理员：{}", admin);
 
         List<Product> products = productService.sellerProductList(pageNum, AppConstant.PRODUCT_PAGE_SIZE);
 
@@ -83,7 +82,12 @@ public class ProductController {
      * @return
      */
     @PostMapping("/shelf/{productId}")
-    public BaseResponse onShelves(@PathVariable("productId") String productId) {
+    public BaseResponse onShelves(@PathVariable("productId") String productId, HttpServletRequest request) {
+        Administrator admin = (Administrator) request.getAttribute("admin");
+        if (admin == null) {
+            throw  new BackEndException(ErrorState.ADMIN_AUTHENTICATION_FAILED);
+        }
+
         log.info("【后台应用】上架商品请求，商品id：{}", productId);
         return productService.onShelves(productId);
     }
@@ -94,7 +98,12 @@ public class ProductController {
      * @return
      */
     @PostMapping("/remove/{productId}")
-    public BaseResponse remove(@PathVariable("productId") String productId) {
+    public BaseResponse remove(@PathVariable("productId") String productId, HttpServletRequest request) {
+        Administrator admin = (Administrator) request.getAttribute("admin");
+        if (admin == null) {
+            throw  new BackEndException(ErrorState.ADMIN_AUTHENTICATION_FAILED);
+        }
+
         log.info("【后台应用】下架商品请求，商品id：{}", productId);
         return productService.remove(productId);
     }

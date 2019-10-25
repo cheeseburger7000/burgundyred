@@ -38,8 +38,6 @@ public class UserController {
             throw  new BackEndException(ErrorState.ADMIN_AUTHENTICATION_FAILED);
         }
 
-        log.info("【产品管理】当前管理员：{}", admin);
-
         BaseResponse userList = authenticationService.userList(pageNum, AppConstant.USER_PAGE_SIZE);
 
         // 计算总页数

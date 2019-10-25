@@ -59,7 +59,12 @@ public class ContentController {
      * @return
      */
     @PostMapping("/banner")
-    public BaseResponse addBanner(@Valid @RequestBody BannerParam bannerParam) {
+    public BaseResponse addBanner(@Valid @RequestBody BannerParam bannerParam, HttpServletRequest request) {
+        Administrator admin = (Administrator) request.getAttribute("admin");
+        if (admin == null) {
+            throw  new BackEndException(ErrorState.ADMIN_AUTHENTICATION_FAILED);
+        }
+
         log.info("【后台应用】添加轮播图请求，参数：{}", bannerParam);
         Banner banner = new Banner();
         BeanUtils.copyProperties(bannerParam, banner);
@@ -68,14 +73,24 @@ public class ContentController {
     }
 
     @PostMapping("/banner/active/{bannerId}")
-    public BaseResponse activeBanner(@PathVariable("bannerId") String bannerId) {
+    public BaseResponse activeBanner(@PathVariable("bannerId") String bannerId, HttpServletRequest request) {
+        Administrator admin = (Administrator) request.getAttribute("admin");
+        if (admin == null) {
+            throw  new BackEndException(ErrorState.ADMIN_AUTHENTICATION_FAILED);
+        }
+
         log.info("【后台应用】激活轮播图请求，轮播图id：{}", bannerId);
         BaseResponse result = sellerBannerService.activeBanner(bannerId);
         return result;
     }
 
     @PostMapping("/banner/inactive/{bannerId}")
-    public BaseResponse inactiveBanner(@PathVariable("bannerId") String bannerId) {
+    public BaseResponse inactiveBanner(@PathVariable("bannerId") String bannerId, HttpServletRequest request) {
+        Administrator admin = (Administrator) request.getAttribute("admin");
+        if (admin == null) {
+            throw  new BackEndException(ErrorState.ADMIN_AUTHENTICATION_FAILED);
+        }
+
         log.info("【后台应用】取消激活轮播图请求，轮播图id：{}", bannerId);
         BaseResponse result = sellerBannerService.inactiveBanner(bannerId);
         return result;
@@ -87,7 +102,6 @@ public class ContentController {
         if (admin == null) {
             throw  new BackEndException(ErrorState.ADMIN_AUTHENTICATION_FAILED);
         }
-        log.info("【产品管理】当前管理员：{}", admin);
 
         BaseResponse bannerList = sellerBannerService.bannerList(pageNum, AppConstant.BANNER_PAGE_SIZE);
 
@@ -107,7 +121,6 @@ public class ContentController {
         if (admin == null) {
             throw  new BackEndException(ErrorState.ADMIN_AUTHENTICATION_FAILED);
         }
-        log.info("【产品管理】当前管理员：{}", admin);
 
         List<Category> categories = categoryService.categoryList(pageNum, AppConstant.CATEGORY_PAGE_SIZE);
 
@@ -122,7 +135,12 @@ public class ContentController {
     }
 
     @PostMapping("/category")
-    public BaseResponse addCategory(@Valid @RequestBody CategoryParam categoryParam) {
+    public BaseResponse addCategory(@Valid @RequestBody CategoryParam categoryParam, HttpServletRequest request) {
+        Administrator admin = (Administrator) request.getAttribute("admin");
+        if (admin == null) {
+            throw  new BackEndException(ErrorState.ADMIN_AUTHENTICATION_FAILED);
+        }
+
         Category category = new Category();
         BeanUtils.copyProperties(categoryParam, category);
         Category result = categoryService.addCategory(category);
@@ -130,13 +148,25 @@ public class ContentController {
     }
 
     @PostMapping("/category/hot/{categoryId}")
-    public BaseResponse setHot(@PathVariable("categoryId") String categoryId) {
+    public BaseResponse setHot(@PathVariable("categoryId") String categoryId,
+                               HttpServletRequest request) {
+        Administrator admin = (Administrator) request.getAttribute("admin");
+        if (admin == null) {
+            throw  new BackEndException(ErrorState.ADMIN_AUTHENTICATION_FAILED);
+        }
+
         log.info("【后台应用】商品类目设置为热门请求，商品类目id：{}", categoryId);
         return categoryService.setHot(categoryId);
     }
 
     @PostMapping("/category/unhot/{categoryId}")
-    public BaseResponse setUnhot(@PathVariable("categoryId") String categoryId) {
+    public BaseResponse setUnhot(@PathVariable("categoryId") String categoryId,
+                                 HttpServletRequest request) {
+        Administrator admin = (Administrator) request.getAttribute("admin");
+        if (admin == null) {
+            throw  new BackEndException(ErrorState.ADMIN_AUTHENTICATION_FAILED);
+        }
+
         log.info("【后台应用】商品类目设置为热门请求，商品类目id：{}", categoryId);
         return categoryService.setUnhot(categoryId);
     }

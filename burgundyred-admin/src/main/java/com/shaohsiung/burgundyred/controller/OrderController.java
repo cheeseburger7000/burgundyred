@@ -40,7 +40,6 @@ public class OrderController {
         if (admin == null) {
             throw  new BackEndException(ErrorState.ADMIN_AUTHENTICATION_FAILED);
         }
-        log.info("【产品管理】当前管理员：{}", admin);
 
         List<Order> orderList = orderService.orderList(pageNum, AppConstant.ORDER_PAGE_SIZE);
 
@@ -59,7 +58,12 @@ public class OrderController {
      * @return
      */
     @PostMapping("/ship/{orderId}")
-    public BaseResponse ship(@PathVariable("orderId") String orderId) {
+    public BaseResponse ship(@PathVariable("orderId") String orderId, HttpServletRequest request) {
+        Administrator admin = (Administrator) request.getAttribute("admin");
+        if (admin == null) {
+            throw  new BackEndException(ErrorState.ADMIN_AUTHENTICATION_FAILED);
+        }
+
         log.info("【卖家应用】卖家发货请求，orderId：{}", orderId);
         Order result = orderService.ship(orderId);
         return BaseResponseUtils.success(result);
@@ -71,7 +75,12 @@ public class OrderController {
      * @return
      */
     @PostMapping("/confirm/{orderId}")
-    public BaseResponse confirmCancel(@PathVariable("orderId") String orderId) {
+    public BaseResponse confirmCancel(@PathVariable("orderId") String orderId, HttpServletRequest request) {
+        Administrator admin = (Administrator) request.getAttribute("admin");
+        if (admin == null) {
+            throw  new BackEndException(ErrorState.ADMIN_AUTHENTICATION_FAILED);
+        }
+
         log.info("【卖家应用】卖家确认取消订单请求，orderId：{}", orderId);
         Order result = orderService.confirmCancel(orderId);
         return BaseResponseUtils.success(result);

@@ -26,7 +26,7 @@ public class JwtInterceptor implements HandlerInterceptor {
         if (jwt != null) {
             Claims claims = null;
             try {
-                log.info("【卖家应用-JWT解析器】admin's JWT: {}", jwt);
+                log.debug("【卖家应用-JWT解析器】admin's JWT: {}", jwt);
                 claims = jwtUtils.parseJWT(jwt);
             } catch(Exception ex) {
                 log.warn("【卖家应用-JWT解析器】用户会话过期，请重新登陆！");
