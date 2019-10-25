@@ -53,13 +53,23 @@ public class UserController {
     }
 
     @PostMapping("/freeze/{userId}")
-    public BaseResponse freezeUser(@PathVariable("userId") String userId) {
+    public BaseResponse freezeUser(@PathVariable("userId") String userId, HttpServletRequest request) {
+        Administrator admin = (Administrator) request.getAttribute("admin");
+        if (admin == null) {
+            throw  new BackEndException(ErrorState.ADMIN_AUTHENTICATION_FAILED);
+        }
+
         log.info("【后台应用】冻结用户请求，userId：{}", userId);
         return authenticationService.freeze(userId);
     }
 
     @PostMapping("/normal/{userId}")
-    public BaseResponse normalUser(@PathVariable("userId") String userId) {
+    public BaseResponse normalUser(@PathVariable("userId") String userId, HttpServletRequest request) {
+        Administrator admin = (Administrator) request.getAttribute("admin");
+        if (admin == null) {
+            throw  new BackEndException(ErrorState.ADMIN_AUTHENTICATION_FAILED);
+        }
+
         log.info("【后台应用】恢复用户状态请求，userId：{}", userId);
         return authenticationService.normal(userId);
     }
