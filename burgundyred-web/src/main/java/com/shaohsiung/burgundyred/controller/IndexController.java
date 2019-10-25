@@ -53,7 +53,7 @@ public class IndexController {
             model.addAttribute("user", user);
         }
 
-        // 获取商品类目列表
+        // TODO 获取商品类目列表 缓存优化
         List<CategoryListItemDto> categoryList = categoryService.indexCategoryList();
 
         // 获取轮播图数据

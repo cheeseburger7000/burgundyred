@@ -76,10 +76,10 @@ public class SellerBannerServiceImpl implements SellerBannerService {
 
     @Override
     public BaseResponse activeBanner(String bannerId) {
-        // 判断已激活的图片是否超过5张
+        // 判断已热门的分类是否超过10张
         Integer activeCount = bannerMapper.calcActiveCount();
         if (activeCount >= AppConstant.MAX_BANNER_COUNT) {
-            throw new BackEndException(ErrorState.BANNER_COUNT_REACHES_THE_UPPER_LIMIT);
+            throw new BackEndException(ErrorState.CATEGORY_COUNT_REACHES_THE_UPPER_LIMIT);
         }
 
         int update = bannerMapper.active(bannerId);

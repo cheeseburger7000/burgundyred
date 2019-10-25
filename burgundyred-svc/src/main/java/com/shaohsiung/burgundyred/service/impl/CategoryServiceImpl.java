@@ -2,6 +2,7 @@ package com.shaohsiung.burgundyred.service.impl;
 
 import com.alibaba.dubbo.config.annotation.Service;
 import com.shaohsiung.burgundyred.api.BaseResponse;
+import com.shaohsiung.burgundyred.constant.AppConstant;
 import com.shaohsiung.burgundyred.dto.CategoryListItemDto;
 import com.shaohsiung.burgundyred.error.BackEndException;
 import com.shaohsiung.burgundyred.error.ErrorState;
@@ -96,6 +97,11 @@ public class CategoryServiceImpl implements CategoryService {
      */
     @Override
     public BaseResponse setHot(String categoryId) {
+        Integer hotCount = categoryMapper.calcHotCount();
+        if (hotCount >= AppConstant.MAX_CATEGORY_COUNT) {
+            throw new BackEndException(ErrorState.BANNER_COUNT_REACHES_THE_UPPER_LIMIT);
+        }
+
         int update = categoryMapper.setHot(categoryId);
         if (update == 1) {
             log.info("【商品类目基础SVC】商品类目设置热门成功，商品类目id：{}", categoryId);
@@ -113,6 +119,11 @@ public class CategoryServiceImpl implements CategoryService {
      */
     @Override
     public BaseResponse setUnhot(String categoryId) {
+        Integer hotCount = categoryMapper.calcHotCount();
+        if (hotCount == AppConstant.MAX_CATEGORY_COUNT) {
+            throw new BackEndException(ErrorState.CATEGORY_COUNT_REACHES_THE_LOWER_LIMIT);
+        }
+
         int update = categoryMapper.setUnhot(categoryId);
         if (update == 1) {
             log.info("【商品类目基础SVC】商品类目取消热门成功，商品类目id：{}", categoryId);

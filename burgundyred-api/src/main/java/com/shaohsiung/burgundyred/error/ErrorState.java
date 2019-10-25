@@ -53,6 +53,8 @@ public enum ErrorState {
 
     CATEGORY_SET_HOT_FAILED(5214, "商品类目设置热门失败"),
     CATEGORY_SET_UNHOT_FAILED(5215, "商品类目取消热门失败"),
+    CATEGORY_COUNT_REACHES_THE_UPPER_LIMIT(5216, "商品类目数量达到上限"),
+    CATEGORY_COUNT_REACHES_THE_LOWER_LIMIT(5217, "商品类目数量达到下限"),
 
     // 用户模块
     FREEZE_USER_FAILED(5301, "用户冻结失败"),

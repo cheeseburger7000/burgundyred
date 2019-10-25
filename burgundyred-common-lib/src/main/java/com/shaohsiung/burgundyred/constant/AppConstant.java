@@ -15,6 +15,10 @@ public interface AppConstant {
 
     Integer MIX_BANNER_COUNT = 1;
 
+    Integer MAX_CATEGORY_COUNT = 10;
+
+    Integer MIX_CATEGORY_COUNT = 1;
+
     /** 轮播图缓存key */
     String BANNER_CACHE_KEY = "banner_cache_key";
 

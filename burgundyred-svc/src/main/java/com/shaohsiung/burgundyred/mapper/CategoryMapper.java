@@ -32,4 +32,7 @@ public interface CategoryMapper {
 
     @Select("select * from t_category where id = #{categoryId}")
     Category getById(@Param("categoryId") String categoryId);
+
+    @Select("select count(1) from t_category where hot = 1")
+    Integer calcHotCount();
 }
