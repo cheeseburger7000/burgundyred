@@ -101,6 +101,12 @@ public class SellerBannerServiceImpl implements SellerBannerService {
 
     @Override
     public BaseResponse inactiveBanner(String bannerId) {
+        // 判断已激活的图片是否少于1张
+        Integer activeCount = bannerMapper.calcActiveCount();
+        if (activeCount == AppConstant.MIX_BANNER_COUNT) {
+            throw new BackEndException(ErrorState.BANNER_COUNT_REACHES_THE_LOWER_LIMIT);
+        }
+
         int update = bannerMapper.inactive(bannerId);
         if (update == 1) {
             log.info("【轮播图SVC】取消轮播图：{}", bannerId);

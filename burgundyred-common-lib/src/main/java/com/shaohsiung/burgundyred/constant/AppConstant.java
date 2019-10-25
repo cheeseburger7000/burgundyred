@@ -13,6 +13,8 @@ public interface AppConstant {
     /** 轮播图数量最大限制 */
     Integer MAX_BANNER_COUNT = 3;
 
+    Integer MIX_BANNER_COUNT = 1;
+
     /** 轮播图缓存key */
     String BANNER_CACHE_KEY = "banner_cache_key";
 

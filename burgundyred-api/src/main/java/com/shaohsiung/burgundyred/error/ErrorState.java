@@ -49,6 +49,7 @@ public enum ErrorState {
     BANNER_COUNT_REACHES_THE_UPPER_LIMIT(5211, "轮播图数量达到上限"),
     BANNER_INACTIVATE_FAILED(5212, "轮播图激活失败"),
     BANNER_CANCEL_FAILED(5213, "轮播图取消失败"),
+    BANNER_COUNT_REACHES_THE_LOWER_LIMIT(5214, "轮播图数量达到下限"),
 
     CATEGORY_SET_HOT_FAILED(5214, "商品类目设置热门失败"),
     CATEGORY_SET_UNHOT_FAILED(5215, "商品类目取消热门失败"),

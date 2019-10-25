@@ -10,12 +10,16 @@ import com.qiniu.storage.model.DefaultPutRet;
 import com.qiniu.util.Auth;
 import com.shaohsiung.burgundyred.api.BaseResponse;
 import com.shaohsiung.burgundyred.constant.QiniuConstant;
+import com.shaohsiung.burgundyred.error.BackEndException;
+import com.shaohsiung.burgundyred.error.ErrorState;
+import com.shaohsiung.burgundyred.model.Administrator;
 import com.shaohsiung.burgundyred.util.BaseResponseUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.UUID;
@@ -29,8 +33,13 @@ public class UploadController {
     @Autowired
     private QiniuConstant qiniuConstant;
 
-    @PostMapping
-    public BaseResponse uploadBannerPicture(@RequestParam("picture") MultipartFile multipartFile) {
+    @PostMapping(consumes = "multipart/form-data")
+    public BaseResponse uploadBannerPicture(@RequestParam("file") MultipartFile multipartFile, HttpServletRequest request) {
+        Administrator admin = (Administrator) request.getAttribute("admin");
+        if (admin == null) {
+            throw  new BackEndException(ErrorState.ADMIN_AUTHENTICATION_FAILED);
+        }
+
         FileInputStream inputStream = null;
         String path = "";
         try {
