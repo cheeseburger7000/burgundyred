@@ -1,6 +1,7 @@
 package com.shaohsiung.burgundyred.service.impl;
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.shaohsiung.burgundyred.dto.OrderDetailDto;
 import com.shaohsiung.burgundyred.error.FrontEndException;
 import com.shaohsiung.burgundyred.model.Order;
 import com.shaohsiung.burgundyred.service.OrderService;
@@ -66,6 +67,7 @@ public class OrderServiceImplTest {
 
     @Test
     public void getById() {
+        OrderDetailDto byId = orderService.getById("1187531962265505792", "1182493800958922752");
     }
 
     @Test

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>订单详情 - 勃艮第红</title>
+    <link href="./lib/fontawesome/css/all.css" rel="stylesheet" th:href="@{/static/lib/fontawesome/css/all.css}">
+    <link rel="stylesheet" href="./style/index.css" th:href="@{/static/style/index.css}">
+    <link rel="stylesheet" href="./style/navbar.css" th:href="@{/static/style/navbar.css}">
+    <link rel="stylesheet" href="./style/search-form.css" th:href="@{/static/style/search-form.css}">
+    <link rel="stylesheet" href="./style/product-item.css" th:href="@{/static/style/product-item.css}">
+    <link rel="stylesheet" href="./style/ad.css" th:href="@{/static/style/ad.css}">
+    <link rel="stylesheet" href="./style/footer.css" th:href="@{/static/style/footer.css}">
+    <link rel="stylesheet" href="./style/ie-list-style.css" th:href="@{/static/style/ie-list-style.css}">
+    <style>
+        .bread_nav {
+            height: 50px;
+            border-top: 4px solid #6C0A26;
+            background-color: #1F1122;
+            color: #ffffff;
+            line-height: 2.8em;
+            margin-bottom: 40px;
+        }
+        .bread_nav a {
+            color: #ffffff;
+            text-decoration: none;
+        }
+        .bread_nav a:hover {
+            color: #D3D0D4;
+        }
+
+        .cart-table {
+            width: 1080px;
+        }
+        .cart-table {
+            border: 1px solid #1F1122;
+        }
+        .cart-table .cart-col a {
+            text-decoration: none; 
+            color: black;
+        }
+        .cart-table .cart-col a:hover {
+            color: #911E3B;
+        }
+        .cart-table tr {
+            height: 120px;
+        }
+        .cart-table thead tr {
+            height: 60px;
+        }
+
+        .order-container .order-item {
+            margin-top: 40px;
+            margin-left: 0;
+            margin-bottom: 0;
+            list-style-type: none;
+        }
+    </style>
+</head>
+<body>
+    <div th:replace="_fragments :: header"></div>
+
+    <!-- 面包削导航 -->
+    <div class="bread_nav">
+        <div class="w">
+            <a href="#">Burgundyred</a> > <a href="#">订单详情</a>
+        </div>
+    </div>
+
+    <div class="w" style="margin-bottom: 60px;">
+        <h3 style="color: #911E3B; margin-bottom: 10px;">订单基本信息</h3>
+        <ul class="order-container">
+            <li class="order-item">
+                <label>订单号：</label>
+                <span th:text="${orderDetailDto.orderNo}">1186919314117234689</span>
+            </li>
+            <li class="order-item">
+                <label>总额：</label>
+                <span th:text="'￥'+${orderDetailDto.total}">1092</span>
+            </li>
+            <li class="order-item">
+                <label>订单状态：</label>
+                <span th:text="${orderDetailDto.state}">未收货</span>
+            </li>
+            <li class="order-item">
+                <label>创建时间：</label>
+                <span th:text="${orderDetailDto.createTime}">2019-10-23 08:16:31</span>
+            </li>
+            <li class="order-item">
+                <label>修改时间</label>
+                <span  th:text="${orderDetailDto.updateTime}">2019-10-23 08:16:31</span>
+            </li>
+            <li class="order-item">
+                <label>物流：</label>
+                <span th:text="' '+${orderDetailDto.shipping.receiverProvince}+' '+${orderDetailDto.shipping.receiverCity}+' '+${orderDetailDto.shipping.receiverDistrict}+' '+${orderDetailDto.shipping.receiverAddress}+' ('+${orderDetailDto.shipping.receiverName}+' 收) '+${orderDetailDto.shipping.receiverMobile}">福建省 厦门市 集美区 杏林街道 软件园三期D3公寓楼 （杨少雄 收）13055228247</span>
+            </li>
+        </ul>
+    </div>
+
+    <div class="w" style="margin-bottom: 60px;">
+        <h3 style="color: #911E3B; margin-bottom: 20px;">订单明细</h3>
+        <table border="1" cellspacing="0" class="cart-table">
+            <thead style="text-align: center;">
+                <td>产品图片</td>
+                <td>产品信息</td>
+                <td>单价</td>
+                <td>数量</td>
+                <td>金额</td>
+            </thead>
+            <tr th:each="orderItemDto : ${orderDetailDto.orderItemDtoList}" class="cart-row" style="text-align: center;">
+                <td class="cart-col">
+                    <img height="100" width="60" src="./images/2.jpg" alt="" th:src="@{${orderItemDto.mainPicture}}">
+                </td>
+                <td class="cart-col" style="width: 200px;">
+                    <a th:text="${orderItemDto.name}" href="#" th:href="@{'/product/' + ${orderItemDto.productId}}">NIKE Air Jordan 耐克男夏季aj篮球运动五分裤速干短裤AQ3116-010</a>
+                </td>
+                <td class="cart-col">
+                    <p th:text="'￥'+${orderItemDto.price}">￥289.00</p>
+                </td>
+                <td class="cart-col">
+                    <span th:text="${orderItemDto.quantity}"> 3 </span>
+                </td>
+                <td class="cart-col">
+                    <p th:text="'￥'+${orderItemDto.amount}" style="color: #911E3B; font-weight: bold;">￥578.00</p>
+                </td>
+            </tr>
+            <!--/*-->
+            <tr class="cart-row" style="text-align: center;">
+                <td class="cart-col">
+                    <img height="100" width="60" src="./images/2.jpg" alt="">
+                </td>
+                <td class="cart-col" style="width: 200px;">
+                    <a href="#">NIKE Air Jordan 耐克男夏季aj篮球运动五分裤速干短裤AQ3116-010</a>
+                </td>
+                <td class="cart-col">
+                    <p>￥289.00</p>
+                </td>
+                <td class="cart-col">
+                    <span> 3 </span>
+                </td>
+                <td class="cart-col">
+                    <p style="color: #911E3B; font-weight: bold;">￥578.00</p>
+                </td>
+            </tr>
+            <!--*/-->
+        </table>
+    </div>
+
+    <div th:replace="_fragments :: footer"></div>
+
+    <script src="/static/lib/jquery.js"></script>
+    <th:block th:replace="_fragments :: script"></th:block>
+</body>
+</html>

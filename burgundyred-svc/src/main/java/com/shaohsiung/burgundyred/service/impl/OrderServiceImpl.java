@@ -25,10 +25,7 @@ import com.qiniu.util.Auth;
 import com.shaohsiung.burgundyred.api.BaseResponse;
 import com.shaohsiung.burgundyred.api.ResultCode;
 import com.shaohsiung.burgundyred.constant.AlipayCallback;
-import com.shaohsiung.burgundyred.dto.Cart;
-import com.shaohsiung.burgundyred.dto.CartItem;
-import com.shaohsiung.burgundyred.dto.OrderDetailDto;
-import com.shaohsiung.burgundyred.dto.ProductStockDto;
+import com.shaohsiung.burgundyred.dto.*;
 import com.shaohsiung.burgundyred.enums.OrderState;
 import com.shaohsiung.burgundyred.enums.PayPlatformEnum;
 import com.shaohsiung.burgundyred.error.BackEndException;
@@ -533,12 +530,24 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDetailDto getById(String orderId, String userId) {
         Order order = orderMapper.getByIdAndUserId(orderId, userId);
+
         List<OrderItem> orderItemList = orderItemMapper.getOrderItemListByOrderId(orderId);
+        List<OrderItemDto> OrderItemDtoList = orderItemList.stream().map(orderItem -> {
+            Product product = productService.getProductById(orderItem.getProductId());
+            return OrderItemDto.builder().productId(product.getId())
+                    .amount(orderItem.getAmount())
+                    .mainPicture(product.getMainPicture())
+                    .price(product.getPrice())
+                    .quantity(orderItem.getQuantity())
+                    .name(product.getName())
+                    .build();
+        }).collect(Collectors.toList());
+
         Shipping shipping = shippingService.getById(order.getShippingId());
 
         OrderDetailDto orderDetailDto = new OrderDetailDto();
         BeanUtils.copyProperties(order, orderDetailDto);
-        orderDetailDto.setOrderItemList(orderItemList);
+        orderDetailDto.setOrderItemDtoList(OrderItemDtoList);
         orderDetailDto.setShipping(shipping);
         return orderDetailDto;
     }

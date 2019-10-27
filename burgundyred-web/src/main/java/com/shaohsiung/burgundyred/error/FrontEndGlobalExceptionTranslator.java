@@ -43,4 +43,14 @@ public class FrontEndGlobalExceptionTranslator {
         result.setViewName("message");
         return result;
     }
+
+    @ExceptionHandler(Exception.class)
+    public ModelAndView handleException(Exception e) {
+        ModelAndView result = new ModelAndView();
+        log.warn("【前台异常】未知的错误: {}", e.getMessage());
+
+        result.addObject("message", e.getMessage());
+        result.setViewName("message");
+        return result;
+    }
 }

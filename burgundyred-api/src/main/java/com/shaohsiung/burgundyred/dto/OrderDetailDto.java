@@ -12,6 +12,10 @@ import java.util.List;
 
 @Data
 public class OrderDetailDto implements Serializable {
+
+    /** 订单id */
+    private String id;
+
     /** 订单号，添加唯一索引。 */
     private String orderNo;
 
@@ -23,7 +27,7 @@ public class OrderDetailDto implements Serializable {
 
     private Date updateTime;
 
-    List<OrderItem> orderItemList;
+    List<OrderItemDto> orderItemDtoList;
 
     Shipping shipping;
 }

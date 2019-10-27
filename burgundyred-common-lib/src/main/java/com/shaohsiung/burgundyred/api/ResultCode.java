@@ -7,6 +7,7 @@ public enum ResultCode {
 
     SUCCESS(0, "操作成功"),
     FAILURE(1, "操作失败"),
+    UNKNOWN(2, "未知错误"),
 
 
     // 支付宝支付提示

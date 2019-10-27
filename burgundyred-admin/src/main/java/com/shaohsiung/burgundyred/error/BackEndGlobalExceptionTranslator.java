@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -45,6 +46,15 @@ public class BackEndGlobalExceptionTranslator {
         String message = String.format("%s:%s", path, violation.getMessage());
         return BaseResponse.builder().state(ResultCode.FAILURE.getCode())
                 .message(message)
+                .build();
+    }
+
+    @ExceptionHandler(Exception.class)
+    public BaseResponse<Object> handleException(Exception e) {
+        log.warn("【前台异常】未知的错误: {}", e.getMessage());
+
+        return BaseResponse.builder().state(ResultCode.UNKNOWN.getCode())
+                .message(ResultCode.UNKNOWN.getMessage())
                 .build();
     }
 }

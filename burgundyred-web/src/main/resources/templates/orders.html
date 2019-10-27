@@ -101,7 +101,7 @@
                             <td th:text="${order.createTime}">2019-10-16 03:18:29</td>
                             <td th:text="${order.updateTime}">2019-10-16 03:18:29</td>
                             <td class="css-width-75">
-                                <span><a href="#">详情</a><br><br></span>
+                                <span><a href="#" th:href="@{'/order/detail/'+${order.id}}">详情</a><br><br></span>
                                 <span th:if="${order.state.name() == 'SHIPPED'}"><a th:href="'javascript:confirmReceipt(\'' + ${order.id}+'\');'" href="#">收货</a><br><br></span>
                                 <span th:if="${order.state.name() == 'UNPAID' || order.state.name() == 'NOT_SHIPPED' || order.state.name() == 'SHIPPED'}"><a th:href="'javascript:cancelOrder(\'' + ${order.id}+'\');'" href="#">取消订单</a><br><br></span>
                                 <span th:if="${order.state.name() == 'UNPAID'}"><a th:href="@{'/order/pay/' + ${order.orderNo}}" href="#">去支付</a><br><br></span>

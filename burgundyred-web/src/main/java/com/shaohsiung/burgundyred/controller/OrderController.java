@@ -10,6 +10,7 @@ import com.shaohsiung.burgundyred.api.ResultCode;
 import com.shaohsiung.burgundyred.constant.AlipayCallback;
 import com.shaohsiung.burgundyred.constant.AppConstant;
 import com.shaohsiung.burgundyred.dto.Cart;
+import com.shaohsiung.burgundyred.dto.OrderDetailDto;
 import com.shaohsiung.burgundyred.error.ErrorState;
 import com.shaohsiung.burgundyred.error.FrontEndException;
 import com.shaohsiung.burgundyred.model.Order;
@@ -257,5 +258,20 @@ public class OrderController {
         Order receipt = orderService.receipt(orderId, user.getId());
 
         return "redirect:/order/orders/0";
+    }
+
+    @GetMapping("/detail/{orderId}")
+    public String orderDetail(@PathVariable("orderId") String orderId,
+                              HttpServletRequest request,
+                              Model model) {
+        User user = (User) request.getAttribute("user");
+        if (user == null) {
+            throw new FrontEndException(ErrorState.USER_NOT_LOGGED_IN);
+        }
+
+        OrderDetailDto orderDetailDto = orderService.getById(orderId, user.getId());
+
+        model.addAttribute("orderDetailDto", orderDetailDto);
+        return "orderDetail";
     }
 }
