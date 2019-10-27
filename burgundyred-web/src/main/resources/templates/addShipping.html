@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>添加物流 - 勃艮第红</title>
+    <link href="./lib/fontawesome/css/all.css" rel="stylesheet" th:href="@{/static/lib/fontawesome/css/all.css}">
+    <link rel="stylesheet" href="./style/index.css" th:href="@{/static/style/index.css}">
+    <link rel="stylesheet" href="./style/navbar.css" th:href="@{/static/style/navbar.css}">
+    <link rel="stylesheet" href="./style/search-form.css" th:href="@{/static/style/search-form.css}">
+    <link rel="stylesheet" href="./style/product-item.css" th:href="@{/static/style/product-item.css}">
+    <link rel="stylesheet" href="./style/ad.css" th:href="@{/static/style/ad.css}">
+    <link rel="stylesheet" href="./style/footer.css" th:href="@{/static/style/footer.css}">
+    <link rel="stylesheet" href="./style/ie-list-style.css" th:href="@{/static/style/ie-list-style.css}">
+    <style>
+        .bread_nav {
+            height: 50px;
+            border-top: 4px solid #6C0A26;
+            background-color: #1F1122;
+            color: #ffffff;
+            line-height: 2.8em;
+        }
+        .bread_nav a {
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        .bread_nav a:hover {
+            color: #D3D0D4;
+        }
+
+        .shipping-form {
+            margin-top: 30px;
+        }
+        .shipping-form .form-item {
+            height: 40px;
+        }
+    </style>
+</head>
+<body>
+    <div th:replace="_fragments :: header"></div>
+
+    <!-- 面包削导航 -->
+    <div class="bread_nav">
+        <div class="w">
+            <a href="#">Burgundyred</a> > <a href="#">物流管理</a>
+            
+        </div>
+    </div>
+
+    <div class="w" style="margin-top: 60px;">
+        <h3 style="color: #911E3B; margin-bottom: 10px;">添加物流</h3>
+        <div class="shipping-form">
+            <form th:action="@{/shipping/confirm}" method="post">
+                <div class="form-item">
+                    <label for="receiverName">收件人名称: </label>
+                    <input type="text" id="receiverName" name="receiverName">
+                </div>
+                <div class="form-item">
+                    <label for="receiverMobile">收件人手机号码: </label>
+                    <input type="text" id="receiverMobile" name="receiverMobile">
+                </div>
+                <div class="form-item">
+                    <label for="receiverProvince">省份: </label>
+                    <input type="text" id="receiverProvince" name="receiverProvince">
+                </div>
+                <div class="form-item">
+                    <label for="receiverCity">城市: </label>
+                    <input type="text" id="receiverCity" name="receiverCity">
+                </div>
+                <div class="form-item">
+                    <label for="receiverDistrict">地区: </label>
+                    <input type="text" id="receiverDistrict" name="receiverDistrict">
+                </div>
+                <div class="form-item">
+                    <label for="receiverAddress">详细地址: </label>
+                    <input type="text" id="receiverAddress" name="receiverAddress">
+                </div>
+                <div class="form-item">
+                    <label for="receiverZip">邮编: </label>
+                    <input type="text" id="receiverZip" name="receiverZip">
+                </div>
+                <div class="form-item">
+                    <input type="submit" value="添加">
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div th:replace="_fragments :: footer"></div>
+
+    <script src="/static/lib/jquery.js"></script>
+    <th:block th:replace="_fragments :: script"></th:block>
+</body>
+</html>

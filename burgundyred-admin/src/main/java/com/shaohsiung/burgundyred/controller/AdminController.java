@@ -18,6 +18,7 @@ import org.apache.tomcat.jni.Error;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -61,5 +62,18 @@ public class AdminController {
         }
 
         return BaseResponseUtils.success(ResultCode.SUCCESS, admin.getAdminName());
+    }
+
+    @PostMapping("/logout")
+    public BaseResponse logout(HttpServletRequest request, HttpServletResponse response) {
+        Cookie token = CookieUtils.get(request, "admin_token");
+        if (token != null) {
+            token.setMaxAge(0);
+            token.setPath("/");
+            token.setHttpOnly(true);
+            response.addCookie(token);
+            log.info("管理员注销登录");
+        }
+        return BaseResponseUtils.success();
     }
 }
