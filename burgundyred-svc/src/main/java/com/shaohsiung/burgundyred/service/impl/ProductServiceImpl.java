@@ -313,4 +313,20 @@ public class ProductServiceImpl implements ProductService {
     public Integer productTotalRecordByCategoryId(String categoryId) {
         return productMapper.productTotalRecordByCategoryId(categoryId);
     }
+
+    /**
+     * 卖家增加商品库存
+     *
+     * @param productId
+     * @param add
+     * @return
+     */
+    @Override
+    public BaseResponse addProductStock(String productId, Integer add) {
+        int update = productMapper.addProductStock(productId, add);
+        if (update == 1) {
+            return BaseResponseUtils.success();
+        }
+        throw new BackEndException(ErrorState.PRODUCT_STOCK_UPDATE_FAILED);
+    }
 }

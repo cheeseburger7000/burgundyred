@@ -97,10 +97,10 @@ public class CategoryServiceImpl implements CategoryService {
      */
     @Override
     public BaseResponse setHot(String categoryId) {
-        Integer hotCount = categoryMapper.calcHotCount();
-        if (hotCount >= AppConstant.MAX_CATEGORY_COUNT) {
-            throw new BackEndException(ErrorState.BANNER_COUNT_REACHES_THE_UPPER_LIMIT);
-        }
+//        Integer hotCount = categoryMapper.calcHotCount();
+//        if (hotCount >= AppConstant.MAX_CATEGORY_COUNT) {
+//            throw new BackEndException(ErrorState.CATEGORY_COUNT_REACHES_THE_UPPER_LIMIT);
+//        }
 
         int update = categoryMapper.setHot(categoryId);
         if (update == 1) {
@@ -119,10 +119,10 @@ public class CategoryServiceImpl implements CategoryService {
      */
     @Override
     public BaseResponse setUnhot(String categoryId) {
-        Integer hotCount = categoryMapper.calcHotCount();
-        if (hotCount == AppConstant.MAX_CATEGORY_COUNT) {
-            throw new BackEndException(ErrorState.CATEGORY_COUNT_REACHES_THE_LOWER_LIMIT);
-        }
+//        Integer hotCount = categoryMapper.calcHotCount();
+//        if (hotCount == AppConstant.MAX_CATEGORY_COUNT) {
+//            throw new BackEndException(ErrorState.CATEGORY_COUNT_REACHES_THE_LOWER_LIMIT);
+//        }
 
         int update = categoryMapper.setUnhot(categoryId);
         if (update == 1) {

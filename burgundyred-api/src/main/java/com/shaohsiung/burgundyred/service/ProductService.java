@@ -108,4 +108,12 @@ public interface ProductService {
      * @return
      */
     Integer productTotalRecordByCategoryId(String categoryId);
+
+    /**
+     * 卖家增加商品库存
+     * @param productId
+     * @param add
+     * @return
+     */
+    BaseResponse addProductStock(String productId, Integer add);
 }

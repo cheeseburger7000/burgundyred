@@ -17,10 +17,12 @@ import com.shaohsiung.burgundyred.vo.CategoryVo;
 import jdk.nashorn.internal.objects.annotations.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +32,7 @@ import java.util.stream.Collectors;
  * 商品管理
  */
 @Slf4j
+@Validated
 @RestController
 @RequestMapping("/product")
 @CrossOrigin(allowCredentials="true", maxAge = 3600)
@@ -127,5 +130,16 @@ public class ProductController {
             return categoryVo;
         }).collect(Collectors.toList());
         return BaseResponseUtils.success(result);
+    }
+
+    @GetMapping("/addStock/{productId}/{add}")
+    public BaseResponse addProductStock(@PathVariable("productId") String productId,
+                                        @PathVariable("add") @Min(1) Integer add,
+                                        HttpServletRequest request) {
+        Administrator admin = (Administrator) request.getAttribute("admin");
+        if (admin == null) {
+            throw  new BackEndException(ErrorState.ADMIN_AUTHENTICATION_FAILED);
+        }
+        return productService.addProductStock(productId, add);
     }
 }
