@@ -79,7 +79,7 @@
         <ul class="shipping-list">
             <li th:each="shipping : ${shippings}" class="shipping-item"><input name="shipping" type="radio" th:value="${shipping.id}" th:text="' '+${shipping.receiverProvince}+' '+${shipping.receiverCity}+' '+${shipping.receiverDistrict}+' '+${shipping.receiverAddress}+' ('+${shipping.receiverName}+' 收) '+${shipping.receiverMobile}"></li>
         </ul>
-        <a th:href="@{/shipping}">添加新物流信息</a>
+        <a th:href="@{/shipping/confirm}">添加新物流信息</a>
     </div>
 
     <div class="w" style="margin-bottom: 60px;">

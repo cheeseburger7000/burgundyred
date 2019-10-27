@@ -34,7 +34,7 @@
                     <a th:href="@{/cart}" href="#"><i class="fas fa-shopping-cart"></i> <span th:if="${cartCount != null}" th:text="'购物车('+${cartCount}+')'">购物车(0)</span><span th:if="${cartCount == null}" th:text="'购物车(0)'">购物车(0)</span></a>
                 </li>
                 <li class="nav-list-item"><a th:href="@{/order/orders/0}" href="#">我的订单</a></li>
-                <li class="nav-list-item"><a href="#">个人中心</a></li>
+                <li class="nav-list-item"><a th:href="@{/info}" href="#">个人中心</a></li>
             </ul>
         </div>
     </div>

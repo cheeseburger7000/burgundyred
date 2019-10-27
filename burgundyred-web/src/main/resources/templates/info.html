@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>个人中心 - 勃艮第红</title>
+    <link href="./lib/fontawesome/css/all.css" rel="stylesheet" th:href="@{/static/lib/fontawesome/css/all.css}">
+    <link rel="stylesheet" href="./style/index.css" th:href="@{/static/style/index.css}">
+    <link rel="stylesheet" href="./style/navbar.css" th:href="@{/static/style/navbar.css}">
+    <link rel="stylesheet" href="./style/search-form.css" th:href="@{/static/style/search-form.css}">
+    <link rel="stylesheet" href="./style/product-item.css" th:href="@{/static/style/product-item.css}">
+    <link rel="stylesheet" href="./style/ad.css" th:href="@{/static/style/ad.css}">
+    <link rel="stylesheet" href="./style/footer.css" th:href="@{/static/style/footer.css}">
+    <link rel="stylesheet" href="./style/ie-list-style.css" th:href="@{/static/style/ie-list-style.css}">
+    <style>
+        .bread_nav {
+            height: 50px;
+            border-top: 4px solid #6C0A26;
+            background-color: #1F1122;
+            color: #ffffff;
+            line-height: 2.8em;
+            margin-bottom: 40px;
+        }
+        .bread_nav a {
+            color: #ffffff;
+            text-decoration: none;
+        }
+        .bread_nav a:hover {
+            color: #D3D0D4;
+        }
+        
+        .info-container .info-item {
+            margin-top: 40px;
+            margin-left: 0;
+            margin-bottom: 0;
+            list-style-type: none;
+        }
+
+        .shipping-container {
+            margin-bottom: 40px;
+        }
+        .shipping-container .shipping-item {
+            margin-top: 40px;
+            margin-left: 40px;
+            margin-bottom: 0;
+            /* list-style-type: none; */
+        }
+    </style>
+</head>
+<body>
+
+    <div th:replace="_fragments :: header"></div>
+
+    <!-- 面包削导航 -->
+    <div class="bread_nav">
+        <div class="w">
+            <a href="#">Burgundyred</a> > <a href="#">个人中心</a>
+        </div>
+    </div>
+
+    <div class="w" style="margin-bottom: 60px;">
+        <h3 style="color: #911E3B; margin-bottom: 10px;">基本信息</h3>
+        <ul class="info-container">
+            <li class="info-item">
+                <label>用户名：</label>
+                <span th:text="${user.userName}">shaohsiung</span>
+            </li>
+            <li class="info-item">
+                <label>邮箱</label>
+                <span th:text="${user.email}">583809255@qq.com</span>
+            </li>
+            <li class="info-item">
+                <label>手机号码：</label>
+                <span th:text="${user.mobile}">13055228247</span>
+            </li>
+            <li class="info-item">
+                <label>头像：</label>
+                <img th:src="@{${user.avatar}}" height="100" width="100" alt="">
+            </li>
+            <li class="info-item">
+                <label>账户状态：</label>
+                <span th:text="${user.state}">正常</span>
+            </li>
+            <li class="info-item">
+                <label>注册时间：</label>
+                <span  th:text="${user.createTime}">2019-10-11</span>
+            </li>
+        </ul>
+    </div>
+
+    <div class="w" style="margin-bottom: 60px;">
+        <h3 style="color: #911E3B; margin-bottom: 10px;">我的收货地址</h3>
+        <ul class="shipping-container">
+            <li th:each="shipping : ${shippings}" class="shipping-item">
+                <span th:text="' '+${shipping.receiverProvince}+' '+${shipping.receiverCity}+' '+${shipping.receiverDistrict}+' '+${shipping.receiverAddress}+' ('+${shipping.receiverName}+' 收) '+${shipping.receiverMobile}">福建省 厦门市 集美区 杏林街道 软件园三期D3公寓楼 （杨少雄 收）13055228247</span>
+                <a href="#" th:href="@{'/shipping/delete/' + ${shipping.id}}">删除</a>
+            </li>
+        </ul>
+        <a th:href="@{/shipping/info}" href="#">添加新收货地址</a>
+    </div>
+
+    <div th:replace="_fragments :: footer"></div>
+
+    <script src="/static/lib/jquery.js"></script>
+    <th:block th:replace="_fragments :: script"></th:block>
+
+</body>
+</html>

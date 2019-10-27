@@ -1,6 +1,5 @@
 package com.shaohsiung.burgundyred.mapper;
 
-import com.shaohsiung.burgundyred.api.BaseResponse;
 import com.shaohsiung.burgundyred.model.User;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
@@ -36,4 +35,7 @@ public interface UserMapper {
 
     @Update("update t_user set state = 1 where id = #{userId}")
     int normal(String userId);
+
+    @Select("select * from t_user where id = #{userId}")
+    User getById(@Param("userId") String userId);
 }
