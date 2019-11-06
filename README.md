@@ -54,3 +54,17 @@ doc文件下文件：
 - burgundyred需求分析.md
 - SQL.md
 - idea构建发布docker镜像，私服上部署流程.md
+
+## 项目截图
+
+- 主页
+![buyer1.jpg](https://i.loli.net/2019/11/06/jFC7wgpZqG4KQJV.jpg)
+
+- 高亮搜索
+![buyer2.jpg](https://i.loli.net/2019/11/06/WcJP53oUrmF47ns.jpg)
+
+- 确认订单
+![确认订单.jpg](https://i.loli.net/2019/11/06/rmnQ5g9b7G2jodh.jpg)
+
+- 扫码支付
+![扫码支付.jpg](https://i.loli.net/2019/11/06/FXAGbwv1Sl5npIH.jpg)
