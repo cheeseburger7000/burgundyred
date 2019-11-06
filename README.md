@@ -28,6 +28,8 @@
 - burgundyred架构图
 ![burgundyred架构图.png](https://i.loli.net/2019/11/06/TitoeGn8bzZpmNP.png)
 
+说明：为了方便开发，这里我将所有的基础服务放在**burgundyred-svc**中。后期可根据业务功能（这里我已经按service划分）将服务拆分为一个个进程。订单服务中包括支付的相关功能，可以将这部分内容拆分成单独的支付服务。降低耦合度，提高代码可维护性。
+
 - burgundyred订单状态机
 ![burgundyred订单状态机.png](https://i.loli.net/2019/11/06/6MejvJgSR9TtH3G.png)
 
