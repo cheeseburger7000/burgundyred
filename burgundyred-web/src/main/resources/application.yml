@@ -5,7 +5,7 @@ dubbo:
     name: dubbo
     port: 20880
   registry:
-    address: zookeeper://119.23.40.171:2181
+    address: XXXX
   consumer:
     timeout: 5000
 
@@ -21,4 +21,4 @@ spring:
     static-path-pattern: /static/**
 
 redis:
-  host: localhost
+  host: XXXX

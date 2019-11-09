@@ -22,11 +22,11 @@ spring:
   # Mail
   mail:
     default-encoding: UTF-8
-    host: smtp.126.com
-    password: shaohsiung123321
+    host: XXXX
+    password: XXXX
     port: 25
     protocol: smtp
-    username: shaohsiung@126.com
+    username: XXXX
 
 
 mybatis:
@@ -49,20 +49,20 @@ dubbo:
     name: dubbo
     port: 20880
   registry:
-    address: zookeeper://119.23.40.171:2181
+    address: XXXX
   provider:
     timeout: 1000
 
 # RabbitMQ
 rabbitmq:
-  host: localhost
+  host: XXXX
   port: 5672
   username: guest
   password: guest
 
 
 qiniu:
-  accessKey: AiYMNMLUCx5T2KJByydrwa3Yje2pVOFZmMn-XlRW
-  secretKey: MEeHVxsI_sJ_2P-x5Css-9IPBLQ65k_3BWfffNNp
-  bucket: producttable
-  host: pzceg9ngw.bkt.clouddn.com
+  accessKey: XXXX
+  secretKey: XXXX
+  bucket: XXXX
+  host: XXXX
